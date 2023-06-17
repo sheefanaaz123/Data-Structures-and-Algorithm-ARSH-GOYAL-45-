@@ -1,0 +1,26 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+        int num[]={1,2,3,4,5,5};
+
+        int n = sizeof(num)/sizeof(num[0]);
+       
+        //we need two pointers
+        int i=0,j;
+
+        for(int j=1; j<n; j++){
+
+            //find the element which is not equal to the element at index i.
+            //if the element is founf, then increment the i, and store that number at num[i].
+            if(num[i]!=num[j]){
+                i++;
+                num[i]=num[j];
+            }
+        }
+
+        printf("No. of unique element : %d",i+1);
+
+ return 0;
+}
