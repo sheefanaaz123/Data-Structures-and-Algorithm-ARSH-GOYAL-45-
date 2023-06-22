@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+#include<iostream>
+using namespace std;
+int main(){
+        
+        // Matrix
+
+        int matrix[3][3]={{1,1,1},
+                        {1,0,1},
+                        {1,1,1}};
+    
+        int m = 3;   // no. of row
+        int n = 3;   // no. of col
+
+        int x =1;    //flag
+        int y =1;    //flag
+
+        //if first row contains '0', then do x=0,
+        for(int j=0;j<n;j++)
+        {
+            if(matrix[0][j]==0)
+                    x=0;
+            
+        }
+        
+        //if first column contains '0', then do y=0,
+        for(int i=0;i<m;i++)
+        {
+            if(matrix[i][0]==0)
+                    y=0;
+        }
+       
+        //find the '0' in the matrix and mark the first row and column accordingly.
+        for(int i=1;i<m;i++)
+        {
+            for(int j=1;j<n;j++)
+            {
+                if(matrix[i][j]==0)
+                {
+                    matrix[i][0]=0;
+                    matrix[0][j]=0;
+                }
+            }
+        }
+        
+        //making column '0'
+         for(int j=1;j<n;j++)
+        {
+           if(matrix[0][j]==0)
+           {
+               for(int i=1;i<m;i++)
+                   matrix[i][j]=0;
+           }
+        }
+        
+        //making row '0'
+        for(int i=1;i<m;i++)
+        {
+            if(matrix[i][0]==0)
+            {
+                for(int j=0;j<n;j++)
+                    matrix[i][j]=0;
+            }
+        }
+        
+        // if conditions are true, then make 1st row and column 0
+        if(y==0)
+        {
+            for(int i=0;i<m;i++)
+            {
+                matrix[i][0]=0;
+            }
+        }
+        
+         if(x==0)
+        {      
+             for(int j=0;j<n;j++)
+            matrix[0][j]=0;
+        
+        } 
+
+    
+        //printing the matrix    
+        for(int i=0; i<3; i++ ){
+            for(int j=0; j<3; j++){
+                cout<<matrix[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+    
+
+    return 0;
+}
