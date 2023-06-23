@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+
+  //declaring an array
+  int array[]={1,0,2,0,3,0,4,0,5,0};
+  int n = sizeof(array)/sizeof(array[0]);
+
+  //take 2 pointers
+  int i=0,j=0;
+  
+  //if element at index i is not 0, then replace it with the 
+  //element at index j
+  for(i=0; i<n; i++){
+    if(array[i]!=0){
+        array[j]=array[i];
+        j++;
+    }
+  }
+
+  //printing the array
+  for(; j<n; j++){
+    array[j]=0;
+  }
+
+  for(int i=0; i<n; i++){
+    cout<<array[i]<<" ";
+  }
+    return 0;
+}
