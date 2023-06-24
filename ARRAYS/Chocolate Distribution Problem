@@ -1,0 +1,24 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+   
+   int arr[] = { 12, 4,  7,  9,  2,  23, 25, 41, 30,
+                  40, 28, 42, 30, 44, 48, 43, 50 };
+   
+   int n = sizeof(arr)/sizeof(arr[0]);
+   
+   int m =7;
+
+   sort(arr,arr+n);
+
+   int min_diff = INT_MAX;
+
+   for(int i; i+m-1<n; i++){
+      min_diff = min(arr[i + m - 1] - arr[i],min_diff); 
+   }
+
+   cout<<"Minimun difference : "<<min_diff;
+
+    return 0;
+}
