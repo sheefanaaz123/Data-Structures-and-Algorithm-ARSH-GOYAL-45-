@@ -1,0 +1,28 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+   
+   //declare an array
+   vector<int>prices= {7,1,5,3,6,4};
+
+   int n = sizeof(prices)/sizeof(prices[0]);
+
+   //take two variables
+   int min_prices = prices[0];
+   int max_profit = 0;
+
+
+   //iterate i to the end 
+   for(int i=0; i<n; i++){
+       max_profit =  max(max_profit, prices[i]-min_prices);
+       min_prices = min(min_prices, prices[i]);
+
+   }
+
+
+   cout<<max_profit;
+
+
+    return 0;
+}
