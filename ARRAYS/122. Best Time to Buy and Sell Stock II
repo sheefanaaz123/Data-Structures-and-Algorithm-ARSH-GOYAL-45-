@@ -1,0 +1,29 @@
+## 2 pointers
+
+#include <bits/stdc++.h>
+#include <vector>
+using namespace std;
+
+int main() {
+
+    vector<int>prices={7,1,5,3,6,4};
+
+    int n = prices.size();
+    
+    int min_price = prices[0];
+    int profit = 0;
+
+    for(int i=1; i<n; i++){
+        if(prices[i]<=min_price){
+            min_price=prices[i];
+        }
+        else{
+            profit=profit+prices[i]-min_price;
+            min_price=prices[i];
+        }
+    }
+
+    cout<<"Maximun profit :"<<profit;
+
+    return 0;
+}
