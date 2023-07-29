@@ -1,29 +1,28 @@
-## 2 pointers
-
-#include <bits/stdc++.h>
-#include <vector>
+#include<bits/stdc++.h>
 using namespace std;
 
-int main() {
+int main(){
 
-    vector<int>prices={7,1,5,3,6,4};
+  //ARRAY OF PRICES
+  int prices[] = {7,1,5,3,6,4};
 
-    int n = prices.size();
-    
-    int min_price = prices[0];
-    int profit = 0;
+  //SIZE OF ARRAY
+  int n = sizeof(prices)/sizeof(prices[0]);
 
-    for(int i=1; i<n; i++){
-        if(prices[i]<=min_price){
-            min_price=prices[i];
-        }
-        else{
-            profit=profit+prices[i]-min_price;
-            min_price=prices[i];
-        }
+  //INITIALIZING PROFIT VARIABLE TO 0
+  int max_profit = 0;
+  
+  //FINDING THE TOTAL PROFIT
+  for(int i=1; i<n; i++){
+    if(prices[i]>prices[i-1]){
+        max_profit+= (prices[i]-prices[i-1]);
     }
+  }
 
-    cout<<"Maximun profit :"<<profit;
+  //PRINTING THE RESULT
+  cout<<"MAXIMUM PROFIT :: "<<max_profit;
 
-    return 0;
+
+
+return 0;
 }
