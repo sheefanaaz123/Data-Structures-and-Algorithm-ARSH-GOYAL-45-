@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+#include<vector>
+#include<unordered_map>
+
+using namespace std;
+
+int main(){
+
+  vector<int> nums;
+  int a;
+  for(int i=0 ; i<6 ; i++)
+  {
+    cin>>a;
+    nums.push_back(a);
+  }
+
+  int k;
+  cin>>k;
+
+  unordered_map<int,int>mp;
+  mp[0]=1;
+  int sum=0, ans=0,rem;
+  for(int i=0; i<nums.size(); i++){
+            sum=sum+nums[i];
+            rem=(sum %k + k) % k;
+            mp[rem]++;
+            if(mp[rem]>1){
+                ans+=mp[rem]-1;
+            }
+        }
+
+
+ cout<<"Answer is "<<ans;
+return 0;
+}
