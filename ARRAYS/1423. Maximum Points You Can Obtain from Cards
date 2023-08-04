@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+
+   vector<int>cardPoints;
+
+   int i,a;
+
+   for(i=0; i<7; i++){
+    cin>>a;
+    cardPoints.push_back(a);
+   }
+
+   int n= cardPoints.size();
+
+   int k =3;
+   
+   int total_sum = 0;
+
+   if(k>n){
+    return 0;
+   }
+
+   for(auto x: cardPoints){
+    total_sum +=x;
+   }
+
+   int size = n-k;
+
+   if(size==0){
+    return total_sum ;
+   }
+
+   int current_sum =0,start=0,ans=INT_MIN;
+   
+   for(int i=0;i<n;i++)
+        {
+            current_sum +=cardPoints[i];
+            if(i>=size-1)
+            {
+                ans=max(ans,total_sum -current_sum);
+                current_sum-=cardPoints[start];
+                start++;
+            }
+        }
+    cout<<"Maximum score "<<ans;
+    return 0;
+}
+
+        
+       
+    
