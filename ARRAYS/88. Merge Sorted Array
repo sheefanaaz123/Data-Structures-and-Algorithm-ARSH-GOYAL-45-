@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+
+class Solution {
+public:
+    void merge(std::vector<int>& nums1, int m, std::vector<int>& nums2, int n) {
+        int index = m + n - 1;
+        m--;
+        n--;
+
+        while (n >= 0) {
+            if (m >= 0 && nums1[m] > nums2[n]) {
+                nums1[index--] = nums1[m--];
+            } else {
+                nums1[index--] = nums2[n--];
+            }
+        }
+    }
+};
+
+int main() {
+    int m, n;
+
+    std::cout << "Enter the number of elements in nums1: ";
+    std::cin >> m;
+
+    std::cout << "Enter the number of elements in nums2: ";
+    std::cin >> n;
+
+    std::vector<int> nums1(m + n);
+    std::vector<int> nums2(n);
+
+    std::cout << "Enter the elements of nums1 in non-decreasing order: ";
+    for (int i = 0; i < m; ++i) {
+        std::cin >> nums1[i];
+    }
+
+    std::cout << "Enter the elements of nums2 in non-decreasing order: ";
+    for (int i = 0; i < n; ++i) {
+        std::cin >> nums2[i];
+    }
+
+    Solution solution;
+    solution.merge(nums1, m, nums2, n);
+
+    std::cout << "Merged Array: ";
+    for (int num : nums1) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
