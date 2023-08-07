@@ -1,29 +1,30 @@
 #include <iostream>
 #include <vector>
-#include<math.h>
+#include <math.h>
 using namespace std;
 
 class Solution {
-    
 public:
-    int attempts(vector<int>& nums, int x, int y, int n) {
-        int i, jump=0, total=0;
-        for(i=0; i<n; i++){
-            jump = ceil((nums[i]-x)/(float)(x-y)) +1;
-            total+=jump;
+    int attempts(vector<int>& wallHeights, int climbDistance, int slipDistance, int totalWalls) {
+        int i, jumps = 0, totalJumps = 0;
+        for (i = 0; i < totalWalls; i++) {
+            jumps = ceil((wallHeights[i] - climbDistance) / (float)(climbDistance - slipDistance)) + 1;
+            totalJumps += jumps;
         }
-        return total;
+        return totalJumps;
     }
 };
 
 int main() {
     Solution solution;
-    vector<int> nums = {11, 34, 27, 9};  
+    vector<int> wallHeights = {11, 34, 27, 9};  
+    int climbDistance = 10;
+    int slipDistance = 1;
+    int totalWalls = 4;
     
-    int ans = solution.attempts(nums,10,1,4);
+    int totalJumps = solution.attempts(wallHeights, climbDistance, slipDistance, totalWalls);
     
-    cout << "Number of jumps: " << ans<< endl;
+    cout << "Total number of jumps required to escape: " << totalJumps << endl;
     
     return 0;
 }
-
