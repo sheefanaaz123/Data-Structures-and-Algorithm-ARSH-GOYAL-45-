@@ -15,7 +15,7 @@ void combinationUtil(int arr[], int data[],
 	}
 
 
-	for (int i = start; i <= end && index>=r-end+i-1; i++)
+	for (int i = start; i <= end && end - i + 1 >= r - index; i++)
 	{
 		data[index] = arr[i];
 		combinationUtil(arr, data, i+1, end, index+1, r);
