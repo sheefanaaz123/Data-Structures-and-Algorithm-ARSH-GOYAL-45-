@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if (needle.empty()) {
+            return 0;  // Empty needle is always present at the beginning of any haystack
+        }
+
+        vector<int> lps = calculateLPS(needle);
+        int i = 0;  // Index for haystack
+        int j = 0;  // Index for needle
+
+        while (i < haystack.length()) {
+            if (haystack[i] == needle[j]) {
+                i++;
+                j++;
+
+                if (j == needle.length()) {
+                    return i - j;  // Found the needle in the haystack
+                }
+            } else {
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
+            }
+        }
+
+        return -1;  // Needle not found in the haystack
+    }
+
+private:
+    vector<int> calculateLPS(string pattern) {
+        int length = pattern.length();
+        vector<int> lps(length, 0);
+        int j = 0;
+
+        for (int i = 1; i < length; i++) {
+            while (j > 0 && pattern[i] != pattern[j]) {
+                j = lps[j - 1];
+            }
+
+            if (pattern[i] == pattern[j]) {
+                j++;
+            }
+            lps[i] = j;
+        }
+
+        return lps;
+    }
+};
+
+int main() {
+    Solution solution;
+    string haystack, needle;
+
+    cout << "Enter the haystack: ";
+    getline(cin, haystack);
+
+    cout << "Enter the needle: ";
+    getline(cin, needle);
+
+    int index = solution.strStr(haystack, needle);
+
+    if (index != -1) {
+        cout << "Needle found at index: " << index << endl;
+    } else {
+        cout << "Needle not found in the haystack." << endl;
+    }
+
+    return 0;
+}
