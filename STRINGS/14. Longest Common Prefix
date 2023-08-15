@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        int n = strs.size();
+        
+        bool match = true;
+        char ch;
+
+        string ans = "";
+        for(int i = 0; i < strs[0].size(); i++){
+            ch = strs[0][i];
+            
+            for(int j = 1; j < n; j++){
+                // Check if the current string is long enough and if the characters match
+                if(strs[j].size() <= i || ch != strs[j][i]){
+                    match = false;
+                    break;
+                }
+            }
+
+            // If there was a mismatch, break the loop
+            if (!match) {
+                break;
+            }
+
+            // If no mismatch, append the character to the common prefix
+            ans.push_back(ch);
+        }
+
+        return ans;
+    }
+};
+
+int main() {
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Example input: a vector of strings
+    vector<string> input = {"flower", "flow", "flight"};
+
+    // Call the longestCommonPrefix function and store the result
+    string commonPrefix = solution.longestCommonPrefix(input);
+
+    // Print the result
+    cout << "Longest Common Prefix: " << commonPrefix << endl;
+
+    return 0;
+}
