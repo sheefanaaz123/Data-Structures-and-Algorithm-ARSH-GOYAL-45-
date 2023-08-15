@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    bool validPalindrome(string s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            if (s[left] != s[right]) {
+                return isPalindrome(s, left + 1, right) || isPalindrome(s, left, right - 1);
+            }
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+
+private:
+    bool isPalindrome(string& s, int left, int right) {
+        while (left < right) {
+            if (s[left] != s[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+};
+
+int main() {
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Example input
+    string input = "abca";
+
+    // Call the validPalindrome function and store the result
+    bool isPalindromePossible = solution.validPalindrome(input);
+
+    // Print the result
+    if (isPalindromePossible) {
+        cout << "A valid palindrome can be formed." << endl;
+    } else {
+        cout << "A valid palindrome cannot be formed." << endl;
+    }
+
+    return 0;
+}
