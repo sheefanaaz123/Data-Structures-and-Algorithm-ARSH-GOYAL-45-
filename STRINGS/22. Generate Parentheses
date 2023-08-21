@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+class Solution {
+public:
+    // This function makes combinations of parentheses.
+    std::vector<std::string> generateParenthesis(int n) {
+        std::vector<std::string> result;  // This is where we'll keep our combinations.
+        std::string current;  // This is like a temporary container for the parentheses we're making.
+        makeCombinations(result, current, 0, 0, n);  // Let's start making combinations!
+        return result;  // Return all the combinations we made.
+    }
+
+    // This function helps make the combinations.
+    void makeCombinations(std::vector<std::string>& result, std::string& current, int open, int close, int n) {
+        // When we have made enough parentheses, we save the combination and stop.
+        if (current.length() == 2 * n) {
+            result.push_back(current);  // Save the combination we made.
+            return;  // Stop here.
+        }
+
+        // We can add an opening parenthesis if we haven't added enough yet.
+        if (open < n) {
+            current += "(";  // Add an opening parenthesis to our temporary container.
+            makeCombinations(result, current, open + 1, close, n);  // Let's keep making more!
+            current.pop_back();  // Remove the last parenthesis we added, so we can try another.
+        }
+
+        // We can add a closing parenthesis if we have more openings than closings.
+        if (close < open) {
+            current += ")";  // Add a closing parenthesis to our temporary container.
+            makeCombinations(result, current, open, close + 1, n);  // Let's keep making more!
+            current.pop_back();  // Remove the last parenthesis we added, so we can try another.
+        }
+    }
+};
+
+int main() {
+    Solution solution;
+    int n = 3;  // Number of pairs of parentheses
+
+    std::vector<std::string> combinations = solution.generateParenthesis(n);
+
+    std::cout << "Generated combinations of parentheses for n = " << n << ":\n";
+    for (const std::string& combination : combinations) {
+        std::cout << combination << "\n";
+    }
+
+    return 0;
+}
