@@ -1,9 +1,12 @@
+Certainly! Here's the updated README with the addition of your Medium account information:
+
+
 # DSA Sheet Solutions by Arsh Goyal (45 Days Plan) - C++ Approaches
 
-1. https://docs.google.com/spreadsheets/d/1MGVBJ8HkRbCnU6EQASjJKCqQE8BWng4qgL0n3vCVOxE/edit?usp=sharing
-2. https://youtu.be/0nc8gzpkkSY
-3. https://docs.google.com/spreadsheets/d/1r35qSXY6rSAonFbPEKB_KXUvpCIBbVGMp5001MaNb3c/edit#gid=0
-4. https://docs.google.com/spreadsheets/d/1hXserPuxVoWMG9Hs7y8wVdRCJTcj3xMBAEYUOXQ5Xag/edit#gid=0
+![DSA Sheet](https://docs.google.com/spreadsheets/d/1MGVBJ8HkRbCnU6EQASjJKCqQE8BWng4qgL0n3vCVOxE/edit?usp=sharing)
+![YOUTUBE LINK](https://youtu.be/0nc8gzpkkSY)
+![LINK](https://docs.google.com/spreadsheets/d/1r35qSXY6rSAonFbPEKB_KXUvpCIBbVGMp5001MaNb3c/edit#gid=0)
+![LINK](https://docs.google.com/spreadsheets/d/1hXserPuxVoWMG9Hs7y8wVdRCJTcj3xMBAEYUOXQ5Xag/edit#gid=0)
 
 Welcome to the repository containing comprehensive solutions to the **DSA Sheet by Arsh Goyal**. This repository is dedicated to providing you with a variety of approaches, all implemented in C++, for solving the problems outlined in the 45 Days Plan.
 
@@ -12,6 +15,7 @@ Welcome to the repository containing comprehensive solutions to the **DSA Sheet 
 - [Introduction](#introduction)
 - [Approaches](#approaches)
 - [How to Use](#how-to-use)
+- [Medium Blog](#medium-blog)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -31,7 +35,6 @@ To make the most out of this repository, follow these steps:
    
    ```bash
    git clone https://github.com/your-username/dsa-sheet-solutions.git
-   ```
 
 2. **Navigate to the Problem:** Browse through the repository to find the specific problem you're interested in.
 
@@ -40,6 +43,10 @@ To make the most out of this repository, follow these steps:
 4. **Compile and Run:** Choose an approach and compile the C++ file. Run the compiled executable to observe the solution in action.
 
 5. **Learn and Compare:** Take the time to understand the logic behind each approach. Compare their pros, cons, and efficiency to gain insights into algorithmic design.
+
+## Medium Blog
+
+I also post detailed write-ups about various approaches on my Medium account. Feel free to check out my articles to dive deeper into the concepts and strategies behind these solutions: [Arsh Goyal's Medium](https://medium.com/@your-medium-username)
 
 ## Contributing
 
@@ -78,4 +85,4 @@ This repository is licensed under the [MIT License](LICENSE), which means you're
 Happy coding! Remember, practice makes perfect, and exploring multiple approaches to problem-solving is a great way to sharpen your skills.
 ```
 
-Please note that you need to replace placeholders like `your-username` and the image URLs (`insert_image_url_here`) with actual links and information. Additionally, ensure that the URLs you provide are valid and accessible to users.
+Remember to replace `your-username` and `your-medium-username` with your actual GitHub and Medium account usernames.
