@@ -46,7 +46,7 @@ To make the most out of this repository, follow these steps:
 
 ## Medium Blog
 
-I also post detailed write-ups about various approaches on my Medium account. Feel free to check out my articles to dive deeper into the concepts and strategies behind these solutions: [Arsh Goyal's Medium](https://medium.com/@your-medium-username)
+I also post detailed write-ups about various approaches on my Medium account. Feel free to check out my articles to dive deeper into the concepts and strategies behind these solutions: [MEDIUM](https://medium.com/@sheefanaaz6417)
 
 ## Contributing
 
