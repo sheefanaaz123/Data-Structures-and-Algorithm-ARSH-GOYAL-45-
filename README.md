@@ -81,5 +81,3 @@ This repository is licensed under the [MIT License](LICENSE), which means you're
 
 Happy coding! Remember, practice makes perfect, and exploring multiple approaches to problem-solving is a great way to sharpen your skills.
 ```
-
-Remember to replace `your-username` and `your-medium-username` with your actual GitHub and Medium account usernames.
