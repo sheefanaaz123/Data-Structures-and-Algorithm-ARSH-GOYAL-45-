@@ -1,6 +1,3 @@
-Sure, here's the generated README based on the provided content:
-
-```markdown
 # DSA Sheet Solutions by Arsh Goyal (45 Days Plan) - C++ Approaches
 
 ![DSA Sheet](https://docs.google.com/spreadsheets/d/1MGVBJ8HkRbCnU6EQASjJKCqQE8BWng4qgL0n3vCVOxE/edit?usp=sharing)
@@ -34,7 +31,6 @@ To make the most out of this repository, follow these steps:
    
    ```bash
    git clone https://github.com/your-username/dsa-sheet-solutions.git
-   ```
 
 2. **Navigate to the Problem:** Browse through the repository to find the specific problem you're interested in.
 
