@@ -1,0 +1,36 @@
+APPROACH 1 : TOKENISATION
+
+#include <sstream>
+#include <string>
+#include<iostream>
+
+using namespace std;
+
+class Solution {
+public:
+    string reverseWords(string s) {
+        stringstream ss(s);
+        string token = "";
+
+        string result = "";
+        while (ss >> token) {
+            result = token + " " + result;
+        }
+
+        return result.substr(0, result.length() - 1);
+    }
+};
+
+int main() {
+    Solution solution;
+    string input = "the sky is blue";
+    string reversed = solution.reverseWords(input);
+    cout << "Original: " << input << endl;
+    cout << "Reversed: " << reversed << endl;
+    return 0;
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+APPROACH 2:
