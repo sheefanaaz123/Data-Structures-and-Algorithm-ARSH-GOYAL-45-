@@ -1,6 +1,3 @@
-Certainly! Here's the updated README with the addition of your Medium account information:
-
-
 # DSA Sheet Solutions by Arsh Goyal (45 Days Plan) - C++ Approaches
 
 ![DSA Sheet](https://docs.google.com/spreadsheets/d/1MGVBJ8HkRbCnU6EQASjJKCqQE8BWng4qgL0n3vCVOxE/edit?usp=sharing)
