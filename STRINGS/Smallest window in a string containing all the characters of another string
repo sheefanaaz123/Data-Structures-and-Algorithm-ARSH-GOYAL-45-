@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    string smallestWindow(string S, string P) {
+        const int MAX_CHARS = 26;
+        int lenS = S.length();
+        int lenP = P.length();
+
+        if (lenS < lenP) {
+            return "-1"; // No such window is possible
+        }
+
+        int charCountP[MAX_CHARS] = {0};
+
+        for (char c : P) {
+            charCountP[c - 'a']++;
+        }
+
+        int left = 0, right = 0;
+        int count = lenP; // Count of characters to match
+        int minLen = lenS + 1; // Initialize with a value that can't be achieved
+        int startIndex = -1;
+
+        while (right < lenS) {
+            if (charCountP[S[right] - 'a'] > 0) {
+                count--;
+            }
+            charCountP[S[right] - 'a']--;
+
+            while (count == 0) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    startIndex = left;
+                }
+
+                charCountP[S[left] - 'a']++;
+                if (charCountP[S[left] - 'a'] > 0) {
+                    count++;
+                }
+                left++;
+            }
+
+            right++;
+        }
+
+        if (startIndex == -1) {
+            return "-1"; // No such window found
+        }
+
+        return S.substr(startIndex, minLen);
+    }
+};
+
+int main() {
+    Solution solution;
+
+    string S, P;
+    cout << "Enter string S: ";
+    cin >> S;
+    cout << "Enter string P: ";
+    cin >> P;
+
+    string result = solution.smallestWindow(S, P);
+
+    if (result == "-1") {
+        cout << "No valid window found." << endl;
+    } else {
+        cout << "Smallest window: " << result << endl;
+    }
+
+    return 0;
+}
