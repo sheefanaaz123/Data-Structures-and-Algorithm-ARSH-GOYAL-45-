@@ -5,7 +5,7 @@
 3. https://docs.google.com/spreadsheets/d/1r35qSXY6rSAonFbPEKB_KXUvpCIBbVGMp5001MaNb3c/edit#gid=0
 4. https://docs.google.com/spreadsheets/d/1hXserPuxVoWMG9Hs7y8wVdRCJTcj3xMBAEYUOXQ5Xag/edit#gid=0
 
-Welcome to the repository containing comprehensive solutions to the **DSA Sheet by Arsh Goyal**. This repository is dedicated to providing you with a variety of approaches, all implemented in C++, for solving the problems outlined in the 45 Days Plan.
+Welcome to the repository containing comprehensive solutions to the **DSA Sheet by Arsh Goyal** and other frequently asked questions in C++. This repository is dedicated to providing you with a variety of approaches, all implemented in C++, for solving the problems outlined in the 45 Days Plan.
 
 ## Table of Contents
 
