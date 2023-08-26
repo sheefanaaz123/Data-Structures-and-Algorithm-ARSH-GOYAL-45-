@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    string convertToTitle(int columnNumber) {
+        string ans;
+
+        while (columnNumber) {
+            columnNumber--;
+            int remainder = columnNumber % 26;
+            char ch = remainder + 'A';
+            ans.push_back(ch);
+            columnNumber /= 26;
+        }
+        reverse(begin(ans), end(ans));
+        return ans;
+    }
+};
+
+int main() {
+    int columnNumber;
+    cout << "Enter a column number: ";
+    cin >> columnNumber;
+
+    Solution solution;
+    string title = solution.convertToTitle(columnNumber);
+
+    cout << "Column number " << columnNumber << " corresponds to title: " << title << endl;
+
+    return 0;
+}
