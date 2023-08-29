@@ -1,0 +1,39 @@
+#include <iostream>
+using namespace std;
+
+class Solution {
+private:
+    int nextNumber(int n){
+        int newNumber = 0;
+        while(n!=0){
+            int num = n%10;
+            newNumber += num*num;
+            n = n/10;
+        }
+        return newNumber;
+    }
+public:
+    bool isHappy(int n) {
+        int slowPointer = n;
+        int fastPointer = nextNumber(n);
+        while(fastPointer != 1 && fastPointer != slowPointer){
+            slowPointer = nextNumber(slowPointer);
+            fastPointer = nextNumber(nextNumber(fastPointer));
+        }
+        return fastPointer==1;
+    }
+};
+
+int main() {
+    Solution sol;
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    bool result = sol.isHappy(n);
+    if (result) {
+        cout << n << " is a happy number." << endl;
+    } else {
+        cout << n << " is not a happy number." << endl;
+    }
+    return 0;
+}
