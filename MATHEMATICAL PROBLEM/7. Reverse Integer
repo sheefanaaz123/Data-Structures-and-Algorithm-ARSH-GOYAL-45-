@@ -1,0 +1,37 @@
+#include <iostream>
+
+using namespace std;
+
+int reverse(int x) {
+
+  long int ans = 0;
+
+  while(x!=0){
+
+    if((ans>INT_MAX/10)||(ans<INT_MIN/10)){
+      return 0;
+    }
+    int digit = x % 10;
+    ans = (ans*10) + digit;
+    x = x/10;
+  }
+  return ans;
+}
+
+int main() {
+
+  int x;
+
+  cout << "Enter a number: ";
+  cin >> x;
+
+  int result = reverse(x);
+
+  if (result == 0) {
+    cout << "The number is not within the range of INT_MIN and INT_MAX" << endl;
+  } else {
+    cout << "The reversed number is: " << result << endl;
+  }
+
+  return 0;
+}
