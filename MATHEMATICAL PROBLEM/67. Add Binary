@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        string result;
+        int i = a.length() - 1, j = b.length() - 1;
+        int carry = 0;
+        while (i >= 0 || j >= 0) {
+            int sum = carry;
+            if (i >= 0) {
+                sum += a[i--] - '0';
+            }
+            if (j >= 0) {
+                sum += b[j--] - '0';
+            }
+            carry = sum > 1 ? 1 : 0;
+            result = to_string(sum % 2) + result;
+        }
+        if (carry) {
+            result = to_string(carry) + result;
+        }
+
+        return result;
+    }
+};
+
+int main() {
+    Solution solution;
+
+    string a, b;
+    cout << "Enter the first binary string: ";
+    cin >> a;
+    cout << "Enter the second binary string: ";
+    cin >> b;
+
+    string result = solution.addBinary(a, b);
+    cout << "Sum of binary strings: " << result << endl;
+
+    return 0;
+}
