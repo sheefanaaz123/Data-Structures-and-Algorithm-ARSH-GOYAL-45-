@@ -1,0 +1,39 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0) {
+            return false; // Negative numbers can't be palindromes
+        }
+        if (x == 0) {
+            return true; // Negative numbers can't be palindromes
+        }
+        
+        int org = x;
+        string result = "";
+        while (x > 0) {
+            int rem = x % 10;
+            result += to_string(rem); // Convert remainder to string before appending
+            x /= 10;
+        }
+
+        return (to_string(org) == result);
+    }
+};
+
+int main() {
+    Solution sol;
+    int x;
+    cout << "Enter a number: ";
+    cin >> x;
+    bool result = sol.isPalindrome(x);
+    if (result) {
+        cout << x << " is a palindrome." << endl;
+    } else {
+        cout << x << " is not a palindrome." << endl;
+    }
+    return 0;
+}
