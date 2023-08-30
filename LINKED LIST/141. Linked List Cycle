@@ -1,0 +1,66 @@
+#include <iostream>
+
+class ListNode {
+public:
+    int val;
+    ListNode* next;
+    ListNode(int val) : val(val), next(NULL) {}
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (head == NULL)
+            return false;
+
+        ListNode* fast = head;
+        ListNode* slow = head;
+
+        while (fast != NULL && fast->next != NULL) {
+            fast = fast->next->next;
+            slow = slow->next;
+
+            if (fast == slow)
+                return true;
+        }
+
+        return false;
+    }
+};
+
+// Function to create a linked list from an array of values
+ListNode* createLinkedList(int arr[], int n) {
+    if (n == 0) {
+        return NULL;
+    }
+
+    ListNode* head = new ListNode(arr[0]);
+    ListNode* current = head;
+
+    for (int i = 1; i < n; ++i) {
+        current->next = new ListNode(arr[i]);
+        current = current->next;
+    }
+
+    return head;
+}
+
+int main() {
+    int values[] = {3,2,0,-4};
+    int n = sizeof(values) / sizeof(values[0]);
+
+    // Creating a linked list with a cycle
+    ListNode* head = createLinkedList(values, n);
+    ListNode* tail = head;
+    while (tail->next != NULL) {
+        tail = tail->next;
+    }
+    tail->next = head; // Creating a cycle
+
+    Solution solution;
+    bool hasCycle = solution.hasCycle(head);
+
+    std::cout << "Linked List has cycle? " << (hasCycle ? "Yes" : "No") << std::endl;
+
+    return 0;
+}
