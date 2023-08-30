@@ -1,0 +1,52 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    int getDecimalValue(ListNode* head) {
+        int ans = 0;
+        ListNode *temp = head;
+        
+        while(temp != nullptr) {
+            ans *= 2;
+            ans += temp->val;
+            temp = temp->next;
+        }
+        
+        return ans;
+    }
+};
+
+int main() {
+    Solution solution;
+
+    // Create the linked list (1 -> 0 -> 1 -> 1)
+    ListNode *head = new ListNode(1);
+    head->next = new ListNode(0);
+    head->next->next = new ListNode(1);
+    head->next->next->next = new ListNode(1);
+
+    // Calculate the decimal value
+    int decimalValue = solution.getDecimalValue(head);
+
+    // Display the result
+    std::cout << "Decimal Value: " << decimalValue << std::endl;
+
+    // Clean up memory (delete linked list nodes)
+    ListNode *current = head;
+    while (current != nullptr) {
+        ListNode *temp = current;
+        current = current->next;
+        delete temp;
+    }
+
+    return 0;
+}
