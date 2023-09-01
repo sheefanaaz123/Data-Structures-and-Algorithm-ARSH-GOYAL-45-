@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int> ans(n + 1, 0);
+
+        for (int i = 1; i <= n; i++) {
+            ans[i] = ans[i >> 1] + (i & 1);
+        }
+
+        return ans;
+    }
+};
+
+int main() {
+    int n;
+    cout << "Enter a number (n): ";
+    cin >> n;
+
+    Solution solution;
+    vector<int> result = solution.countBits(n);
+
+    cout << "Count of 1's in binary representation for numbers from 0 to " << n << ":" << endl;
+    for (int i = 0; i <= n; i++) {
+        cout << "Number " << i << ": " << result[i] << endl;
+    }
+
+    return 0;
+}
