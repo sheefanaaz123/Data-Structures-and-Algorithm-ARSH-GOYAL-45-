@@ -1,0 +1,80 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+
+        while (curr != nullptr) {
+            if (curr->val == val) {
+                if (prev == nullptr) {
+                    head = curr->next;
+                    delete curr; // Free memory of the node
+                    curr = head; // Move curr to the new head
+                } else {
+                    prev->next = curr->next;
+                    delete curr; // Free memory of the node
+                    curr = prev->next; // Move curr to the next node
+                }
+            } else {
+                prev = curr;
+                curr = curr->next;
+            }
+        }
+
+        return head;
+    }
+};
+
+// Function to create a linked list from an array
+ListNode* createLinkedList(int arr[], int n) {
+    if (n == 0) {
+        return nullptr;
+    }
+
+    ListNode* head = new ListNode(arr[0]);
+    ListNode* curr = head;
+
+    for (int i = 1; i < n; ++i) {
+        curr->next = new ListNode(arr[i]);
+        curr = curr->next;
+    }
+
+    return head;
+}
+
+// Function to print a linked list
+void printLinkedList(ListNode* head) {
+    ListNode* curr = head;
+    while (curr != nullptr) {
+        std::cout << curr->val << " ";
+        curr = curr->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    int arr[] = {1, 2, 6, 3, 4, 5, 6};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int val = 6;
+
+    ListNode* head = createLinkedList(arr, n);
+    std::cout << "Original Linked List: ";
+    printLinkedList(head);
+
+    Solution solution;
+    head = solution.removeElements(head, val);
+
+    std::cout << "Modified Linked List: ";
+    printLinkedList(head);
+
+    return 0;
+}
