@@ -1,0 +1,73 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode* cur = head;
+        while (cur) {
+            while (cur->next && cur->val == cur->next->val) {
+                ListNode* next_next = cur->next->next;
+                ListNode* nodeToDelete = cur->next;
+                delete (nodeToDelete);
+                cur->next = next_next;
+            }
+            cur = cur->next;
+        }
+        return head;
+    }
+};
+
+// Function to create a linked list from user input
+ListNode* createLinkedList() {
+    int n;
+    std::cout << "Enter the number of elements: ";
+    std::cin >> n;
+
+    ListNode* head = nullptr;
+    ListNode* tail = nullptr;
+
+    std::cout << "Enter the elements: ";
+    for (int i = 0; i < n; ++i) {
+        int val;
+        std::cin >> val;
+        ListNode* newNode = new ListNode(val);
+        if (!head) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    return head;
+}
+
+// Function to display the linked list
+void displayLinkedList(ListNode* head) {
+    ListNode* cur = head;
+    while (cur) {
+        std::cout << cur->val << " ";
+        cur = cur->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    ListNode* head = createLinkedList();
+
+    Solution solution;
+    ListNode* result = solution.deleteDuplicates(head);
+
+    std::cout << "Linked List after removing duplicates: ";
+    displayLinkedList(result);
+
+    return 0;
+}
