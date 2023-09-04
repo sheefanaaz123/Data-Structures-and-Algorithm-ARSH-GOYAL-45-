@@ -1,0 +1,28 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Solution {
+public:
+    bool canBeEqual(string s1, string s2) {
+        bool evenCheck = (s1[0] == s2[0] && s1[2] == s2[2]) || (s1[0] == s2[2] && s1[2] == s2[0]);
+        bool oddCheck = (s1[1] == s2[1] && s1[3] == s2[3]) || (s1[1] == s2[3] && s1[3] == s2[1]);
+        
+        return evenCheck && oddCheck;
+    }
+};
+
+int main() {
+    Solution solution;
+    
+    // Example 1
+    string input1 = "abcd";
+    string input2 = "cdab";
+    bool result1 = solution.canBeEqual(input1, input2);
+    cout << "Input 1: " << input1 << ", Input 2: " << input2 << " => Output: " << (result1 ? "true" : "false") << endl;
+
+
+
+    return 0;
+}
