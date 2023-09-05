@@ -130,4 +130,139 @@ int main()
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+#include <iostream>
+
+class Node
+{
+public:
+    int data;
+    Node *next;
+    Node()
+    {
+        this->data = 0;
+        next = NULL;
+    }
+    Node(int data)
+    {
+        this->data = data;
+        this->next = NULL;
+    }
+    Node(int data, Node *next)
+    {
+        this->data = data;
+        this->next = next;
+    }
+};
+
+void insertAtTail(Node* &tail, Node* curr ) {
+    tail -> next = curr;
+    tail = curr;
+}
+
+Node* sortList(Node *head)
+{
+    Node* zeroHead = new Node(-1);
+    Node* zeroTail = zeroHead;
+    Node* oneHead = new Node(-1);
+    Node* oneTail = oneHead;
+    Node* twoHead = new Node(-1);
+    Node* twoTail = twoHead;
+    
+    Node* curr = head;
+    
+    // create separate lists for 0s, 1s, and 2s
+    while(curr != NULL) {
+        int value = curr -> data;
+        
+        if(value == 0) {
+            insertAtTail(zeroTail, curr);
+        }
+        else if(value == 1) {
+            insertAtTail(oneTail, curr);
+        }
+        else if(value == 2) {
+            insertAtTail(twoTail, curr);
+        }       
+        curr = curr -> next;
+    }
+    
+    // merge 3 sublists
+    
+    // 1s list not empty
+    if(oneHead -> next != NULL) {
+        zeroTail -> next = oneHead -> next;
+    }
+    else {
+        // 1s list is empty
+        zeroTail -> next = twoHead -> next;
+    }
+    
+    oneTail -> next = twoHead -> next;
+    twoTail -> next = NULL;
+    
+    // set up the head
+    head = zeroHead -> next;
+    
+    // delete dummy nodes
+    delete zeroHead;
+    delete oneHead;
+    delete twoHead;
+    
+    return head;
+}
+
+// Function to insert a node at the tail of the linked list
+void insertAtTail(Node* &tail, int data) {
+    Node* newNode = new Node(data);
+    tail -> next = newNode;
+    tail = newNode;
+}
+
+// Function to display the linked list
+void display(Node *head)
+{
+    Node *temp = head;
+    while (temp != NULL)
+    {
+        std::cout << temp->data << " ";
+        temp = temp->next;
+    }
+    std::cout << std::endl;
+}
+
+int main()
+{
+    Node *head = NULL;
+    Node *tail = NULL;
+    int n, data;
+
+    std::cout << "Enter the number of elements: ";
+    std::cin >> n;
+
+    std::cout << "Enter the elements (0, 1, or 2): ";
+    for (int i = 0; i < n; i++)
+    {
+        std::cin >> data;
+        if (head == NULL)
+        {
+            head = new Node(data);
+            tail = head;
+        }
+        else
+        {
+            insertAtTail(tail, data);
+        }
+    }
+
+    std::cout << "Original Linked List: ";
+    display(head);
+
+    head = sortList(head);
+
+    std::cout << "Sorted Linked List: ";
+    display(head);
+
+    return 0;
+}
+
 
