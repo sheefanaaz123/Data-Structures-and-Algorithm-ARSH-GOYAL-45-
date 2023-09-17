@@ -1,0 +1,100 @@
+#include <iostream>
+#include <stack>
+
+class MyQueue {
+private:
+    std::stack<int> inStack;   // Stack for enqueue operations
+    std::stack<int> outStack;  // Stack for dequeue operations
+
+    // Move elements from inStack to outStack when needed
+    void moveElements() {
+        if (outStack.empty()) {
+            while (!inStack.empty()) {
+                outStack.push(inStack.top());
+                inStack.pop();
+            }
+        }
+    }
+
+public:
+    MyQueue() {
+    }
+
+    void push(int x) {
+        inStack.push(x);
+    }
+
+    int pop() {
+        moveElements();
+        if (!outStack.empty()) {
+            int frontElement = outStack.top();
+            outStack.pop();
+            return frontElement;
+        }
+        return -1; // Queue is empty
+    }
+
+    int peek() {
+        moveElements();
+        if (!outStack.empty()) {
+            return outStack.top();
+        }
+        return -1; // Queue is empty
+    }
+
+    bool empty() {
+        return inStack.empty() && outStack.empty();
+    }
+};
+
+int main() {
+    MyQueue q; // Create a MyQueue object
+
+    int choice, x;
+
+    do {
+        std::cout << "1. Push an element" << std::endl;
+        std::cout << "2. Pop an element" << std::endl;
+        std::cout << "3. Peek front element" << std::endl;
+        std::cout << "4. Check if the queue is empty" << std::endl;
+        std::cout << "5. Quit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                std::cout << "Enter an element to push: ";
+                std::cin >> x;
+                q.push(x);
+                break;
+            case 2:
+                if (!q.empty()) {
+                    std::cout << "Popped element: " << q.pop() << std::endl;
+                } else {
+                    std::cout << "Queue is empty." << std::endl;
+                }
+                break;
+            case 3:
+                if (!q.empty()) {
+                    std::cout << "Front element: " << q.peek() << std::endl;
+                } else {
+                    std::cout << "Queue is empty." << std::endl;
+                }
+                break;
+            case 4:
+                if (q.empty()) {
+                    std::cout << "Queue is empty." << std::endl;
+                } else {
+                    std::cout << "Queue is not empty." << std::endl;
+                }
+                break;
+            case 5:
+                std::cout << "Exiting program." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
