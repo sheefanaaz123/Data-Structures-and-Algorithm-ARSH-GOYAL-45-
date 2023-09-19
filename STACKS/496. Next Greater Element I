@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <stack>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> umap;
+        stack<int> st;
+        int n = nums2.size();
+
+        for (int i = n - 1; i >= 0; i--) {
+            int ele = nums2[i];
+            while (!st.empty() && st.top() <= ele) {
+                st.pop();
+            }
+            int res = (st.empty()) ? -1 : st.top();
+            umap.insert({ele, res});
+            st.push(ele);
+        }
+
+        vector<int> ans;
+        for (auto x : nums1) {
+            ans.push_back(umap[x]);
+        }
+
+        return ans;
+    }
+};
+
+int main() {
+    Solution solution;
+    vector<int> nums1, nums2;
+    
+    // Input for nums1 and nums2
+    int n1, n2;
+    cout << "Enter the size of nums1: ";
+    cin >> n1;
+    cout << "Enter elements of nums1: ";
+    for (int i = 0; i < n1; i++) {
+        int num;
+        cin >> num;
+        nums1.push_back(num);
+    }
+
+    cout << "Enter the size of nums2: ";
+    cin >> n2;
+    cout << "Enter elements of nums2: ";
+    for (int i = 0; i < n2; i++) {
+        int num;
+        cin >> num;
+        nums2.push_back(num);
+    }
+
+    // Calculate the next greater elements
+    vector<int> result = solution.nextGreaterElement(nums1, nums2);
+
+    // Display the result
+    cout << "Next greater elements for nums1: ";
+    for (int i = 0; i < result.size(); i++) {
+        cout << result[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
