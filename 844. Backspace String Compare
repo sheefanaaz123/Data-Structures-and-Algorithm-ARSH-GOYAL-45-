@@ -1,0 +1,57 @@
+#include <iostream>
+#include <stack>
+#include <string>
+#include<algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    bool backspaceCompare(string s, string t) {
+        return processString(s) == processString(t);
+    }
+
+private:
+    string processString(string str) {
+        stack<char> stack;
+        for (char c : str) {
+            if (c == '#') {
+                if (!stack.empty()) {
+                    stack.pop();
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+
+        string result;
+        while (!stack.empty()) {
+            result += stack.top();
+            stack.pop();
+        }
+        reverse(result.begin(), result.end());
+
+        return result;
+    }
+};
+
+int main() {
+    string s, t;
+    
+    // Input
+    cout << "Enter string s: ";
+    cin >> s;
+    cout << "Enter string t: ";
+    cin >> t;
+
+    Solution solution;
+
+    // Check if strings match after backspace processing
+    if (solution.backspaceCompare(s, t)) {
+        cout << "The strings match after backspace processing." << endl;
+    } else {
+        cout << "The strings do not match after backspace processing." << endl;
+    }
+
+    return 0;
+}
