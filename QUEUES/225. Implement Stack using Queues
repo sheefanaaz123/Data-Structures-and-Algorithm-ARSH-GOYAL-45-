@@ -1,0 +1,64 @@
+#include <iostream>
+#include <queue>
+
+class MyStack {
+public:
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        q1.push(x);
+
+        while (!q2.empty()) {
+            q1.push(q2.front());
+            q2.pop();
+        }
+        
+        swap(q1, q2);
+    }
+    
+    int pop() {
+        if (q2.empty()) {
+            return -1;
+        } else {
+            int ans = q2.front();
+            q2.pop();
+            return ans;
+        }
+    }
+    
+    int top() {
+        if (!q2.empty()) {
+            return q2.front();
+        }
+        return -1; 
+    }
+    
+    bool empty() {
+        return q2.empty();
+    }
+    
+private:
+    std::queue<int> q1;
+    std::queue<int> q2;
+};
+
+int main() {
+    MyStack stack;
+    
+    // Push elements into the stack
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    
+    // Display the top element
+    std::cout << "Top element: " << stack.top() << std::endl;
+    
+    // Pop elements from the stack and display them
+    while (!stack.empty()) {
+        std::cout << "Popped: " << stack.pop() << std::endl;
+    }
+    
+    return 0;
+}
