@@ -1,0 +1,71 @@
+#include <iostream>
+
+using namespace std;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode *fast = head;
+        ListNode *slow = head;
+
+        while(fast!=NULL && fast->next!=NULL){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+
+        ListNode *prev = NULL;
+        ListNode *curr = slow;
+        ListNode *next;
+
+        while(curr!=NULL){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+
+        fast = head;
+
+        while(prev!=NULL){
+            if(prev->val != fast->val){
+                return false;
+            }
+            prev=prev->next;
+            fast = fast->next;
+        }
+        return true;
+    }
+};
+
+int main() {
+    // Create a linked list
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(2);
+    head->next->next->next = new ListNode(1);
+
+    // Create a Solution object
+    Solution s;
+    
+    // Check if the linked list is a palindrome
+    bool isPalin = s.isPalindrome(head);
+
+    // Print the result
+    if (isPalin) {
+        cout << "The linked list is a palindrome." << endl;
+    } else {
+        cout << "The linked list is not a palindrome." << endl;
+    }
+
+    return 0;
+}
