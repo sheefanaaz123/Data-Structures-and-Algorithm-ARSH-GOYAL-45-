@@ -1,0 +1,91 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *ptr1 = headA;
+        ListNode *ptr2 = headB;
+
+        int l1=0, l2=0;
+        while(ptr1){
+            l1++;
+            ptr1=ptr1->next;
+        }
+        while(ptr2){
+            l2++;
+            ptr2=ptr2->next;
+        }
+
+        ptr1=headA;
+        ptr2=headB;
+        int diff = abs(l1-l2);
+
+        if(l1>l2){
+            for(int i=0; i<diff; i++){
+                ptr1=ptr1->next;
+            }
+        }else if(l2>l1){
+            for(int i=0; i<diff; i++){
+                ptr2=ptr2->next;
+            } 
+        }
+
+        while(ptr1!=ptr2){
+            ptr1=ptr1->next;
+            ptr2=ptr2->next;
+        }
+
+        if(ptr1){
+            return ptr1;
+        }
+
+        return NULL;
+    }
+};
+int main() {
+    // Create two linked lists
+    ListNode* intersect = new ListNode(8);
+    intersect->next = new ListNode(10);
+    intersect->next->next = new ListNode(12);
+
+    ListNode* headA = new ListNode(3);
+    headA->next = new ListNode(7);
+    headA->next->next = intersect;
+
+    ListNode* headB = new ListNode(1);
+    headB->next = new ListNode(2);
+    headB->next->next = intersect;
+
+    // Create a Solution object
+    Solution s;
+    
+    // Get the intersection node
+    ListNode* intersectionNode = s.getIntersectionNode(headA, headB);
+
+    // Print the intersection node
+    if (intersectionNode) {
+        cout << "The intersection node is " << intersectionNode->val << endl;
+    } else {
+        cout << "There is no intersection node." << endl;
+    }
+
+    return 0;
+}
