@@ -1,0 +1,60 @@
+#include <iostream>
+
+// Definition for singly-linked list
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+// Your Solution class with the reverseList function
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode *prev = NULL;
+        ListNode *curr = head;
+        ListNode *next;
+
+        while(curr != NULL){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        return prev;
+    }
+};
+
+// Helper function to print a linked list
+void printList(ListNode* head) {
+    ListNode* current = head;
+    while (current != nullptr) {
+        std::cout << current->val << " -> ";
+        current = current->next;
+    }
+    std::cout << "nullptr" << std::endl;
+}
+
+int main() {
+    // Create a sample linked list
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(4);
+    head->next->next->next->next = new ListNode(5);
+
+    // Create a Solution object
+    Solution solution;
+
+    // Reverse the linked list
+    ListNode* reversedHead = solution.reverseList(head);
+
+    // Print the reversed linked list
+    std::cout << "Reversed Linked List: ";
+    printList(reversedHead);
+
+    return 0;
+}
