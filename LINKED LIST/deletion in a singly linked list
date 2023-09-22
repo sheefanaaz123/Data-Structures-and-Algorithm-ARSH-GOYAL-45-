@@ -60,4 +60,87 @@ int main()
 	printList(head);
 	return 0;
 }
+-----------------------------------------------------------------------
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Node {
+public:
+	int data;
+	Node* next;
+};
+
+
+void push(Node** head_ref, int new_data)
+{
+	Node* new_node = new Node();
+	new_node->data = new_data;
+	new_node->next = (*head_ref);
+	(*head_ref) = new_node;
+}
+
+void printList(Node* head)
+{
+	Node* temp = head;
+	while (temp != NULL) {
+		cout << temp->data << " ";
+		temp = temp->next;
+	}
+}
+
+void deleteNode(Node* node, Node* head) {
+    if (node == NULL || head == NULL) {
+        // Handle invalid input
+        return;
+    }
+
+    // If the node to be deleted is the head node
+    if (head == node) {
+        head = head->next;
+        free(node);
+        return;
+    }
+
+    // Find the previous node of the node to be deleted
+    Node* prev = head;
+    while (prev->next != NULL && prev->next != node) {
+        prev = prev->next;
+    }
+
+    // If the node to be deleted is not found
+    if (prev->next == NULL) {
+        // Node not found in the list
+        return;
+    }
+
+    // Unlink the node from the list and free it
+    prev->next = node->next;
+    free(node);
+}
+
+
+int main()
+{
+
+	Node* head = NULL;
+
+	push(&head, 1);
+	push(&head, 2);
+	push(&head, 3);
+	push(&head, 4);
+	push(&head, 5);
+
+	cout << "Before deleting \n";
+	printList(head);
+
+	deleteNode(head->next->next,head);
+
+	cout << "\nAfter deleting \n";
+	printList(head);
+	return 0;
+}
+
 
