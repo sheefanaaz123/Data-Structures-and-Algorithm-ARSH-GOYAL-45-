@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct TreeNode {
+  int val;
+  TreeNode *left;
+  TreeNode *right;
+  TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Solution {
+public:
+  int diameterOfBinaryTree(TreeNode* root) {
+    int diameter = 0;
+    height(root, diameter);
+    return diameter;
+  }
+
+private:
+  int height(TreeNode* root, int& diameter) {
+    if (root == nullptr) {
+      return 0;
+    }
+
+    int lh = height(root->left, diameter);
+    int rh = height(root->right, diameter);
+
+    diameter = max(diameter, lh + rh);
+
+    return max(lh, rh) + 1;
+  }
+};
+
+int main() {
+  // Create a binary tree.
+  TreeNode* root = new TreeNode(1);
+  root->left = new TreeNode(2);
+  root->right = new TreeNode(3);
+  root->left->left = new TreeNode(4);
+  root->left->right = new TreeNode(5);
+
+  // Calculate the diameter of the binary tree.
+  Solution solution;
+  int diameter = solution.diameterOfBinaryTree(root);
+
+  // Print the diameter of the binary tree.
+  cout << "The diameter of the binary tree is: " << diameter << endl;
+
+  return 0;
+}
