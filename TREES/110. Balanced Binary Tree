@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct TreeNode {
+  int val;
+  TreeNode *left;
+  TreeNode *right;
+  TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+class Solution {
+public:
+  bool isBalanced(TreeNode* root) {
+    return height(root)!=-1;
+  }
+private:
+  int height(TreeNode* root){
+    if(root==nullptr){
+      return 0;
+    }
+
+    int lh = height(root->left);
+    if(lh==-1){
+      return -1;
+    }
+    int rh = height(root->right);
+    if(rh==-1){
+      return -1;
+    }
+
+    if(abs(lh-rh)>1){
+      return -1;
+    }
+
+    return max(lh,rh)+1;
+  }
+};
+
+int main() {
+  // Create a binary tree.
+  TreeNode* root = new TreeNode(1);
+  root->left = new TreeNode(2);
+  root->right = new TreeNode(3);
+  root->left->left = new TreeNode(4);
+  root->left->right = new TreeNode(5);
+
+  // Check if the binary tree is balanced.
+  Solution solution;
+  bool isBalanced = solution.isBalanced(root);
+
+  // Print if the binary tree is balanced.
+  if (isBalanced) {
+    cout << "The binary tree is balanced." << endl;
+  } else {
+    cout << "The binary tree is not balanced." << endl;
+  }
+
+  return 0;
+}
