@@ -144,8 +144,8 @@ int main()
 {
 	Stack stk;
 
-	stk.push(7);
-	stk.push(8);
+	stk.push(1);
+	stk.push(2);
 	cout << "Stack: ";
 	stk.display();
 
@@ -155,8 +155,8 @@ int main()
 
 	Queue que;
 
-	que.enqueue(12);
-	que.enqueue(13);
+	que.enqueue(3);
+	que.enqueue(4);
 	cout << "Queue: ";
 	que.display();
 
