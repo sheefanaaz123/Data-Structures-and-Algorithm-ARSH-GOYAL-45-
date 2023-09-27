@@ -1,0 +1,94 @@
+// This program inverts a binary tree.
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TreeNode {
+  // The value of the node.
+  int val;
+
+  // The left child of the node.
+  TreeNode *left;
+
+  // The right child of the node.
+  TreeNode *right;
+
+  // Constructs a new TreeNode object with the given value.
+  TreeNode() : val(0), left(nullptr), right(nullptr) {}
+
+  // Constructs a new TreeNode object with the given value and children.
+  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+
+  // Constructs a new TreeNode object with the given value, left child, and right child.
+  TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+/**
+ * Inverts a binary tree.
+ *
+ * @param root The root node of the tree to be inverted.
+ * @return The root node of the inverted tree.
+ */
+TreeNode* invertTree(TreeNode* root) {
+  // If the root node is null, then there is nothing to invert.
+  if (root == nullptr) {
+    return nullptr;
+  }
+
+  // Invert the left and right subtrees.
+  invertTree(root->left);
+  invertTree(root->right);
+
+  // Swap the left and right pointers of the root node.
+  auto temp = root->left;
+  root->left = root->right;
+  root->right = temp;
+
+  // Return the root node of the inverted tree.
+  return root;
+}
+
+/**
+ * Prints the inorder traversal of a binary tree.
+ *
+ * @param root The root node of the tree to be printed.
+ */
+void printInorder(TreeNode* root) {
+  // If the root node is null, then there is nothing to print.
+  if (root == nullptr) {
+    return;
+  }
+
+  // Print the inorder traversal of the left subtree.
+  printInorder(root->left);
+
+  // Print the value of the root node.
+  cout << root->val << " ";
+
+  // Print the inorder traversal of the right subtree.
+  printInorder(root->right);
+}
+
+// Driver code
+int main() {
+  // Create a binary tree.
+  TreeNode* root = new TreeNode(1);
+  root->left = new TreeNode(2);
+  root->right = new TreeNode(3);
+  root->left->left = new TreeNode(4);
+  root->left->right = new TreeNode(5);
+
+  // Print the inorder traversal of the original tree.
+  cout << "Inorder traversal of the original tree: ";
+  printInorder(root);
+  cout << endl;
+
+  // Invert the tree.
+  invertTree(root);
+
+  // Print the inorder traversal of the inverted tree.
+  cout << "Inorder traversal of the inverted tree: ";
+  printInorder(root);
+  cout << endl;
+
+  return 0;
+}
