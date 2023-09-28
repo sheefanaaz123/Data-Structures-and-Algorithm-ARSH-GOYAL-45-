@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    void helper(TreeNode *root, vector<string>& ans, string curr){
+        if(root == nullptr){
+            return;
+        }
+        curr += to_string(root->val);
+
+        if(root->left == nullptr && root->right == nullptr){
+            ans.push_back(curr); // Add the current path to the result when reaching a leaf node.
+        }
+        else {
+            curr += "->";
+            helper(root->left, ans, curr);  // Recursively call for left subtree
+            helper(root->right, ans, curr); // Recursively call for right subtree
+        }
+    }
+
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> result;
+        if(root == nullptr) {
+            return result;
+        }
+        string curr = "";
+        helper(root, result, curr);
+        return result;
+    }
+};
+
+int main() {
+    // Create a sample binary tree
+    TreeNode *root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->right = new TreeNode(5);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Call the binaryTreePaths function
+    vector<string> paths = solution.binaryTreePaths(root);
+
+    // Display the result
+    cout << "Binary Tree Paths:" << endl;
+    for (const string &path : paths) {
+        cout << path << endl;
+    }
+
+ return 0;
+}
+   
