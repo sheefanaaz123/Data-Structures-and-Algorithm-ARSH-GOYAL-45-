@@ -1,0 +1,85 @@
+#include <iostream>
+
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    bool ans = false;
+
+    bool match(TreeNode *root, TreeNode *subRoot){
+        if(root!=NULL && subRoot!=NULL){
+            bool a = match(root->left, subRoot->left);
+            bool b = match(root->right, subRoot->right);
+            
+            if((root->val == subRoot->val) && a && b){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        else if(root==NULL && subRoot==NULL){
+                return true;
+        }else{
+                return false;
+        }
+    }
+
+    void inorder(TreeNode *root, TreeNode *subRoot){
+        if(root!=NULL){
+            inorder(root->left, subRoot);
+            
+            bool x = match(root,subRoot);
+             
+            if(x){
+                ans = true;
+            }
+
+            inorder(root->right, subRoot);
+        }
+    }
+
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        inorder(root,subRoot);
+        return ans;
+    }
+};
+
+int main() {
+    // Create a main tree
+    TreeNode* mainRoot = new TreeNode(3);
+    mainRoot->left = new TreeNode(4);
+    mainRoot->right = new TreeNode(5);
+    mainRoot->left->left = new TreeNode(1);
+    mainRoot->left->right = new TreeNode(2);
+
+    // Create a subtree
+    TreeNode* subRoot = new TreeNode(4);
+    subRoot->left = new TreeNode(1);
+    subRoot->right = new TreeNode(2);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Check if subRoot is a subtree of mainRoot
+    bool isSubtree = solution.isSubtree(mainRoot, subRoot);
+
+    // Output the result
+    if (isSubtree) {
+        std::cout << "subRoot is a subtree of mainRoot." << std::endl;
+    } else {
+        std::cout << "subRoot is not a subtree of mainRoot." << std::endl;
+    }
+
+    // Clean up the memory (you should release allocated memory in a real program)
+    delete mainRoot;
+    delete subRoot;
+
+    return 0;
+}
