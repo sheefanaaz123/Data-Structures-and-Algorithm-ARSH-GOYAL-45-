@@ -1,0 +1,57 @@
+#include <iostream>
+#include <climits>
+
+/**
+ * Definition for a binary tree node.
+ */
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+public:
+    int min_diff = INT_MAX;
+    int prev = -1;
+
+    int getMinimumDifference(TreeNode* root) {
+        if (root == nullptr) {
+            return min_diff;
+        }
+
+        getMinimumDifference(root->left);
+
+        if (prev != -1) {
+            min_diff = std::min(min_diff, std::abs(root->val - prev));
+        }
+
+        prev = root->val;
+
+        getMinimumDifference(root->right);
+
+        return min_diff;
+    }
+};
+
+int main() {
+    // Test your Solution class here
+    Solution solution;
+
+    // Create a sample binary search tree
+    TreeNode* root = new TreeNode(4);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(6);
+    root->left->left = new TreeNode(1);
+    root->left->right = new TreeNode(3);
+
+    // Call the function and output the result
+    int result = solution.getMinimumDifference(root);
+    std::cout << "Minimum Absolute Difference: " << result << std::endl;
+
+
+    return 0;
+}
