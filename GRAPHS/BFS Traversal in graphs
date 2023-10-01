@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+class Solution {
+public:
+  vector<int> bfsOfGraph(int V, vector<int> adj[]) {
+    int visited_array[V] = {0};
+    visited_array[0] = 1;
+    queue<int> q;
+    q.push(0);
+    vector<int> bfs;
+    while (!q.empty()) {
+      int node = q.front();
+      q.pop();
+      bfs.push_back(node);
+      for (auto it : adj[node]) {
+        if (!visited_array[it]) {
+          visited_array[it] = 1;
+          q.push(it);
+        }
+      }
+    }
+    return bfs;
+  }
+};
+
+int main() {
+  // Create a graph
+  int V = 4;
+  vector<int> adj[] = {{1, 2}, {0, 3}, {0, 2}, {1, 3}};
+
+  // Perform BFS traversal
+  Solution solution;
+  vector<int> bfs = solution.bfsOfGraph(V, adj);
+
+  // Print the BFS traversal
+  for (int i = 0; i < bfs.size(); i++) {
+    cout << bfs[i] << " ";
+  }
+  cout << endl;
+
+  return 0;
+}
