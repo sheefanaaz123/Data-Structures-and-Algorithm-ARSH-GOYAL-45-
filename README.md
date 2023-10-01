@@ -1,5 +1,7 @@
 # DSA Sheet Solutions - C++ Approaches
 
+https://docs.google.com/spreadsheets/d/19U4BGMCVA4tkjsGlLeOpQTHXsrUS7TacV5mro261Q_4/edit#gid=0
+
 1. https://docs.google.com/spreadsheets/d/1MGVBJ8HkRbCnU6EQASjJKCqQE8BWng4qgL0n3vCVOxE/edit?usp=sharing
 2. https://youtu.be/0nc8gzpkkSY
 3. https://docs.google.com/spreadsheets/d/1r35qSXY6rSAonFbPEKB_KXUvpCIBbVGMp5001MaNb3c/edit#gid=0
