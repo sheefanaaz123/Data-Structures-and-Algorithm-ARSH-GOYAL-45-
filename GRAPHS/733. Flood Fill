@@ -1,0 +1,60 @@
+#include <iostream>
+#include <vector>
+
+class Solution {
+public:
+
+    void dfs(int row, int col ,std::vector<std::vector<int>>& ans, const std::vector<std::vector<int>>& image, int color, int delRow[], int delCol[], int initial_color) {
+        ans[row][col] = color;
+        int n = image.size();
+        int m = image[0].size();
+        for(int i = 0; i < 4; i++) {
+            int nrow = row + delRow[i];
+            int ncol = col + delCol[i];
+            if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && image[nrow][ncol] == initial_color && ans[nrow][ncol] != color) {
+                dfs(nrow, ncol, ans, image, color, delRow, delCol, initial_color);
+            }
+        }
+    }
+
+    std::vector<std::vector<int>> floodFill(const std::vector<std::vector<int>>& image, int sr, int sc, int color) {
+        int initial_color = image[sr][sc];
+        std::vector<std::vector<int>> ans = image;
+        int delRow[] = {-1, 0, 1, 0};
+        int delCol[] = {0, 1, 0, -1};
+
+        dfs(sr, sc, ans, image, color, delRow, delCol, initial_color);
+        return ans;
+    }
+};
+
+void printMatrix(const std::vector<std::vector<int>>& matrix) {
+    for (const auto& row : matrix) {
+        for (int value : row) {
+            std::cout << value << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+int main() {
+    Solution solution;
+    
+    std::vector<std::vector<int>> image = {
+        {1, 1, 1},
+        {1, 1, 0},
+        {1, 0, 1}
+    };
+
+    int sr = 1, sc = 1, newColor = 2;
+
+    std::cout << "Original Image:" << std::endl;
+    printMatrix(image);
+
+    std::vector<std::vector<int>> result = solution.floodFill(image, sr, sc, newColor);
+
+    std::cout << "\nImage after flood fill:" << std::endl;
+    printMatrix(result);
+
+    return 0;
+}
