@@ -33,7 +33,7 @@ To make the most out of this repository, follow these steps:
 1. **Clone the Repository:** Start by cloning this repository to your local machine using the following command:
    
    ```bash
-   git clone https://github.com/your-username/dsa-sheet-solutions.git
+   git clone https://github.com/your-username/Data-Structures-and-Algorithm.git
 
 2. **Navigate to the Problem:** Browse through the repository to find the specific problem you're interested in.
 
