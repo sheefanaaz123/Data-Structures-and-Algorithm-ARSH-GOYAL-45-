@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+class Solution {
+public:
+    int maxProduct(std::vector<int>& nums) {
+        int ans = nums[0];
+        int ma = ans;
+        int mi = ans;
+
+        for(int i=1; i<nums.size(); i++){
+            if(nums[i]<0){
+                std::swap(ma, mi);
+            }
+            ma = std::max(nums[i], ma * nums[i]);
+            mi = std::min(nums[i], mi * nums[i]);
+
+            ans = std::max(ma, ans);
+        }
+
+        return ans;
+    }
+};
+
+int main() {
+    Solution solution;
+    
+    // Test case
+    std::vector<int> nums = {2, 3, -2, 4, -1};
+    
+    std::cout << "Maximum product of subarray: " << solution.maxProduct(nums) << std::endl;
+    
+    return 0;
+}
