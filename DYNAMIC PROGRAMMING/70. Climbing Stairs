@@ -1,1 +1,36 @@
-KKKKKKKKKKKKK
+#include <iostream>
+
+class Solution {
+public :
+int climbStairs(int n) {
+    // base cases
+    if(n <= 0) return 0;
+    if(n == 1) return 1;
+    if(n == 2) return 2;
+    
+    int one_step_before = 2;
+    int two_steps_before = 1;
+    int all_ways = 0;
+    
+    for(int i=2; i<n; i++){
+    	all_ways = one_step_before + two_steps_before;
+    	two_steps_before = one_step_before;
+        one_step_before = all_ways;
+    }
+    return all_ways;
+}
+};
+
+int main() {
+    Solution solution;
+    
+    // Test cases
+    int n1 = 2;
+    int n2 = 3;
+    
+    std::cout << "Ways to climb " << n1 << " stairs: " << solution.climbStairs(n1) << std::endl;
+    std::cout << "Ways to climb " << n2 << " stairs: " << solution.climbStairs(n2) << std::endl;
+    
+    return 0;
+}
+
