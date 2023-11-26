@@ -1,0 +1,60 @@
+#include <iostream>
+#include <map>
+#include <vector>
+#include <set>
+
+using namespace std;
+
+class RandomizedCollection {
+public:
+    map<int, set<int>> m;
+    vector<int> v;
+
+    RandomizedCollection() {}
+
+    bool insert(int val) {
+        v.push_back(val);
+        m[val].insert(v.size() - 1);
+        return m[val].size() == 1;
+    }
+
+    bool remove(int val) {
+        auto it = m.find(val);
+        if (it != m.end()) {
+            auto pos = *it->second.begin();
+            it->second.erase(it->second.begin());
+            v[pos] = v.back();
+            m[v.back()].insert(pos);
+            m[v.back()].erase(v.size() - 1);
+            v.pop_back();
+            if (it->second.size() == 0) {
+                m.erase(it);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    int getRandom() {
+        return v[rand() % v.size()];
+    }
+};
+
+int main() {
+    RandomizedCollection obj;
+    bool result;
+
+    result = obj.insert(1);
+    cout << "Inserted element: " << result << endl;
+
+    result = obj.insert(1);
+    cout << "Inserted element: " << result << endl;
+
+    result = obj.remove(2);
+    cout << "Removed element: " << result << endl;
+
+    int randomElement = obj.getRandom();
+    cout << "Random element: " << randomElement << endl;
+
+    return 0;
+}
