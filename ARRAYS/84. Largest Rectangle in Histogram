@@ -1,0 +1,23 @@
+BRUTE
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& a) {
+        int area =0;
+        for(int i=0; i<a.size(); i++){
+            int left = i;
+            int right = i;
+
+            while(a[left]>=a[i]){
+                left--;
+            }
+            while(a[right]>=a[i]){
+                right++;
+            }
+
+            area = max(area,(right-left-1)*a[i]);
+        }
+
+        return area;
+    }
+};
