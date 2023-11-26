@@ -21,3 +21,78 @@ public:
         return area;
     }
 };
+
+optimal:
+
+#include <iostream>
+#include <vector>
+#include<stack>
+
+class Solution {
+public:
+    std::vector<int> prevSmaller(std::vector<int>& heights) {
+        std::stack<int> st;
+        std::vector<int> leftAns(heights.size());
+
+        for (int i = 0; i < heights.size(); ++i) {
+            while (!st.empty() && heights[st.top()] >= heights[i]) {
+                st.pop();
+            }
+
+            if (st.empty()) {
+                leftAns[i] = -1;
+            } else {
+                leftAns[i] = st.top();
+            }
+
+            st.push(i);
+        }
+
+        return leftAns;
+    }
+
+    std::vector<int> nextSmaller(std::vector<int>& heights) {
+        std::stack<int> st;
+        std::vector<int> rightAns(heights.size());
+
+        for (int i = heights.size() - 1; i >= 0; --i) {
+            while (!st.empty() && heights[st.top()] > heights[i]) {
+                st.pop();
+            }
+
+            if (st.empty()) {
+                rightAns[i] = heights.size();
+            } else {
+                rightAns[i] = st.top();
+            }
+
+            st.push(i);
+        }
+
+        return rightAns;
+    }
+
+    int largestRectangleArea(std::vector<int>& heights) {
+        std::vector<int> left = prevSmaller(heights);
+        std::vector<int> right = nextSmaller(heights);
+
+        int maxArea = INT_MIN;
+
+        for (int i = 0; i < heights.size(); ++i) {
+            int area = (right[i] - left[i] - 1) * heights[i];
+            maxArea = std::max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+};
+
+int main() {
+    Solution s;
+    std::vector<int> heights = {2,1,5,6,2,3};
+    int result = s.largestRectangleArea(heights);
+    std::cout << "Maximum Rectangle Area: " << result << std::endl;
+
+    return 0;
+}
+
