@@ -1,1 +1,39 @@
-h
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        int countArray[26] = {};
+        int left = 0;
+        int right = 0;
+        int ans = 0;
+
+        for (int right = 0; right < s.size(); right++) {
+            countArray[s[right] - 'A']++;
+
+            while (right - left + 1 - *max_element(countArray, countArray + 26) > k) {
+                countArray[s[left] - 'A']--;
+                left++;
+            }
+
+            ans = max(ans, right - left + 1);
+        }
+
+        return ans;
+    }
+};
+
+int main() {
+    Solution s;
+    string str = "ABAB";
+    int k = 2;
+    int result = s.characterReplacement(str, k);
+    cout << "Maximum Characters Replaced: " << result << endl;
+
+    return 0;
+}
+
