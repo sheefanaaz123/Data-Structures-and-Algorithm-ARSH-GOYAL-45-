@@ -1,0 +1,82 @@
+#include <string>
+#include<iostream>
+
+using namespace std;
+
+class Solution {
+public:
+    bool isNumber(string s) {
+        bool digitSeen = false, dotSeen = false, eSeen = false;
+        int plusMinusCount = 0;
+
+        for (int i = 0; i < s.size(); i++) {
+            char ch = s.at(i);
+
+            if (isdigit(ch)) {
+                digitSeen = true;
+            }
+
+            else if (ch == '+' || ch == '-') {
+                if (plusMinusCount == 2) {
+                    return false;
+                }
+
+                if (i > 0 && (s.at(i - 1) != 'e' && s.at(i - 1) != 'E')) {
+                    return false;
+                }
+
+                if (i == s.size() - 1) {
+                    return false;
+                }
+
+                plusMinusCount++;
+            }
+
+            else if (ch == '.') {
+                if (eSeen || dotSeen) {
+                    return false;
+                }
+
+                if (i == s.size() - 1 && !digitSeen) {
+                    return false;
+                }
+
+                dotSeen = true;
+            }
+
+            else if (ch == 'e' || ch == 'E') {
+                if (eSeen || !digitSeen || i == s.size() - 1) {
+                    return false;
+                }
+
+                eSeen = true;
+            }
+
+            else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+
+
+int main() {
+  Solution sol;
+  std::string inputString;
+
+  while (true) {
+    std::cout << "Enter a string to check if it's a valid numeric value: ";
+    std::getline(std::cin, inputString);
+
+    if (inputString == "exit") {
+      break;
+    }
+
+    bool result = sol.isNumber(inputString);
+    std::cout << "Input: " << inputString << ", Output: " << result << std::endl;
+  }
+
+  return 0;
+}
