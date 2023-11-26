@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include<algorithm>
+#include<math.h>
+
+using namespace std;
+
+class Solution {
+public:
+    int visiblePoints(vector<vector<int>>& points, int angle, vector<int>& location) {
+        int answer = 0;
+        double pi = acos(-1.0);
+        vector<double> pointAngles;
+
+        // Iterate through all points p to find the required polar angle with respect to location
+        for (auto p : points) {
+            if (p[0] == location[0] && p[1] == location[1]) {
+                // These are points with the same location as yours
+                answer += 1;
+            } else {
+                int dx = p[0] - location[0];
+                int dy = p[1] - location[1];
+                double angle = atan2(dy, dx); // Gives inverse tangent in radians for a coordinate
+                // Convert to degrees
+                double angle1 = angle * (180) / pi;
+                pointAngles.push_back(angle1);
+            }
+        }
+
+        sort(pointAngles.begin(), pointAngles.end());
+        // Sorting the angles will make sure that the required count is a contiguous length of angles
+
+        int n = pointAngles.size();
+        for (int i = 0; i < n; ++i) {
+            pointAngles.push_back(pointAngles[i] + 360);
+            // Push the angles again by adding 360 to handle the case of consecutive points being after a complete cycle. Ex - 345 and 14 (if angle >= 29)
+        }
+
+        int left = 0;
+        int cnt = 0;
+        // Now a simple implementation of sliding window of size angle
+        for (int right = 0; right < pointAngles.size(); ++right) {
+            if (pointAngles[right] - pointAngles[left] > angle) {
+                left++;
+            }
+            cnt = max(cnt, right - left + 1);
+        }
+
+        answer += cnt; // Add this length to the number of overlapping points earlier
+
+        return answer;
+    }
+};
+
+int main() {
+    Solution s;
+    vector<vector<int>> points = {{2,1},{2,2},{3,3}};
+    int angle = 90;
+    vector<int> location = {1, 1};
+    int result = s.visiblePoints(points, angle, location);
+    cout << "Visible Points: " << result << endl;
+
+    return 0;
+}
