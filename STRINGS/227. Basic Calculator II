@@ -1,0 +1,68 @@
+#include <iostream>
+#include <string>
+#include<stack>
+
+using namespace std;
+
+class Solution {
+public:
+    int calculate(string s) {
+        stack<int> myStack;
+        char sign = '+';
+        int result = 0;
+        long currentNumber = 0;
+
+        for (unsigned int i = 0; i < s.size(); i++) {
+            if (isdigit(s[i])) {
+                currentNumber = 10 * currentNumber + s[i] - '0';
+            }
+
+            if (!isdigit(s[i]) && !isspace(s[i]) || i == s.size() - 1) {
+                // Handle the current operation
+                handleOperation(myStack, currentNumber, sign);
+
+                // Update the sign and reset the current number
+                sign = s[i];
+                currentNumber = 0;
+            }
+        }
+
+        // Sum up the results from the stack
+        while (!myStack.empty()) {
+            result += myStack.top();
+            myStack.pop();
+        }
+
+        return result;
+    }
+
+private:
+    // Helper function to handle different operations and update the stack
+    void handleOperation(stack<int> &myStack, long currentNumber, char sign) {
+        if (sign == '-') {
+            myStack.push(-currentNumber);
+        } else if (sign == '+') {
+            myStack.push(currentNumber);
+        } else {
+            int num = (sign == '*') ? myStack.top() * currentNumber : myStack.top() / currentNumber;
+            myStack.pop();
+            myStack.push(num);
+        }
+    }
+};
+
+
+
+int main() {
+    Solution calculator;
+
+    string expression = "3+2*2";
+
+    int result = calculator.calculate(expression);
+
+
+    // Display results
+    cout << "Result : " << result;
+
+    return 0;
+}
