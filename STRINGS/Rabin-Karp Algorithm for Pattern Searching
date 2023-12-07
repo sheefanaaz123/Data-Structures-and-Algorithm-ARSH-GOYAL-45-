@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+#include <map>
+#include <string>
+
+using namespace std;
+
+class Solution {
+public:
+    long long hashvalue_pattern(string p, unordered_map<char, int>& map) {
+        int m = p.size();
+        long long sum = 0;
+        for (int j = 0; j < m; j++) {
+            sum += p[j] * pow(26, m - (j + 1));
+        }   
+        return sum;
+    }
+
+    int pattern_find(string pattern, string text, unordered_map<char, int>& map, int &flag) {
+        int m = pattern.size();
+        int n = text.size();
+
+        long long pattern_value = hashvalue_pattern(pattern, map);
+        int index = -1;
+
+        for (int i = 0; i < n - m + 1; i++) {
+            long long intern = 0;
+            for (int j = 0; j < m; j++) {
+                intern += text[i + j] * pow(26, m - (j + 1));
+            }
+            if (intern == pattern_value) {
+                flag = 1;
+                index = i;
+                break;
+            }
+        }
+
+        if (flag == 1) {
+            return index;
+        } else {
+            return -1;
+        }
+    }
+};
+
+int main() {
+    Solution solution;
+    string pattern = "sheefa";
+    string text = "naazsheefanaaz";
+    int flag = 0;
+
+    unordered_map<char, int> mp;
+
+    for (int i = 0; i < 26; i++) {
+        mp[97 + i] = i + 1;
+    }
+
+    int index_obtained = solution.pattern_find(pattern, text, mp, flag);
+
+    if(index_obtained!=-1){
+        cout<<"The substring "<<pattern<<" is present "<<"at index "<<index_obtained<<" of string:: "<<text;
+    }else{
+        cout<<"Not Present";
+    }
+
+    return 0;
+}
