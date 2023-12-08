@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void rotateClockwise(int n, vector<vector<int>> &nums) {
+//Transpose
+  for (int i = 0; i < n - 1; i++) {
+    for (int j = i + 1; j < n; j++) {
+      int temp = nums[i][j];
+      nums[i][j] = nums[j][i];
+      nums[j][i] = temp;
+    }
+  }
+  for (int i = 0; i < n; i++) {
+    reverse(nums[i].begin(), nums[i].end());
+  }
+}
+
+int main() {
+  int n = 3;
+  vector<vector<int>> nums = {{1, 2}, {3,4}};
+
+  rotateClockwise(n, nums);
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      cout << nums[i][j] << " ";
+    }
+    cout << endl;
+  }
+
+  return 0;
+}
