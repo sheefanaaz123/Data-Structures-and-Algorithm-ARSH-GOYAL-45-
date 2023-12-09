@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+class Solution {
+public:
+    int getDistanceSquare(vector<int>& a, vector<int>& b){
+        return pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2);
+    }
+
+    bool validSquare(vector<int>& p1, vector<int>& p2, vector<int>& p3, vector<int>& p4) {
+        set<int> st;
+        st.insert(getDistanceSquare(p1, p2));
+        st.insert(getDistanceSquare(p1, p3));
+        st.insert(getDistanceSquare(p1, p4));
+        st.insert(getDistanceSquare(p2, p3));
+        st.insert(getDistanceSquare(p2, p4));
+        st.insert(getDistanceSquare(p3, p4));
+
+        return (!st.count(0) && st.size() == 2);
+    }
+};
+
+int main() {
+    // Step 1: Create an instance of the Solution class
+    Solution solution;
+
+    // Step 2: Define input points (modify these points for testing)
+    vector<int> p1 = {0, 0};
+    vector<int> p2 = {1, 0};
+    vector<int> p3 = {1, 1};
+    vector<int> p4 = {0, 1};
+
+    // Step 3: Call the validSquare function
+    bool result = solution.validSquare(p1, p2, p3, p4);
+
+    // Step 4: Display the result
+    if (result) {
+        cout << "The points form a valid square." << endl;
+    } else {
+        cout << "The points do not form a valid square." << endl;
+    }
+
+    return 0;
+}
