@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+class Solution {
+public:
+    int kthFactor(int n, int k) {
+        int count = 0, i;
+        for (i = 1; i <= n; i++) {
+            if (n % i == 0) {
+                count++;
+                if (count == k) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+};
+
+// Example usage
+#include <iostream>
+
+int main() {
+    Solution solution;
+
+    // Example 1
+    int n1 = 12, k1 = 3;
+    int result1 = solution.kthFactor(n1, k1);
+    std::cout << "For n=" << n1 << " and k=" << k1 << ", the " << k1 << "th factor is: " << result1 << std::endl;
+
+    // Example 2
+    int n2 = 7, k2 = 2;
+    int result2 = solution.kthFactor(n2, k2);
+    std::cout << "For n=" << n2 << " and k=" << k2 << ", the " << k2 << "th factor is: " << result2 << std::endl;
+
+    return 0;
+}
