@@ -1,0 +1,123 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+class Solution {
+    public:
+    vector<int> prevSmaller(std::vector<int>& heights) {
+        stack<int> st;
+        vector<int> leftAns(heights.size());
+
+        for (int i = 0; i < heights.size(); ++i) {
+            while (!st.empty() && heights[st.top()] >= heights[i]) {
+                st.pop();
+            }
+
+            if (st.empty()) {
+                leftAns[i] = -1;
+            } else {
+                leftAns[i] = st.top();
+            }
+
+            st.push(i);
+        }
+
+        return leftAns;
+    }
+
+    vector<int> nextSmaller(std::vector<int>& heights) {
+        stack<int> st;
+        vector<int> rightAns(heights.size());
+
+        for (int i = heights.size() - 1; i >= 0; --i) {
+            while (!st.empty() && heights[st.top()] > heights[i]) {
+                st.pop();
+            }
+
+            if (st.empty()) {
+                rightAns[i] = heights.size();
+            } else {
+                rightAns[i] = st.top();
+            }
+
+            st.push(i);
+        }
+
+        return rightAns;
+    }
+
+    int largestHistogramArea(vector<int>& heights) {
+        vector<int> left = prevSmaller(heights);
+        vector<int> right = nextSmaller(heights);
+
+        int maxArea = INT_MIN;
+
+        for (int i = 0; i < heights.size(); ++i) {
+            int area = (right[i] - left[i] - 1) * heights[i];
+            maxArea = max(maxArea, area);
+        }
+
+        return maxArea;
+    }
+
+    
+    int maximalRectangle(vector<vector<char>>& matrix) {
+
+        vector<int> currentRow;
+        for (char c : matrix[0]) {
+            currentRow.push_back(c - '0');
+        }
+
+
+        int ans = largestHistogramArea(currentRow);
+
+        for(int i=1; i<matrix.size(); i++){
+            for(int j=0; j<matrix[0].size(); j++){
+                if(matrix[i][j]=='1'){
+                    currentRow[j]++;
+                }else{
+                    currentRow[j]=0;
+                }
+            }
+            int area =  largestHistogramArea(currentRow);
+            ans = max(ans, area);
+
+        }
+
+        return ans;
+    }
+    
+    void printMatrix(const std::vector<std::vector<char>>& matrix) {
+        for (const auto& row : matrix) {
+            for (char c : row) {
+                std::cout << c << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+int main() {
+    // Create an instance of the Solution class
+    Solution s;
+
+    // Example matrix
+    std::vector<std::vector<char>> matrix = {
+        {'1', '0', '1', '0', '0'},
+        {'1', '0', '1', '1', '1'},
+        {'1', '1', '1', '1', '1'},
+        {'1', '0', '0', '1', '0'}
+    };
+
+    // Print the input matrix
+    std::cout << "Input Matrix:" << std::endl;
+    s.printMatrix(matrix);
+
+    // Calculate the maximal rectangle area
+    int result = s.maximalRectangle(matrix);
+
+    // Print the result
+    std::cout << "Maximum Rectangle Area: " << result << std::endl;
+
+    return 0;
+}
