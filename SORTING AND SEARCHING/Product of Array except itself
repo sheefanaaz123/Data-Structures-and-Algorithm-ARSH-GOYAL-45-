@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstring> // for memset
+using namespace std;
+
+// Function to calculate and print the product array
+void calculateProductArray(int arr[], int n) {
+    // Base case
+    if (n == 1) {
+        cout << "The product array is: 0";
+        return;
+    }
+
+    int i, temp = 1;
+
+    // Allocate memory for the product array
+    int* productArray = new int[n];
+
+    // Initialize the product array as 1
+    memset(productArray, 1, n * sizeof(int));
+
+    // Calculate product of elements on the left side excluding arr[i]
+    for (i = 0; i < n; i++) {
+        productArray[i] = temp;
+        temp *= arr[i];
+    }
+
+    // Initialize temp to 1 for product on the right side
+    temp = 1;
+
+    // Calculate product of elements on the right side excluding arr[i]
+    for (i = n - 1; i >= 0; i--) {
+        productArray[i] *= temp;
+        temp *= arr[i];
+    }
+
+    // Print the constructed product array
+    cout << "The product array is: ";
+    for (i = 0; i < n; i++)
+        cout << productArray[i] << " ";
+
+    // Free allocated memory
+    delete[] productArray;
+}
+
+// Driver Code
+int main() {
+    int arr[] = {10, 3, 5, 6, 2};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    // Calculate and print the product array
+    calculateProductArray(arr, n);
+
+    return 0;
+}
