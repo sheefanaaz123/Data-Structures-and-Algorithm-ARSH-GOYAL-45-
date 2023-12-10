@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+// Function to find the maximum element in the array
+int findMax(int arr[], int n) {
+    int maxElement = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > maxElement)
+            maxElement = arr[i];
+    return maxElement;
+}
+
+// Function to perform counting sort on a specific digit place (exp)
+void countSortOnDigit(int arr[], int n, int exp) {
+    int output[n];
+    int count[10] = {0};
+
+    for (int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+
+// Function to perform radix sort on the array
+void radixSort(int arr[], int n) {
+    int maxElement = findMax(arr, n);
+
+    // Iterate through each digit place (exp)
+    for (int exp = 1; maxElement / exp > 0; exp *= 10)
+        countSortOnDigit(arr, n, exp);
+}
+
+// Function to print the elements of the array
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++)
+        cout << arr[i] << " ";
+}
+
+int main() {
+    int arr[] = {543, 986, 217, 765, 329};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    // Perform Radix Sort
+    radixSort(arr, n);
+
+    // Print the sorted array
+    printArray(arr, n);
+
+    return 0;
+}
