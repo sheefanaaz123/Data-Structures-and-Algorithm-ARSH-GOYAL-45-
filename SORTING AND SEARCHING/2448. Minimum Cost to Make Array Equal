@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+
+    long long find_cost(vector<int>& nums, vector<int>& cost, int target){
+
+        long long result = 0;
+        for(int i = 0; i < nums.size(); i++){
+            result += (long long)abs(nums[i] - target) * cost[i];
+        }
+
+        return result;
+    }
+
+    long long minCost(vector<int>& nums, vector<int>& cost) {
+        long long ans = INT_MAX;
+        int left = *min_element(nums.begin(), nums.end());
+        int right = *max_element(nums.begin(), nums.end());
+
+        while(left <= right){
+
+            int mid = left + (right - left) / 2;
+
+            long long total_cost1 = find_cost(nums, cost, mid);
+            long long total_cost2 = find_cost(nums, cost, mid + 1);
+
+            ans = min(total_cost1, total_cost2);
+
+            if(total_cost2 > total_cost1){
+                right = mid - 1;
+            }else{
+                left = mid + 1;
+            }
+
+        }
+
+        return ans == INT_MAX ? 0 : ans;
+    }
+};
+
+int main() {
+    Solution solution;
+
+    // Test input vectors
+    vector<int> nums = {1, 2, 3};
+    vector<int> cost = {1, 2, 3};
+
+    // Call minCost function and print the result
+    cout << "Minimum Cost: " << solution.minCost(nums, cost) << endl;
+
+    return 0;
+}
