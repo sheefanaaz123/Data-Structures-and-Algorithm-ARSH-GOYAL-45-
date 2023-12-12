@@ -1,0 +1,75 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = NULL;
+
+        while (head) {
+            ListNode* nxt = head->next;
+            head->next = prev;
+            prev = head;
+            head = nxt;
+        }
+        return prev;
+    }
+
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+
+        ListNode* dummy = new ListNode();
+        ListNode* temp = dummy;
+        int carry = 0;
+
+        while ((l1 != NULL || l2 != NULL) || carry) {
+            int sum = 0;
+            if (l1 != NULL) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+
+            if (l2 != NULL) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+
+            sum += carry;
+            carry = sum / 10;
+            ListNode* node = new ListNode(sum % 10);
+            temp->next = node;
+            temp = temp->next;
+        }
+
+        return reverseList(dummy->next);
+    }
+};
+
+int main() {
+    // Example usage
+    Solution solution;
+
+    // Create linked lists representing numbers
+    ListNode* l1 = new ListNode(2, new ListNode(4, new ListNode(3)));
+    ListNode* l2 = new ListNode(5, new ListNode(6, new ListNode(4)));
+
+    // Add the two numbers
+    ListNode* result = solution.addTwoNumbers(l1, l2);
+
+    // Output the result
+    while (result != nullptr) {
+        std::cout << result->val << " ";
+        result = result->next;
+    }
+
+    return 0;
+}
