@@ -1,0 +1,36 @@
+#include <bits/stdc++.h> 
+using namespace std; 
+
+int minSwaps(int nums[], int n) 
+{ 
+	vector<pair<int,int>> V(n);
+
+    for(int i=0; i<n; i++){
+        V[i] = {nums[i],i};
+    }
+
+    sort(V.begin(),V.end());
+    
+    int count =0;
+
+    for(int i=0; i<n; i++){
+        if(V[i].second == i){
+            continue;
+        }else{
+            count++;
+            swap(V[i],V[V[i].second]);
+            i--;
+        }
+    }
+    return count;
+} 
+
+int main() 
+{ 
+
+	int a[] = { 1, 5, 4, 3, 2 }; 
+	int n = 5; 
+	cout << minSwaps(a, n); 
+	return 0; 
+} 
+
