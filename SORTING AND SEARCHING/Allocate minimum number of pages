@@ -1,0 +1,57 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+// Function to count the number of students needed based on the maximum pages a student can read
+int countStudents(const vector<int> &arr, int pages) {
+    int students = 1;
+    long long pagesStudent = 0;
+
+    // Iterate through each book's pages
+    for (int pagesInBook : arr) {
+        // Check if the current student can read the pages of the current book
+        if (pagesStudent + pagesInBook <= pages) {
+            pagesStudent += pagesInBook;
+        } else {
+            // If not, allocate a new student and start counting pages for the new student
+            students++;
+            pagesStudent = pagesInBook;
+        }
+    }
+    return students;
+}
+
+// Function to find the minimum number of pages each student must read such that
+// the maximum pages assigned to a student is minimized and all students get assigned
+int findPages(const vector<int>& arr, int m) {
+    int n = arr.size();
+    if (m > n) return -1; // More students than books, not possible
+
+    // Initialize the search range for the binary search
+    int low = *max_element(arr.begin(), arr.end());
+    int high = accumulate(arr.begin(), arr.end(), 0);
+
+    // Perform binary search to find the minimum maximum pages
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        int students = countStudents(arr, mid);
+
+        // Adjust the search range based on the number of students
+        if (students > m) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return low;
+}
+
+int main() {
+    vector<int> arr = {12,34,67,90};
+
+    // Find the minimum pages and output the result
+    int ans = findPages(arr, 2);
+    cout << "The answer is: " << ans << "\n";
+
+    return 0;
+}
