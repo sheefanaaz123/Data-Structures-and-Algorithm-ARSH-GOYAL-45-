@@ -1,0 +1,90 @@
+#include <iostream>
+#include <unordered_map>
+
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (head == NULL) {
+            return NULL;
+        }
+
+        std::unordered_map<Node*, Node*> mp;
+        Node* curr = head;
+        Node* prev = NULL;
+        Node* newHead = NULL;
+
+        // First Pass - Creating Nodes
+        while (curr != NULL) {
+            Node* temp = new Node(curr->val);
+            mp[curr] = temp;
+
+            if (newHead == NULL) {
+                newHead = temp;
+                prev = newHead;
+            } else {
+                prev->next = temp;
+                prev = temp;
+            }
+
+            curr = curr->next;
+        }
+
+        // Second Pass - Copying Random Pointers
+        curr = head;
+        Node* newCurr = newHead;
+
+        while (curr) {
+            newCurr->random = (curr->random == NULL) ? NULL : mp[curr->random];
+            curr = curr->next;
+            newCurr = newCurr->next;
+        }
+
+        return newHead;
+    }
+};
+
+int main() {
+    // Example usage
+    Solution solution;
+
+    // Create a sample linked list
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->random = head->next->next;
+    head->next->random = head;
+
+    // Copy the linked list with random pointers
+    Node* copiedList = solution.copyRandomList(head);
+
+    // Output the result
+    while (copiedList != NULL) {
+        std::cout << "Value: " << copiedList->val;
+
+        if (copiedList->random != NULL) {
+            std::cout << ", Random Value: " << copiedList->random->val;
+        } else {
+            std::cout << ", Random: NULL";
+        }
+
+        std::cout << std::endl;
+
+        copiedList = copiedList->next;
+    }
+
+    return 0;
+}
