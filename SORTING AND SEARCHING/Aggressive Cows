@@ -1,44 +1,61 @@
+#include<bits/stdc++.h>
 
-
-
-#include <bits/stdc++.h>
 using namespace std;
 
-bool canWePlace(vector<int> &stalls, int dist, int cows) {
-    int n = stalls.size(); //size of array
-    int cntCows = 1; //no. of cows placed
-    int last = stalls[0]; //position of last placed cow.
-    for (int i = 1; i < n; i++) {
-        if (stalls[i] - last >= dist) {
-            cntCows++; //place next cow.
-            last = stalls[i]; //update the last location.
+// Function to check if we can place cows with a given minimum distance
+bool canPlaceCows(vector<int> &stalls, int distance, int cows) {
+    int totalStalls = stalls.size();
+    int cowsPlaced = 1; // Number of cows already placed
+    int lastStall = stalls[0]; // Position of the last placed cow
+
+    for (int i = 1; i < totalStalls; i++) {
+        // Check if the current stall can accommodate a cow
+        if (stalls[i] - lastStall >= distance) {
+            cowsPlaced++; // Place the next cow
+            lastStall = stalls[i]; // Update the position of the last placed cow
         }
-        if (cntCows >= cows) return true;
+
+        if (cowsPlaced >= cows) {
+            return true; // We can place all cows with the given distance
+        }
     }
-    return false;
+
+    return false; // Cannot place all cows with the given distance
 }
-int aggressiveCows(vector<int> &stalls, int k) {
-    int n = stalls.size(); //size of array
-    //sort the stalls[]:
+
+// Function to find the maximum possible minimum distance for aggressive cows
+int findMaxMinDistance(vector<int> &stalls, int numberOfCows) {
+    int totalStalls = stalls.size();
+
+    // Sort the stalls
     sort(stalls.begin(), stalls.end());
 
-    int low = 1, high = stalls[n - 1] - stalls[0];
-    //apply binary search:
+    int low = 1, high = stalls[totalStalls - 1] - stalls[0];
+
+    // Apply binary search to find the maximum possible minimum distance
     while (low <= high) {
-        int mid = (low + high) / 2;
-        if (canWePlace(stalls, mid, k) == true) {
+        int mid = low + (high - low) / 2;
+
+        if (canPlaceCows(stalls, mid, numberOfCows)) {
             low = mid + 1;
+        } else {
+            high = mid - 1;
         }
-        else high = mid - 1;
     }
+
+    // Return the result (the high value is the maximum possible minimum distance)
     return high;
 }
 
-int main()
-{
+int main() {
     vector<int> stalls = {0, 3, 4, 7, 10, 9};
-    int k = 4;
-    int ans = aggressiveCows(stalls, k);
-    cout << "The maximum possible minimum distance is: " << ans << "\n";
+    int numberOfCows = 4;
+
+    // Find the maximum possible minimum distance
+    int result = findMaxMinDistance(stalls, numberOfCows);
+
+    // Output the result
+    cout << "The maximum possible minimum distance is: " << result << "\n";
+
     return 0;
 }
