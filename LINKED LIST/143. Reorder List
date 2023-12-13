@@ -1,0 +1,47 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+
+class ListNode {
+public:
+    int val;
+    ListNode* next;
+    ListNode(int x) : val(x), next(nullptr) {}
+};
+
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if (!head || !head->next || !head->next->next) return;
+
+        ListNode* penultimate = head;
+        while (penultimate->next->next) penultimate = penultimate->next;
+
+        penultimate->next->next = head->next;
+        head->next = penultimate->next;
+
+        penultimate->next = NULL;
+
+        reorderList(head->next->next);
+    }
+};
+
+int main() {
+    // Example usage
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(4);
+    head->next->next->next->next = new ListNode(5);
+
+    Solution solution;
+    solution.reorderList(head);
+
+    ListNode* current = head;
+    while (current) {
+        std::cout << current->val << " ";
+        current = current->next;
+    }
+
+    return 0;
+}
