@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Node {
+public:
+    int val;
+    Node* prev;
+    Node* next;
+    Node* child;
+};
+
+class Solution {
+public:
+    Node* flatten(Node* head) {
+        Node* cur = head;
+        Node* tail = head;
+        std::stack<Node*> stack;
+
+        while (cur != nullptr) {
+            if (cur->child != nullptr) {
+                Node* child = cur->child;
+                if (cur->next != nullptr) {
+                    stack.push(cur->next);
+                    cur->next->prev = nullptr;
+                }
+                cur->next = child;
+                child->prev = cur;
+                cur->child = nullptr;
+            }
+            tail = cur;
+            cur = cur->next;
+        }
+
+        while (!stack.empty()) {
+            cur = stack.top();
+            stack.pop();
+            tail->next = cur;
+            cur->prev = tail;
+            while (cur != nullptr) {
+                tail = cur;
+                cur = cur->next;
+            }
+        }
+
+        return head;
+    }
+};
+
+
+int main() {
+    // Create a sample linked list with nested child nodes
+    Node* head = new Node{1, nullptr, nullptr, nullptr};
+    head->next = new Node{2, head, nullptr, nullptr};
+    head->next->next = new Node{3, head->next, nullptr, nullptr};
+    head->next->child = new Node{4, nullptr, nullptr, nullptr};
+    head->next->child->next = new Node{5, head->next->child, nullptr, nullptr};
+    head->next->next->child = new Node{6, nullptr, nullptr, nullptr};
+
+    // Create a Solution object
+    Solution solution;
+
+    // Flatten the linked list
+    Node* flattenedHead = solution.flatten(head);
+
+    // Display the flattened linked list
+    while (flattenedHead != nullptr) {
+        std::cout << flattenedHead->val << " ";
+        flattenedHead = flattenedHead->next;
+    }
+
+    return 0;
+}
+
