@@ -1,0 +1,92 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    int getLength(ListNode* head) {
+        int length = 0;
+        ListNode* temp = head;
+
+        while (temp != nullptr) {
+            length++;
+            temp = temp->next;
+        }
+
+        return length;
+    }
+
+    ListNode* reverseK(ListNode*& head, int k, int length) {
+        // Base case
+        if (head == nullptr || head->next == nullptr || k == 1 || length < k)
+            return head;
+
+        // Step 1: Reverse first k nodes
+        ListNode* nxt = nullptr;
+        ListNode* curr = head;
+        ListNode* prev = nullptr;
+
+        int count = 1;
+
+        while (curr != nullptr && count <= k) {
+            nxt = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nxt;
+            count++;
+        }
+
+        // Step 2: Reverse next k nodes using recursion
+        if (nxt != nullptr) {
+            head->next = reverseK(nxt, k, (length - k));
+        }
+
+        // Step 3: Return head of the reversed linked list
+        head = prev;
+
+        return head;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        int len = getLength(head);
+        return reverseK(head, k, len);
+    }
+};
+
+// Driver code to test the reverseKGroup function
+void printList(ListNode* head) {
+    while (head) {
+        std::cout << head->val << " ";
+        head = head->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    Solution solution;
+
+    // Create a sample linked list
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(4);
+    head->next->next->next->next = new ListNode(5);
+
+    std::cout << "Original Linked List: ";
+    printList(head);
+
+    int k = 2;
+    ListNode* result = solution.reverseKGroup(head, k);
+
+    std::cout << "Linked List after reversing every " << k << " nodes: ";
+    printList(result);
+
+    return 0;
+}
