@@ -1,0 +1,94 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        ListNode* temp = NULL;
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast != NULL && fast->next != NULL) {
+            temp = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        temp->next = NULL;
+
+        ListNode* l1 = sortList(head);
+        ListNode* l2 = sortList(slow);
+        return mergeLists(l1, l2);
+    }
+
+    ListNode* mergeLists(ListNode* l1, ListNode* l2) {
+        ListNode* ptr = new ListNode(0);
+        ListNode* curr = ptr;
+
+        while (l1 != NULL && l2 != NULL) {
+            if (l1->val <= l2->val) {
+                curr->next = l1;
+                l1 = l1->next;
+            } else {
+                curr->next = l2;
+                l2 = l2->next;
+            }
+
+            curr = curr->next;
+        }
+
+        if (l1 != NULL) {
+            curr->next = l1;
+            l1 = l1->next;
+        }
+
+        if (l2 != NULL) {
+            curr->next = l2;
+            l2 = l2->next;
+        }
+
+        return ptr->next;
+    }
+};
+
+// Utility function to print a linked list
+void printList(ListNode* node) {
+    while (node != nullptr) {
+        std::cout << node->val << " ";
+        node = node->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    Solution solution;
+    
+    // Create a sample linked list
+    ListNode* head = new ListNode(3);
+    head->next = new ListNode(1);
+    head->next->next = new ListNode(4);
+    head->next->next->next = new ListNode(2);
+
+    // Print original linked list
+    std::cout << "Original Linked List: ";
+    printList(head);
+
+    // Sort the linked list
+    ListNode* sortedList = solution.sortList(head);
+
+    // Print sorted linked list
+    std::cout << "Sorted Linked List: ";
+    printList(sortedList);
+
+    return 0;
+}
