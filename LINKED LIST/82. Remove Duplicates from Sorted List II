@@ -1,0 +1,67 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head) {
+            return nullptr;
+        }
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+
+        ListNode* itr = dummy;
+
+        while (itr->next && itr->next->next) {
+            if (itr->next->val == itr->next->next->val) {
+                int duplicateVal = itr->next->val;
+                while (itr->next && itr->next->val == duplicateVal) {
+                    itr->next = itr->next->next;
+                }
+            } else {
+                itr = itr->next;
+            }
+        }
+
+        return dummy->next;
+    }
+};
+
+// Driver code to test the deleteDuplicates function
+void printList(ListNode* head) {
+    while (head) {
+        std::cout << head->val << " ";
+        head = head->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    // Create a sample linked list with duplicates
+    ListNode* head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(3);
+    head->next->next->next->next = new ListNode(4);
+    head->next->next->next->next->next = new ListNode(4);
+    head->next->next->next->next->next->next = new ListNode(5);
+
+    std::cout << "Original Linked List: ";
+    printList(head);
+
+    Solution solution;
+    ListNode* result = solution.deleteDuplicates(head);
+
+    std::cout << "Linked List after removing duplicates: ";
+    printList(result);
+
+    return 0;
+}
