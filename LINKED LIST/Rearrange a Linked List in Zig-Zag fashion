@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+
+class Node {
+public:
+    Node* next;
+    int data;
+};
+
+class Linked {
+public:
+   
+    Node* rearrangeLinkedListZigzag(Node* head) {
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }
+
+        Node* node = head;
+        bool flag = true;
+
+        while (node->next != nullptr) {
+            if (flag) {
+                if (node->data > node->next->data) {
+                    int temp = node->data;
+                    node->data = node->next->data;
+                    node->next->data = temp;
+                }
+                flag = !flag;
+            } else {
+                if (node->data < node->next->data) {
+                    int temp = node->data;
+                    node->data = node->next->data;
+                    node->next->data = temp;
+                }
+                flag = !flag;
+            }
+
+            node = node->next;
+        }
+
+        return head;
+    }
+
+    Node* getNewNode(int key) {
+        Node* a = new Node();
+        a->next = nullptr;
+        a->data = key;
+        return a;
+    }
+
+    Node* insert(int key, Node* node) {
+        if (node == nullptr)
+            return getNewNode(key);
+        else
+            node->next = insert(key, node->next);
+
+        return node;
+    }
+
+
+    void printList(Node* node) {
+        if (node == nullptr) {
+            return;
+        }
+
+        std::cout << node->data << " ";
+        printList(node->next);
+    }
+};
+
+int main() {
+    Linked a;
+    Node* head = nullptr;
+
+    head = a.insert(2, head);
+    head = a.insert(3, head);
+    head = a.insert(5, head);
+    head = a.insert(9, head);
+    head = a.insert(11, head);
+    head = a.insert(12, head);
+
+    Node* zigZagList = a.rearrangeLinkedListZigzag(head);
+    a.printList(zigZagList);
+
+    return 0;
+}
