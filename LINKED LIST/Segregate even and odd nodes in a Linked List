@@ -1,0 +1,72 @@
+#include <iostream>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* modifyLinkedList(ListNode* head) {
+        ListNode* even = new ListNode(0);
+        ListNode* odd = new ListNode(0);
+
+        ListNode* evenP = even;
+        ListNode* oddP = odd;
+
+        while (head) {
+            if (head->val % 2 == 0) {
+                evenP->next = head;
+                evenP = evenP->next;
+            } else {
+                oddP->next = head;
+                oddP = oddP->next;
+            }
+
+            head = head->next;
+        }
+
+        oddP->next = nullptr;
+        evenP->next = odd->next;
+        return even->next;
+    }
+};
+
+// Driver code to test the modifyLinkedList function
+void printList(ListNode* head) {
+    while (head) {
+        std::cout << head->val << " ";
+        head = head->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    //17->15->8->12->10->5->4->1->7->6->NULL
+    ListNode* head = new ListNode(17);
+    head->next = new ListNode(15);
+    head->next->next = new ListNode(8);
+    head->next->next->next = new ListNode(12);
+    head->next->next->next->next = new ListNode(10);
+    head->next->next->next->next->next = new ListNode(5);
+    head->next->next->next->next->next->next = new ListNode(4);
+    head->next->next->next->next->next->next->next = new ListNode(1);
+    head->next->next->next->next->next->next->next->next = new ListNode(7);
+    head->next->next->next->next->next->next->next->next->next = new ListNode(6);
+
+
+    std::cout << "Original Linked List: ";
+    printList(head);
+
+    Solution solution;
+    ListNode* modifiedList = solution.modifyLinkedList(head);
+
+    std::cout << "Modified Linked List: ";
+    printList(modifiedList);
+
+    return 0;
+}
