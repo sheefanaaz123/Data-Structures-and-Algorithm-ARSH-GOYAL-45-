@@ -1,0 +1,92 @@
+#include <iostream>
+#include <vector>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoSortedLists(ListNode* l1, ListNode* l2) {
+        if (!l1)
+            return l2;
+        if (!l2)
+            return l1;
+
+        if (l1->val <= l2->val) {
+            l1->next = mergeTwoSortedLists(l1->next, l2);
+            return l1;
+        } else {
+            l2->next = mergeTwoSortedLists(l1, l2->next);
+            return l2;
+        }
+
+        return NULL;
+    }
+
+    ListNode* partitionAndMerge(int start, int end, std::vector<ListNode*>& lists) {
+        if (start == end)
+            return lists[start];
+
+        if (start > end)
+            return NULL;
+
+        int mid = start + (end - start) / 2;
+
+        ListNode* l1 = partitionAndMerge(start, mid, lists);
+        ListNode* l2 = partitionAndMerge(mid + 1, end, lists);
+
+        return mergeTwoSortedLists(l1, l2);
+    }
+
+    ListNode* mergeKLists(std::vector<ListNode*>& lists) {
+        int n = lists.size();
+
+        if (n == 0)
+            return NULL;
+
+        return partitionAndMerge(0, n - 1, lists);
+    }
+};
+
+// Driver code to test the mergeKLists function
+void printList(ListNode* head) {
+    while (head) {
+        std::cout << head->val << " ";
+        head = head->next;
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    Solution solution;
+
+    // Create sample linked lists
+    ListNode* list1 = new ListNode(1);
+    list1->next = new ListNode(4);
+    list1->next->next = new ListNode(5);
+
+    ListNode* list2 = new ListNode(1);
+    list2->next = new ListNode(3);
+    list2->next->next = new ListNode(4);
+
+    ListNode* list3 = new ListNode(2);
+    list3->next = new ListNode(6);
+
+    // Store the linked lists in a vector
+    std::vector<ListNode*> lists = {list1, list2, list3};
+
+    // Merge the k lists
+    ListNode* result = solution.mergeKLists(lists);
+
+    // Print the merged list
+    std::cout << "Merged Linked List: ";
+    printList(result);
+
+    return 0;
+}
