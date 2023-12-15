@@ -1,0 +1,34 @@
+#include <iostream>
+#include <stack>
+#include <vector>
+
+class StockSpanner {
+public:
+    StockSpanner() {
+    }
+    
+    int next(int price) {
+        int span = 1;
+        while (!stack.empty() && stack.top().first <= price) {
+            span += stack.top().second;
+            stack.pop();
+        }
+        stack.push(std::make_pair(price, span));
+        return span;
+    }
+
+private:
+    std::stack<std::pair<int, int>> stack;
+};
+
+int main() {
+    StockSpanner* obj = new StockSpanner();
+    std::cout << obj->next(100) << std::endl;  // Output: 1
+    std::cout << obj->next(80) << std::endl;   // Output: 1
+    std::cout << obj->next(60) << std::endl;   // Output: 1
+    std::cout << obj->next(70) << std::endl;   // Output: 2
+    std::cout << obj->next(60) << std::endl;   // Output: 1
+    std::cout << obj->next(75) << std::endl;   // Output: 4
+
+    return 0;
+}
