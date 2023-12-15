@@ -1,0 +1,133 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct ListNode {
+    int value;
+    struct ListNode* next;
+};
+
+ListNode* createNode(int value) {
+    ListNode* temp = new ListNode;
+    temp->value = value;
+    temp->next = NULL;
+    return temp;
+}
+
+int getLength(ListNode* node) {
+    int size = 0;
+    while (node != NULL) {
+        node = node->next;
+        size++;
+    }
+    return size;
+}
+
+ListNode* reverseList(ListNode* head) {
+    ListNode *prev = NULL, *next;
+    while (head != NULL) {
+        next = head->next;
+        head->next = prev;
+        prev = head;
+        head = next;
+    }
+    return prev;
+}
+
+ListNode* subtractLinkedListHelper(ListNode* list1, ListNode* list2) {
+    list1 = reverseList(list1);
+    list2 = reverseList(list2);
+
+    int carry = 1, sum;
+    ListNode *result = NULL, *temp;
+
+    while (list1 != NULL || list2 != NULL) {
+        sum = carry;
+
+        if (list1) {
+            sum += list1->value;
+            list1 = list1->next;
+        }
+
+        if (list2) {
+            sum += (9 - list2->value);
+            list2 = list2->next;
+        } else {
+            sum += 9;
+        }
+
+        carry = sum / 10;
+        sum = sum % 10;
+
+        if (result == NULL) {
+            result = createNode(sum);
+            temp = result;
+        } else {
+            temp->next = createNode(sum);
+            temp = temp->next;
+        }
+    }
+
+    result = reverseList(result);
+
+    while (result && result->value == 0)
+        result = result->next;
+
+    return result;
+}
+
+ListNode* subtractLinkedList(ListNode* list1, ListNode* list2) {
+    if (list1 == NULL && list2 == NULL)
+        return NULL;
+
+    while (list1 != NULL && list1->value == 0)
+        list1 = list1->next;
+    while (list2 != NULL && list2->value == 0)
+        list2 = list2->next;
+
+    int len1 = getLength(list1);
+    int len2 = getLength(list2);
+
+    if (len1 == len2) {
+        ListNode *a = list1, *b = list2;
+        while (a != NULL && b != NULL && a->value == b->value) {
+            a = a->next;
+            b = b->next;
+        }
+
+        if (a != NULL && b != NULL && a->value < b->value) {
+            swap(list1, list2);
+        }
+    } else if (len2 > len1) {
+        swap(list1, list2);
+    }
+
+    ListNode* result = subtractLinkedListHelper(list1, list2);
+
+    if (result == NULL) {
+        return createNode(0);
+    }
+
+    return result;
+}
+
+void printLinkedList(struct ListNode* node) {
+    while (node != NULL) {
+        printf("%d ", node->value);
+        node = node->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    ListNode* head1 = createNode(1);
+    head1->next = createNode(1);
+    head1->next->next = createNode(0);
+
+    ListNode* head2 = createNode(1);
+
+    ListNode* result = subtractLinkedList(head1, head2);
+
+    printLinkedList(result);
+
+    return 0;
+}
