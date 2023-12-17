@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+/**
+ * This is the interface that allows for creating nested lists.
+ * You should not implement it, or speculate about its implementation
+ */
+class NestedInteger {
+public:
+    // Return true if this NestedInteger holds a single integer, rather than a nested list.
+    bool isInteger() const;
+
+    // Return the single integer that this NestedInteger holds, if it holds a single integer
+    // The result is undefined if this NestedInteger holds a nested list
+    int getInteger() const;
+
+    // Return the nested list that this NestedInteger holds, if it holds a nested list
+    // The result is undefined if this NestedInteger holds a single integer
+    const vector<NestedInteger>& getList() const;
+};
+
+class NestedIterator {
+public:
+    stack<NestedInteger> st;
+
+    NestedIterator(vector<NestedInteger>& nestedList) {
+        int n = nestedList.size();
+        for (int i = n - 1; i >= 0; i--)
+            st.push(nestedList[i]);
+        flatten();
+    }
+
+    int next() {
+        int num = st.top().getInteger();
+        st.pop();
+        return num;
+    }
+
+    bool hasNext() {
+        return !st.empty();
+    }
+
+private:
+    void flatten() {
+        while (!st.empty()) {
+            NestedInteger curr = st.top();
+            st.pop();
+            if (curr.isInteger()) {
+                st.push(curr);
+                break;
+            }
+            vector<NestedInteger>& vec = curr.getList();
+            for (int i = vec.size() - 1; i >= 0; i--)
+                st.push(vec[i]);
+        }
+    }
+};
+
+/**
+ * Your NestedIterator object will be instantiated and called as such:
+ * NestedIterator i(nestedList);
+ * while (i.hasNext()) cout << i.next();
+ */
+int main() {
+    // Create a sample nested list: [[1, 2], [3], [4, 5]]
+    vector<NestedInteger> nestedList;
+    nestedList.push_back(NestedInteger({1, 2}));
+    nestedList.push_back(NestedInteger({3}));
+    nestedList.push_back(NestedInteger({4, 5}));
+
+    // Create a NestedIterator object
+    NestedIterator i(nestedList);
+
+    // Print the elements using hasNext() and next()
+    while (i.hasNext()) {
+        cout << i.next() << " ";
+    }
+
+    cout << endl;
+
+    return 0;
+}
