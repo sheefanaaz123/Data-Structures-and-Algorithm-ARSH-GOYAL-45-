@@ -1,0 +1,46 @@
+#include <iostream>
+#include <stack>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    string removeDuplicates(string s, int k) {
+        stack<pair<char, int>> x;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (x.size() == 0) {
+                x.push({s[i], 1});
+                continue;
+            }
+
+            // stack is not empty
+
+            if (s[i] == x.top().first) {
+                x.top().second++;
+                if (x.top().second == k) x.pop();
+            } else {
+                x.push({s[i], 1});
+            }
+        }
+
+        string ans = "";
+        while (!x.empty()) {
+            ans.append(x.top().second, x.top().first);  // Corrected the append function
+            x.pop();
+        }
+
+        reverse(ans.begin(), ans.end());
+
+        return ans;
+    }
+};
+
+int main() {
+    // Example usage
+    Solution sol;
+    string result = sol.removeDuplicates("deeedbbcccbdaa", 3);
+    cout << "Result: " << result << endl;
+
+    return 0;
+}
