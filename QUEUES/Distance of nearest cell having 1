@@ -1,0 +1,76 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution 
+{
+public:
+    vector<vector<int>> nearest(vector<vector<int>> grid)
+    {
+        int rows = grid.size(); 
+        int cols = grid[0].size(); 
+
+        vector<vector<int>> visited(rows, vector<int>(cols, 0)); 
+        vector<vector<int>> distances(rows, vector<int>(cols, 0)); 
+        
+        // Queue for BFS traversal
+        queue<pair<pair<int, int>, int>> bfsQueue; 
+
+        // Initialize the queue with the positions of 1s in the grid
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++) {
+                if(grid[i][j] == 1) {
+                    bfsQueue.push({{i, j}, 0}); 
+                    visited[i][j] = 1; 
+                }
+                else {
+                    visited[i][j] = 0; 
+                }
+            }
+        }
+        
+        // Possible movements: Up, Right, Down, Left
+        int deltaRow[] = {-1, 0, +1, 0}; 
+        int deltaCol[] = {0, +1, 0, -1}; 
+
+        while(!bfsQueue.empty()) {
+            int row = bfsQueue.front().first.first; 
+            int col = bfsQueue.front().first.second; 
+            int steps = bfsQueue.front().second; 
+            bfsQueue.pop(); 
+
+            distances[row][col] = steps; 
+
+            // Visit all 4 neighbors
+            for(int i = 0; i < 4; i++) {
+                int newRow = row + deltaRow[i]; 
+                int newCol = col + deltaCol[i]; 
+
+                // Visit only unvisited and valid neighbors
+                if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && visited[newRow][newCol] == 0) {
+                    visited[newRow][newCol] = 1; 
+                    bfsQueue.push({{newRow, newCol}, steps + 1});  
+                }
+            }
+        }
+        return distances; 
+    }
+};
+
+int main(){
+    vector<vector<int>> grid{
+        {1,0,1},{1,1,0},{1,0,0}
+
+    };
+    
+    Solution obj;
+    vector<vector<int>> result = obj.nearest(grid);
+    
+    // Print the result
+    for(auto row : result) {
+        for(auto distance : row)
+            cout << distance << " ";
+        cout << "\n";
+    }
+    
+    return 0;
+}
