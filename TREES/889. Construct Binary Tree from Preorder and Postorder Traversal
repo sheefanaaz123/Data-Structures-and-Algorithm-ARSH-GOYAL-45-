@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+#define Tn TreeNode
+#define vc vector<int>
+
+class Solution {
+private:
+    int findElement(vc post, int element) {
+        return find(post.begin(), post.end(), element) - post.begin();
+    }
+
+    TreeNode* helper(vc& pre, vc& post, int preStart, int preEnd, int postStart, int postEnd) {
+        if (preStart > preEnd) {
+            return nullptr;
+        }
+        TreeNode* root = new TreeNode(pre[preStart]);
+
+        if (preStart == preEnd) {
+            return root;
+        }
+
+        int index = findElement(post, pre[preStart + 1]);
+        int length = index - postStart + 1;
+
+        root->left = helper(pre, post, preStart + 1, preStart + length, postStart, index);
+        root->right = helper(pre, post, preStart + length + 1, preEnd, index + 1, postEnd - 1);
+
+        return root;
+    }
+
+public:
+    TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
+        return helper(pre, post, 0, pre.size() - 1, 0, post.size() - 1);
+    }
+};
+
+// Function to print the inorder traversal of the constructed tree
+void printInorder(TreeNode* root) {
+    if (root) {
+        printInorder(root->left);
+        cout << root->val << " ";
+        printInorder(root->right);
+    }
+}
+
+int main() {
+    // Example usage
+
+    Solution solution;
+
+    // Example preorder and postorder arrays
+    vector<int> preorder = {1, 2, 4, 5, 3, 6, 7};
+    vector<int> postorder = {4, 5, 2, 6, 7, 3, 1};
+
+    // Construct the binary tree
+    TreeNode* root = solution.constructFromPrePost(preorder, postorder);
+
+    // Print the inorder traversal of the constructed tree
+    cout << "Inorder Traversal of the Constructed Tree: ";
+    printInorder(root);
+    cout << endl;
+
+    // Clean up allocated memory
+    delete root->right;
+    delete root->left->right;
+    delete root->left;
+    delete root;
+
+    return 0;
+}
