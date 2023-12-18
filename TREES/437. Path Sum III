@@ -1,0 +1,81 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution {
+    long long total = 0;
+
+public:
+    int pathSum(TreeNode* root, int sum) {
+        if (root == nullptr)
+            return 0;
+
+        unordered_map<long long, long long> hm;
+        hm[0] = 1;
+        findPathSum(root, 0, sum, hm);
+        return static_cast<int>(total);
+    }
+
+private:
+    void findPathSum(TreeNode* curr, long long sum, int target, unordered_map<long long, long long>& hm) {
+        if (curr == nullptr)
+            return;
+
+        sum += curr->val;
+        if (hm.find(sum - target) != hm.end())
+            total += hm[sum - target];
+        
+        hm[sum] += 1;
+        
+        findPathSum(curr->left, sum, target, hm);
+        findPathSum(curr->right, sum, target, hm);
+
+        hm[sum] -= 1;
+        return;
+    }
+};
+
+int main() {
+    // Example usage
+
+    // Create a binary tree
+    TreeNode* root = new TreeNode(10);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(-3);
+    root->left->left = new TreeNode(3);
+    root->left->right = new TreeNode(2);
+    root->right->right = new TreeNode(11);
+    root->left->left->left = new TreeNode(3);
+    root->left->left->right = new TreeNode(-2);
+    root->left->right->right = new TreeNode(1);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Test the pathSum function
+    int targetSum = 8;
+    int result = solution.pathSum(root, targetSum);
+
+    cout << "Number of paths with sum " << targetSum << ": " << result << endl;
+
+    // Clean up allocated memory
+    delete root->left->left->right;
+    delete root->left->left->left;
+    delete root->left->right->right;
+    delete root->left->right;
+    delete root->left;
+    delete root->right->right;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
