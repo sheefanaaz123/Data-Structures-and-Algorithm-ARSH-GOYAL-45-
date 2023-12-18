@@ -1,0 +1,51 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    // Function to find the starting gas station index to complete the circuit
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        int totalGas = 0, totalCost = 0;
+        int currentGas = 0, startingPoint = 0;
+
+        // Calculate total gas and total cost
+        for (int i = 0; i < n; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+
+        // Check if it's possible to complete the circuit
+        if (totalGas < totalCost) {
+            // If total gas is less than total cost, no solution exists
+            return -1;
+        }
+
+        // Iterate through the gas stations
+        for (int i = 0; i < n; i++) {
+            // Update current gas based on the difference between gas and cost at the current station
+            currentGas += gas[i] - cost[i];
+
+            // If there is a breakdown (current gas < 0), reset starting point and current gas
+            if (currentGas < 0) {
+                startingPoint = i + 1;
+                currentGas = 0;
+            }
+        }
+
+        return startingPoint;
+    }
+};
+
+int main() {
+    // Driver's code
+    vector<int> gas = {1, 2, 3, 4, 5};
+    vector<int> cost = {3, 4, 5, 1, 2};
+
+    Solution obj;
+    int startingIndex = obj.canCompleteCircuit(gas, cost);
+
+    cout << "The starting gas station index to complete the circuit is: " << startingIndex << "\n";
+
+    return 0;
+}
