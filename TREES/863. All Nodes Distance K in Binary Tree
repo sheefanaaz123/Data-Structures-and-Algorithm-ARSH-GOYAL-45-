@@ -1,0 +1,129 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+using namespace std;
+
+/**
+ * Definition for a binary tree node.
+ */
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    unordered_map<TreeNode*, TreeNode*> parent;
+
+    void addParent(TreeNode* root) {
+        if (!root)
+            return;
+
+        if (root->left)
+            parent[root->left] = root;
+
+        addParent(root->left);
+
+        if (root->right)
+            parent[root->right] = root;
+
+        addParent(root->right);
+    }
+
+    void collectKDistanceNodes(TreeNode* target, int k, vector<int>& result) {
+        queue<TreeNode*> que;
+        que.push(target);
+        unordered_set<int> visited;
+        visited.insert(target->val);
+
+        while (!que.empty()) {
+            int n = que.size();
+            if (k == 0)
+                break;
+
+            while (n--) {
+                TreeNode* curr = que.front();
+                que.pop();
+
+                if (curr->left && !visited.count(curr->left->val)) {
+                    que.push(curr->left);
+                    visited.insert(curr->left->val);
+                }
+                if (curr->right && !visited.count(curr->right->val)) {
+                    que.push(curr->right);
+                    visited.insert(curr->right->val);
+                }
+
+                if (parent.count(curr) && !visited.count(parent[curr]->val)) {
+                    que.push(parent[curr]);
+                    visited.insert(parent[curr]->val);
+                }
+            }
+            k--;
+        }
+
+        while (!que.empty()) {
+            TreeNode* temp = que.front();
+            que.pop();
+            result.push_back(temp->val);
+        }
+    }
+
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        vector<int> result;
+
+        addParent(root);
+
+        collectKDistanceNodes(target, k, result);
+        return result;
+    }
+};
+
+// Function to delete a binary tree and free the memory
+void deleteTree(TreeNode* root) {
+    if (root) {
+        deleteTree(root->left);
+        deleteTree(root->right);
+        delete root;
+    }
+}
+
+// Function to print vector elements
+void printVector(const vector<int>& vec) {
+    for (int num : vec) {
+        cout << num << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    Solution solution;
+
+    // Create a sample binary tree
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(1);
+    root->left->left = new TreeNode(6);
+    root->left->right = new TreeNode(2);
+    root->right->left = new TreeNode(0);
+    root->right->right = new TreeNode(8);
+    root->left->right->left = new TreeNode(7);
+    root->left->right->right = new TreeNode(4);
+
+    // Test the distanceK function
+    TreeNode* targetNode = root->left;
+    int k = 2;
+    vector<int> result = solution.distanceK(root, targetNode, k);
+
+    // Print the result
+    cout << "Nodes at distance " << k << " from target node " << targetNode->val << ": ";
+    printVector(result);
+
+    // Delete the tree to avoid memory leaks
+    deleteTree(root);
+
+    return 0;
+}
