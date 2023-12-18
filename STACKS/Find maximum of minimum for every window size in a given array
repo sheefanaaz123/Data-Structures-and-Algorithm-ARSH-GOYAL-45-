@@ -1,0 +1,83 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+void printMaxOfMin(int arr[], int n)
+{
+	// Stack to store indices of elements in the array
+	stack<int> indexStack;
+
+	// Arrays to store the previous and next smaller elements
+	int left[n + 1];
+	int right[n + 1];
+
+	// Initialize elements of left[] and right[]
+	for (int i = 0; i < n; i++) {
+		left[i] = -1;
+		right[i] = n;
+	}
+
+	// Calculate the previous smaller element for each element in the array
+	for (int i = 0; i < n; i++) {
+		while (!indexStack.empty() && arr[indexStack.top()] >= arr[i])
+			indexStack.pop();
+
+		if (!indexStack.empty())
+			left[i] = indexStack.top();
+
+		indexStack.push(i);
+	}
+
+	// Empty the stack as the stack is going to be used for the next smaller element
+	while (!indexStack.empty())
+		indexStack.pop();
+
+	// Calculate the next smaller element for each element in the array
+	for (int i = n - 1; i >= 0; i--) {
+		while (!indexStack.empty() && arr[indexStack.top()] >= arr[i])
+			indexStack.pop();
+
+		if (!indexStack.empty())
+			right[i] = indexStack.top();
+
+		indexStack.push(i);
+	}
+
+	// Create and initialize an answer array
+	int ans[n + 1];
+	for (int i = 0; i <= n; i++)
+		ans[i] = 0;
+
+	// Fill the answer array by comparing minimums of all
+	// lengths computed using left[] and right[]
+	for (int i = 0; i < n; i++) {
+		// Length of the interval
+		int len = right[i] - left[i] - 1;
+
+		// arr[i] is a possible answer for this length 'len' interval,
+		// check if arr[i] is more than the max for 'len'
+		ans[len] = max(ans[len], arr[i]);
+	}
+
+	// Some entries in ans[] may not be filled yet. Fill
+	// them by taking values from the right side of ans[]
+	for (int i = n - 1; i >= 1; i--)
+		ans[i] = max(ans[i], ans[i + 1]);
+
+	// Print the result
+	for (int i = 1; i <= n; i++)
+		cout << ans[i] << " ";
+}
+
+// Driver program
+int main()
+{
+	// Example array
+	int arr[] = { 10, 20, 30, 50, 10, 70, 30 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+
+	// Call the function to print the result
+	printMaxOfMin(arr, n);
+
+	return 0;
+}
