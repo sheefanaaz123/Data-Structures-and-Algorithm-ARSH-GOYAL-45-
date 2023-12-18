@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> parent;
+
+    int find(int node) {
+        while (parent[node] != node)
+            node = parent[node];
+        return node;
+    }
+
+    void union1(int i, int j) {
+        int iRoot = find(i);
+        int jRoot = find(j);
+
+        if (iRoot != jRoot) {
+            parent[jRoot] = iRoot;
+        }
+    }
+
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+
+        // Make each node the parent of itself
+        for (int i = 0; i <= n; i++)
+            parent.push_back(i);
+
+        // Loop on all the edges
+        for (vector<int> edge : edges) {
+            if (find(edge[0]) == find(edge[1])) {
+                return edge;
+            } else {
+                union1(edge[0], edge[1]);
+            }
+        }
+
+        return {};
+    }
+};
+
+int main() {
+    // Example usage
+
+    Solution solution;
+
+    // Example 1
+    vector<vector<int>> edges1 = {{1, 2}, {2, 3}, {3, 4}, {1, 4}, {1, 5}};
+    vector<int> redundantEdge1 = solution.findRedundantConnection(edges1);
+
+    cout << "Redundant Edge (Example 1): ";
+    for (int val : redundantEdge1) {
+        cout << val << " ";
+    }
+    cout << endl;
+
+    // Example 2
+    vector<vector<int>> edges2 = {{1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 5}};
+    vector<int> redundantEdge2 = solution.findRedundantConnection(edges2);
+
+    cout << "Redundant Edge (Example 2): ";
+    for (int val : redundantEdge2) {
+        cout << val << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
