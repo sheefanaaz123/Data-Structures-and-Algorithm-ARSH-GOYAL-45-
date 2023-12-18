@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Solution {
+public:
+    int numTrees(int n) {
+        vector<vector<int>> memo(n + 1, vector<int>(n + 1, 0));
+        return numTrees(1, n, memo);
+    }
+
+private:
+    int numTrees(int start, int end, vector<vector<int>>& memo) {
+        if (start >= end) {
+            return 1;
+        }
+
+        if (memo[start][end] > 0) {
+            return memo[start][end];
+        }
+
+        int countUnique = 0;
+
+        for (int i = start; i <= end; i++) { // take i as root
+            countUnique += numTrees(start, i - 1, memo) * numTrees(i + 1, end, memo);
+        }
+
+        memo[start][end] = countUnique;
+
+        return countUnique;
+    }
+};
+
+int main() {
+    // Example usage
+
+    Solution solution;
+
+    // Test the numTrees function
+    int n = 3;
+    int result = solution.numTrees(n);
+
+    cout << "Number of unique binary search trees with " << n << " nodes: " << result << endl;
+
+    return 0;
+}
