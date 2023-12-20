@@ -51,3 +51,79 @@ int main() {
 
     return 0;
 }
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+// Maximum number of persons in the party
+#define MAX_PERSONS 8
+
+// Matrix representing whether a person i knows person j
+bool knowsMatrix[MAX_PERSONS][MAX_PERSONS] = {
+    {0, 0, 1, 0},
+    {0, 0, 1, 0},
+    {0, 0, 0, 0},
+    {0, 0, 1, 0}
+};
+
+// Function to check if person 'a' knows person 'b'
+bool knows(int a, int b) {
+    return knowsMatrix[a][b];
+}
+
+// Function to find the celebrity in the party
+int findCelebrity(int n) {
+    stack<int> potentialCelebrities;
+
+    // Push everybody to stack
+    for (int i = 0; i < n; i++)
+        potentialCelebrities.push(i);
+
+    int celebrityCandidate;
+
+    // Find a potential celebrity
+    while (potentialCelebrities.size() > 1) {
+        int personA = potentialCelebrities.top();
+        potentialCelebrities.pop();
+        int personB = potentialCelebrities.top();
+        potentialCelebrities.pop();
+
+        if (knows(personA, personB)) {
+            potentialCelebrities.push(personB);
+        } else {
+            potentialCelebrities.push(personA);
+        }
+    }
+
+    // Potential candidate?
+    celebrityCandidate = potentialCelebrities.top();
+    potentialCelebrities.pop();
+
+    // Check if celebrityCandidate is actually a celebrity or not
+    for (int i = 0; i < n; i++) {
+        // If any person doesn't know 'celebrityCandidate'
+        // or 'celebrityCandidate' doesn't know any person, return -1
+        if ((i != celebrityCandidate) && (knows(celebrityCandidate, i) || !knows(i, celebrityCandidate)))
+            return -1;
+    }
+
+    return celebrityCandidate;
+}
+
+// Driver code
+int main() {
+    int numPersons = 4;
+    int celebrityID = findCelebrity(numPersons);
+
+    if (celebrityID == -1) {
+        cout << "No celebrity found";
+    } else {
+        cout << "Celebrity ID: " << celebrityID;
+    }
+
+    return 0;
+}
+
