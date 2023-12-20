@@ -1,0 +1,53 @@
+#include <iostream>
+using namespace std;
+
+#define MAX_PERSONS 8
+
+bool knowsMatrix[MAX_PERSONS][MAX_PERSONS] = {
+    {0, 0, 1, 0},
+    {0, 0, 1, 0},
+    {0, 0, 0, 0},
+    {0, 0, 1, 0}
+};
+
+
+// Function to find the celebrity in the party
+int findCelebrity(int n) {
+    // Arrays to store in-degree and out-degree of each person
+    int inDegree[MAX_PERSONS] = {0};
+    int outDegree[MAX_PERSONS] = {0};
+
+    // Calculate in-degree and out-degree for each person
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            int knowsRelation = knowsMatrix[i][j];
+
+            // Update the degrees
+            outDegree[i] += knowsRelation;
+            inDegree[j] += knowsRelation;
+        }
+    }
+
+    // Find a person with in-degree n-1 and out-degree 0 (potential celebrity)
+    for (int i = 0; i < n; ++i) {
+        if (inDegree[i] == n - 1 && outDegree[i] == 0) {
+            return i; // Found the celebrity
+        }
+    }
+
+    return -1; // No celebrity found
+}
+
+// Driver code
+int main() {
+    int numPersons = 4;
+    int celebrityID = findCelebrity(numPersons);
+
+    if (celebrityID == -1) {
+        cout << "No celebrity found";
+    } else {
+        cout << "Celebrity id: " << celebrityID;
+    }
+
+    return 0;
+}
