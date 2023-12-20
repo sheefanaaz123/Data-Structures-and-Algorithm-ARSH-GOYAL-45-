@@ -1,0 +1,87 @@
+#include <unordered_map>
+
+class LRUCache {
+public:
+    // Node class represents a node in the doubly linked list
+    class node {
+    public:
+        int key;      // Key of the cache
+        int val;      // Value corresponding to the key
+        node *next;   // Pointer to the next node
+        node *prev;   // Pointer to the previous node
+
+        // Constructor to initialize a node with a key and value
+        node(int _key, int _val) : key(_key), val(_val) {}
+    };
+
+    // Head and tail nodes act as dummy nodes to simplify operations
+    node *head = new node(-1, -1);
+    node *tail = new node(-1, -1);
+
+    int cap;   // Capacity of the cache
+    // Map to store the mapping of keys to their corresponding nodes
+    std::unordered_map<int, node *> m;
+
+    // Constructor to initialize LRUCache with a given capacity
+    LRUCache(int capacity) {
+        cap = capacity;
+        // Set up initial connections between head and tail
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    // Function to add a new node to the front of the linked list
+    void addnode(node *newnode) {
+        node *temp = head->next;
+        newnode->next = temp;
+        newnode->prev = head;
+        head->next = newnode;
+        temp->prev = newnode;
+    }
+
+    // Function to delete a given node from the linked list
+    void deletenode(node *delnode) {
+        node *delprev = delnode->prev;
+        node *delnext = delnode->next;
+        delprev->next = delnext;
+        delnext->prev = delprev;
+    }
+
+    // Function to get the value associated with a given key
+    int get(int key_) {
+        // Check if the key is present in the cache
+        if (m.find(key_) != m.end()) {
+            node *resnode = m[key_];
+            int res = resnode->val;
+            // Remove the node and add it to the front (recently used)
+            m.erase(key_);
+            deletenode(resnode);
+            addnode(resnode);
+            m[key_] = head->next;  // Update the mapping in the map
+            return res;
+        }
+
+        return -1;  // Return -1 if the key is not found
+    }
+
+    // Function to insert a new key-value pair or update an existing one
+    void put(int key_, int value) {
+        // Check if the key already exists in the cache
+        if (m.find(key_) != m.end()) {
+            // If present, remove the existing node
+            node *existingnode = m[key_];
+            m.erase(key_);
+            deletenode(existingnode);
+        }
+
+        // If the cache is full, remove the least recently used node
+        if (m.size() == cap) {
+            m.erase(tail->prev->key);
+            deletenode(tail->prev);
+        }
+
+        // Add a new node with the given key and value to the front
+        addnode(new node(key_, value));
+        m[key_] = head->next;  // Update the mapping in the map
+    }
+};
