@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        if (root == nullptr) {
+            return result;
+        }
+
+        queue<TreeNode*> nodesQueue;
+        nodesQueue.push(root);
+        bool leftToRight = true;
+
+        while (!nodesQueue.empty()) {
+            int size = nodesQueue.size();
+            vector<int> row(size);
+
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = nodesQueue.front();
+                nodesQueue.pop();
+
+                // find position to fill node's value
+                int index = (leftToRight) ? i : (size - 1 - i);
+
+                row[index] = node->val;
+
+                if (node->left) {
+                    nodesQueue.push(node->left);
+                }
+                if (node->right) {
+                    nodesQueue.push(node->right);
+                }
+            }
+
+            // After this level
+            leftToRight = !leftToRight;
+            result.push_back(row);
+        }
+
+        return result;
+    }
+};
+
+// Driver code
+int main() {
+    // Create a sample binary tree
+    TreeNode* root = new TreeNode(3);
+    root->left = new TreeNode(9);
+    root->right = new TreeNode(20);
+    root->right->left = new TreeNode(15);
+    root->right->right = new TreeNode(7);
+
+    // Instantiate the Solution class
+    Solution solution;
+
+    // Call the zigzagLevelOrder function
+    vector<vector<int>> zigzagOrder = solution.zigzagLevelOrder(root);
+
+    // Display the result
+    cout << "Zigzag Level Order Traversal:" << endl;
+    for (const auto& row : zigzagOrder) {
+        for (int val : row) {
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
