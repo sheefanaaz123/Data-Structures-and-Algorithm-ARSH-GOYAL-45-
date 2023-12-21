@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(nullptr), right(nullptr), next(nullptr) {}
+
+    Node(int _val) : val(_val), left(nullptr), right(nullptr), next(nullptr) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+
+class Solution {
+public:
+    void helper(Node* root) {
+        if (root == nullptr)
+            return;
+
+        if (root->left != nullptr)
+            root->left->next = root->right;
+        if (root->right != nullptr && root->next != nullptr)
+            root->right->next = root->next->left;
+
+        helper(root->left);
+        helper(root->right);
+    }
+
+    Node* connect(Node* root) {
+        helper(root);
+        return root;
+    }
+
+    void inorderTraversal(Node* root) {
+        if (root == nullptr)
+            return;
+
+        inorderTraversal(root->left);
+        std::cout << "Node Value: " << root->val;
+        if (root->next != nullptr)
+            std::cout << ", Next Node Value: " << root->next->val;
+        std::cout << std::endl;
+
+        inorderTraversal(root->right);
+    }
+};
+
+// Driver code
+int main() {
+    // Sample tree
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+    root->right->left = new Node(6);
+    root->right->right = new Node(7);
+
+    // Instantiate the Solution class
+    Solution solution;
+
+    // Connect nodes in the tree
+    Node* connectedRoot = solution.connect(root);
+
+    // Display the connected nodes using inorder traversal
+    std::cout << "Connected Nodes (Inorder Traversal):" << std::endl;
+    solution.inorderTraversal(connectedRoot);
+
+    return 0;
+}
