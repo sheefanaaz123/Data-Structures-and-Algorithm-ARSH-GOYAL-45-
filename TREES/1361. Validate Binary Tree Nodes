@@ -1,0 +1,105 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class BinaryTreeValidator {
+public:
+    // Function to validate whether the given nodes form a valid binary tree
+    bool isValidBinaryTree(int numNodes, vector<int>& leftChildren, vector<int>& rightChildren) {
+        unordered_map<int, vector<int>> parentNodeToChildren;
+        unordered_map<int, int> childNodeToParent;
+
+        // Populate parent-to-children and child-to-parent mappings
+        for (int node = 0; node < numNodes; ++node) {
+            int leftChild = leftChildren[node];
+            int rightChild = rightChildren[node];
+
+            if (leftChild != -1) {
+                parentNodeToChildren[node].push_back(leftChild);
+
+                if (childNodeToParent.find(leftChild) != childNodeToParent.end()) {
+                    // If left child already has a parent, it's not a valid binary tree
+                    return false;
+                } else {
+                    childNodeToParent[leftChild] = node;
+                }
+            }
+
+            if (rightChild != -1) {
+                parentNodeToChildren[node].push_back(rightChild);
+
+                if (childNodeToParent.find(rightChild) != childNodeToParent.end()) {
+                    // If right child already has a parent, it's not a valid binary tree
+                    return false;
+                } else {
+                    childNodeToParent[rightChild] = node;
+                }
+            }
+        }
+
+        int root = -1;
+
+        // Find the root of the tree
+        for (int node = 0; node < numNodes; ++node) {
+            if (childNodeToParent.find(node) == childNodeToParent.end()) {
+                if (root != -1) {
+                    // If there is more than one root, it's not a valid binary tree
+                    return false;
+                } else {
+                    root = node;
+                }
+            }
+        }
+
+        // If no root is found, it's not a valid binary tree
+        if (root == -1) {
+            return false;
+        }
+
+        // Perform BFS traversal to ensure all nodes are reachable
+        vector<bool> visitedNodes(numNodes, false);
+        queue<int> bfsQueue;
+        int visitedNodeCount = 1;  // Start with the root node
+        bfsQueue.push(root);
+        visitedNodes[root] = true;
+
+        while (!bfsQueue.empty()) {
+            int currentNode = bfsQueue.front();
+            bfsQueue.pop();
+
+            // Visit children of the current node
+            for (int& child : parentNodeToChildren[currentNode]) {
+                if (!visitedNodes[child]) {
+                    visitedNodes[child] = true;
+                    ++visitedNodeCount;
+                    bfsQueue.push(child);
+                }
+            }
+        }
+
+        // Check if all nodes are visited during BFS traversal
+        return visitedNodeCount == numNodes;
+    }
+};
+
+int main() {
+    BinaryTreeValidator binaryTreeValidator;
+
+    // Example 1
+    int nodes1 = 5;
+    vector<int> leftChildren1 = {1, 3, -1, -1, -1};
+    vector<int> rightChildren1 = {2, 4, -1, -1, -1};
+    bool result1 = binaryTreeValidator.isValidBinaryTree(nodes1, leftChildren1, rightChildren1);
+    cout << "Example 1 Result: " << (result1 ? "Valid Binary Tree" : "Not a Valid Binary Tree") << endl;
+
+    // Example 2
+    int nodes2 = 4;
+    vector<int> leftChildren2 = {1, 0, 3, -1};
+    vector<int> rightChildren2 = {-1, -1, -1, -1};
+    bool result2 = binaryTreeValidator.isValidBinaryTree(nodes2, leftChildren2, rightChildren2);
+    cout << "Example 2 Result: " << (result2 ? "Valid Binary Tree" : "Not a Valid Binary Tree") << endl;
+
+    // Add more test cases as needed...
+
+    return 0;
+}
