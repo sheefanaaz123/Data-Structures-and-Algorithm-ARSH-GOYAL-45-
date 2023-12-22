@@ -1,0 +1,62 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Definition for a binary tree node.
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    // Function to count the number of nodes in the BST within the range [l, h]
+    int getCount(Node *root, int l, int h) {
+        if (root == nullptr) {
+            return 0;
+        }
+
+        if (root->data >= l && root->data <= h) {
+            return 1 + getCount(root->left, l, h) + getCount(root->right, l, h);
+        } else if (root->data <= l) {
+            return getCount(root->right, l, h);
+        } else {
+            return getCount(root->left, l, h);
+        }
+    }
+};
+
+// Driver code to test the implementation
+int main() {
+    // Create a sample binary search tree
+    Node* root = new Node(10);
+    root->left = new Node(5);
+    root->right = new Node(15);
+    root->left->left = new Node(3);
+    root->left->right = new Node(7);
+    root->right->left = new Node(12);
+    root->right->right = new Node(18);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Test the getCount function with a range [l, h]
+    int l = 7, h = 15;
+    int count = solution.getCount(root, l, h);
+
+    // Print the result
+    cout << "Number of nodes in the range [" << l << ", " << h << "]: " << count << endl;
+
+    // Clean up memory (optional)
+    delete root->right->right;
+    delete root->right->left;
+    delete root->left->right;
+    delete root->left->left;
+    delete root->right;
+    delete root->left;
+    delete root;
+
+    return 0;
+}
