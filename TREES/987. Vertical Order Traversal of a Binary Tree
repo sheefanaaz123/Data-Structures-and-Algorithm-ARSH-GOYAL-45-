@@ -1,0 +1,95 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int value) : val(value), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        // Map to store nodes based on vertical and level
+        // {vertical, {level, node->val}}
+        map<int, map<int, multiset<int>>> m;
+        
+        // Queue to perform level-order traversal
+        // {node, {vertical, level}}
+        queue<pair<TreeNode*, pair<int, int>>> q;
+        
+        // Initialize the queue with the root node at vertical 0 and level 0
+        q.push({root, {0, 0}});
+        
+        // Perform level-order traversal
+        while (!q.empty()) {
+            auto it = q.front();
+            q.pop();
+            
+            TreeNode* node = it.first;
+            int vertical = it.second.first;
+            int level = it.second.second;
+            
+            // Insert the node's value into the map based on its vertical and level
+            m[vertical][level].insert(node->val);
+            
+            // Enqueue the left and right children with updated vertical and level
+            if (node->left) 
+                q.push({node->left, {vertical - 1, level + 1}});
+            if (node->right) 
+                q.push({node->right, {vertical + 1, level + 1}});
+        }
+        
+        // Vector to store the final result
+        vector<vector<int>> ans;
+      
+        // Process the map and construct the result vector
+        for (auto oneVertical : m) {
+            // Vector to store one complete vertical
+            vector<int> vec;
+            for (auto levelAndSet : oneVertical.second) {
+                for (auto setElement : levelAndSet.second) {
+                    vec.push_back(setElement);
+                }
+            }
+            ans.push_back(vec);
+        }
+        
+        return ans;
+    }
+};
+
+// Helper function to print a vector of vectors
+void printResult(const vector<vector<int>>& result) {
+    for (const auto& vertical : result) {
+        for (int val : vertical) {
+            cout << val << " ";
+        }
+        cout << endl;
+    }
+}
+
+// Driver code
+int main() {
+    // Create a sample binary tree
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(4);
+    root->left->right = new TreeNode(5);
+    root->right->left = new TreeNode(6);
+    root->right->right = new TreeNode(7);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Find and print the vertical traversal
+    vector<vector<int>> result = solution.verticalTraversal(root);
+    cout << "Vertical Traversal:\n";
+    printResult(result);
+
+    return 0;
+}
