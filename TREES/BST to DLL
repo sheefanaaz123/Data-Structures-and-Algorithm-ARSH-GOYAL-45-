@@ -1,0 +1,90 @@
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node.
+struct Node {
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    void solve(Node *root, Node *&prev, Node *&head, int &flag) {
+        if (root == NULL) {
+            return;
+        }
+
+        // Traverse left subtree
+        solve(root->left, prev, head, flag);
+
+        // If flag is 0, it means we are at the leftmost node of the current subtree
+        // Set head and prev to the current node
+        if (flag == 0) {
+            flag = 1;
+            head = root;
+            prev = root;
+        } else {
+            // If flag is 1, it means we are past the leftmost node
+            // Connect the current node to the previous node
+            prev->right = root;
+            prev->right->left = prev;
+            prev = prev->right;
+        }
+
+        // Traverse right subtree
+        solve(root->right, prev, head, flag);
+    }
+
+    // Function to convert binary tree to doubly linked list and return it.
+    Node *bToDLL(Node *root) {
+        // Initialize prev, head, and flag
+        Node *prev = NULL;
+        Node *head = NULL;
+        int flag = 0;
+
+        // Call the solve function to perform the conversion
+        solve(root, prev, head, flag);
+
+        // head now points to the leftmost node of the DLL
+        // Return head to the caller
+        return head;
+    }
+};
+
+// Helper function to print the doubly linked list
+void printDLL(Node *head) {
+    while (head != NULL) {
+        cout << head->data << " ";
+        head = head->right;
+    }
+    cout << endl;
+}
+
+// Driver code
+int main() {
+    // Create a sample binary tree
+    Node *root = new Node(10);
+    root->left = new Node(5);
+    root->right = new Node(20);
+    root->left->left = new Node(3);
+    root->left->right = new Node(7);
+    root->right->right = new Node(30);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Convert the binary tree to doubly linked list
+    Node *dllHead = solution.bToDLL(root);
+
+    // Print the doubly linked list
+    cout << "Doubly Linked List: ";
+    printDLL(dllHead);
+
+    // Clean up memory (optional)
+    // Add deletion logic for the binary tree and doubly linked list
+
+    return 0;
+}
