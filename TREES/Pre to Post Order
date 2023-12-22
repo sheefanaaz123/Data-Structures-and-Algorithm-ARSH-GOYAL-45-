@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int data;
+    TreeNode* left;
+    TreeNode* right;
+
+    TreeNode(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class BSTPostorder {
+public:
+    // Function to find postorder traversal from preorder traversal.
+    void findPostorderUtil(int preorder[], int n, int min_value, int max_value, int& preIndex) {
+        // If entire preorder array is traversed, return.
+        if (preIndex == n) {
+            return;
+        }
+
+        // If array element does not lie in the specified range, it is not part of the current subtree.
+        if (preorder[preIndex] < min_value || preorder[preIndex] > max_value) {
+            return;
+        }
+
+        // Store the current value to be printed later.
+        int root_value = preorder[preIndex];
+        preIndex++;
+
+        // Recursively traverse the left subtree.
+        findPostorderUtil(preorder, n, min_value, root_value, preIndex);
+
+        // Recursively traverse the right subtree.
+        findPostorderUtil(preorder, n, root_value, max_value, preIndex);
+
+        // Print the root value in postorder.
+        cout << root_value << " ";
+    }
+
+    // Function to find postorder traversal.
+    void findPostorder(int preorder[], int n) {
+        // To store the index of the element to be traversed next in the preorder array.
+        int preIndex = 0;
+
+        // Initial call with the entire range of values for the root of the entire tree.
+        findPostorderUtil(preorder, n, numeric_limits<int>::min(), numeric_limits<int>::max(), preIndex);
+    }
+};
+
+// Driver code
+int main() {
+    int preorder[] = {40, 30, 35, 80, 100};
+    int n = sizeof(preorder) / sizeof(preorder[0]);
+
+    // Create an instance of the BSTPostorder class.
+    BSTPostorder bstPostorder;
+
+    // Calling the function to find and print the postorder traversal.
+    cout << "Postorder traversal: ";
+    bstPostorder.findPostorder(preorder, n);
+
+    return 0;
+}
