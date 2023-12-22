@@ -1,0 +1,113 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node.
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    // Function to find the Lowest Common Ancestor (LCA) of nodes a and b
+    Node* lca(Node* root, int a, int b) {
+        if (root == nullptr) {
+            return nullptr;
+        }
+        if (root->data == a || root->data == b) {
+            return root;
+        }
+
+        Node* left = lca(root->left, a, b);
+        Node* right = lca(root->right, a, b);
+
+        if (left == nullptr) {
+            return right;
+        } else if (right == nullptr) {
+            return left;
+        } else {
+            return root;
+        }
+    }
+
+    // Function to find the distance from the LCA to a specific node with value val
+    int distanceToNode(Node* node, int val) {
+        if (node == nullptr) {
+            return -1; // Node not found
+        } else if (node->data == val) {
+            return 0; // Distance to the target node is 0
+        }
+
+        int left = distanceToNode(node->left, val);
+        int right = distanceToNode(node->right, val);
+
+        // If the target node is not present in the subtree, return -1
+        if (left == -1 && right == -1) {
+            return -1;
+        }
+
+        // If the target node is present in one of the subtrees, add 1 to the distance
+        return (left == -1 ? right : left) + 1;
+    }
+
+    // Function to find the minimum distance between nodes a and b in the binary tree
+    int findDist(Node* root, int a, int b) {
+        // Find the Lowest Common Ancestor (LCA) of nodes a and b
+        Node* LCA = lca(root, a, b);
+
+        // Find the distance from LCA to node a
+        int distanceA = distanceToNode(LCA, a);
+
+        // Find the distance from LCA to node b
+        int distanceB = distanceToNode(LCA, b);
+
+        // If either of the nodes is not present in the subtree, return -1
+        if (distanceA == -1 || distanceB == -1) {
+            return -1;
+        }
+
+        // Calculate the minimum distance between nodes a and b
+        return distanceA + distanceB;
+    }
+};
+
+// Driver code to test the implementation
+int main() {
+    // Create a sample binary tree
+    Node* root = new Node(47);
+    root->left = new Node(43);
+    root->right = new Node(69);
+    root->left->left = new Node(4);
+    root->left->right = new Node(44);
+    root->right->left = new Node(49);
+    root->right->right = new Node(86);
+
+    // Create an instance of the Solution class
+    Solution solution;
+
+    // Test the findDist function with nodes 86 and 44
+    int result = solution.findDist(root, 86, 44);
+
+    // Print the result
+    if (result != -1) {
+        cout << "Minimum distance between nodes 86 and 44: " << result << endl;
+    } else {
+        cout << "Nodes not found in the subtree." << endl;
+    }
+
+    // Clean up memory (optional)
+    delete root->right->right;
+    delete root->right->left;
+    delete root->left->right;
+    delete root->left->left;
+    delete root->right;
+    delete root->left;
+    delete root;
+
+    return 0;
+}
