@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class TreeNode {
+public:
+    int val;
+    TreeNode *left, *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+void printInOrder(TreeNode* root) {
+    if (root) {
+        printInOrder(root->left);
+        std::cout << root->val << " ";
+        printInOrder(root->right);
+    }
+}
+
+void deleteTree(TreeNode* root) {
+    if (root) {
+        deleteTree(root->left);
+        deleteTree(root->right);
+        delete root;
+    }
+}
+
+class Solution {
+public:
+    TreeNode* helper(std::vector<int>& preorder, int& i, int bound) {
+        if (i == preorder.size() || preorder[i] > bound) {
+            return NULL;
+        }
+        TreeNode* root = new TreeNode(preorder[i++]);
+        root->left = helper(preorder, i, root->val);
+        root->right = helper(preorder, i, bound);
+
+        return root;
+    }
+
+    TreeNode* bstFromPreorder(std::vector<int>& preorder) {
+        int i = 0;
+        return helper(preorder, i, INT_MAX);
+    }
+};
+
+// Sample Driver Code
+int main() {
+    Solution solution;
+
+    // Example preorder traversal: [8, 5, 1, 7, 10, 12]
+    std::vector<int> preorder = {8, 5, 1, 7, 10, 12};
+
+    // Constructing BST from preorder traversal
+    TreeNode* root = solution.bstFromPreorder(preorder);
+
+    // Displaying the constructed BST (in-order traversal)
+    std::cout << "In-order traversal of the constructed BST: ";
+    printInOrder(root);
+    std::cout << std::endl;
+
+    // Clean up: Free memory
+    deleteTree(root);
+
+    return 0;
+}
+
