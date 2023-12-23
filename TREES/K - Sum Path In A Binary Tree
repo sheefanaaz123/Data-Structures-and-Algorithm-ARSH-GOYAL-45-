@@ -1,0 +1,87 @@
+#include <bits/stdc++.h>
+using namespace std;
+#include <bits/stdc++.h>
+
+using namespace std;
+
+    
+    template <typename T>
+    class BinaryTreeNode {
+    public:
+        T data;
+        BinaryTreeNode<T> *left;
+        BinaryTreeNode<T> *right;
+
+        BinaryTreeNode(T data) {
+            this->data = data;
+            left = NULL;
+            right = NULL;
+        }
+    };
+    
+
+
+template <typename T>
+void solve(vector<vector<T>> &ans, vector<T> &path, BinaryTreeNode<T> *root, T k) {
+    if (root == NULL) {
+        return;
+    }
+    path.push_back(root->data);
+    solve(ans, path, root->left, k);
+    solve(ans, path, root->right, k);
+
+    T sum = 0;
+    for (int j = path.size() - 1; j >= 0; j--) {
+        sum += path[j];
+        if (sum == k) {
+            // Record the path from j to the end
+            vector<T> temp;
+            for (int i = j; i < path.size(); i++) {
+                temp.push_back(path[i]);
+            }
+            ans.push_back(temp);
+        }
+    }
+    path.pop_back();
+}
+
+template <typename T>
+vector<vector<T>> kPathSum(BinaryTreeNode<T> *root, T k) {
+    vector<vector<T>> ans;
+    vector<T> path;
+    solve(ans, path, root, k);
+    return ans;
+}
+
+// Driver's code for testing
+int main() {
+    // Create a sample binary tree
+    BinaryTreeNode<int> *root = new BinaryTreeNode<int>(10);
+    root->left = new BinaryTreeNode<int>(5);
+    root->right = new BinaryTreeNode<int>(12);
+    root->left->left = new BinaryTreeNode<int>(4);
+    root->left->right = new BinaryTreeNode<int>(7);
+
+    int k = 22;
+
+    // Find paths with sum equal to k
+    vector<vector<int>> result = kPathSum(root, k);
+
+    // Display the result
+    cout << "Paths with sum " << k << ": \n";
+    for (const auto &path : result) {
+        for (const auto &nodeValue : path) {
+            cout << nodeValue << " ";
+        }
+        cout << "\n";
+    }
+
+    // Clean up memory (free the allocated nodes)
+    delete root->left->left;
+    delete root->left->right;
+    delete root->left;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
