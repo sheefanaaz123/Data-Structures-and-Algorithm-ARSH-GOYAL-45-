@@ -1,0 +1,68 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class TreeNode {
+public:
+    int data;
+    TreeNode *left, *right;
+    TreeNode() : data(0), left(NULL), right(NULL) {}
+    TreeNode(int x) : data(x), left(NULL), right(NULL) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : data(x), left(left), right(right) {}
+};
+
+class NodeValue {
+public:
+    int maxNode, minNode, maxSize;
+
+    NodeValue(int minNode, int maxNode, int maxSize) {
+        this->maxNode = maxNode;
+        this->minNode = minNode;
+        this->maxSize = maxSize;
+    }
+};
+
+NodeValue helper(TreeNode *root) {
+    if (!root) {
+        return NodeValue(INT_MAX, INT_MIN, 0);
+    }
+
+    auto left = helper(root->left);
+    auto right = helper(root->right);
+
+    if (left.maxNode < root->data && root->data < right.minNode) {
+        // it is a BST
+        return NodeValue(min(root->data, left.minNode), max(root->data, right.maxNode), left.maxSize + right.maxSize + 1);
+    } else {
+        return NodeValue(INT_MIN, INT_MAX, max(left.maxSize, right.maxSize));
+    }
+}
+
+int largestBST(TreeNode *root) {
+    return helper(root).maxSize;
+}
+
+// Sample Driver Code
+int main() {
+    // Creating a sample Binary Tree
+    TreeNode *root = new TreeNode(10);
+    root->left = new TreeNode(5);
+    root->right = new TreeNode(15);
+    root->left->left = new TreeNode(1);
+    root->left->right = new TreeNode(8);
+    root->right->right = new TreeNode(7);
+
+    // Calculating the size of the largest BST
+    int maxSize = largestBST(root);
+
+    std::cout << "Size of the largest BST: " << maxSize << std::endl;
+
+    // Clean up: Free memory
+    delete root->left->left;
+    delete root->left->right;
+    delete root->right->right;
+    delete root->left;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
