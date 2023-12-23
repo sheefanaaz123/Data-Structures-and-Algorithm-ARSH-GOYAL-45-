@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+void solve(int i, int j, vector<vector<int>> &a, int n, vector<string> &ans, string move,
+           vector<vector<int>> &vis, int di[], int dj[]) {
+    if (i == n - 1 && j == n - 1) {
+        ans.push_back(move);
+        return;
+    }
+    string dir = "DLRU";
+    for (int ind = 0; ind < 4; ind++) {
+        int nexti = i + di[ind];
+        int nextj = j + dj[ind];
+        if (nexti >= 0 && nextj >= 0 && nexti < n && nextj < n && !vis[nexti][nextj] && a[nexti][nextj] == 1) {
+            vis[i][j] = 1;
+            solve(nexti, nextj, a, n, ans, move + dir[ind], vis, di, dj);
+            vis[i][j] = 0;
+        }
+    }
+}
+
+vector<string> searchMaze(vector<vector<int>> &arr, int n) {
+    vector<string> ans;
+    vector<vector<int>> vis(n, vector<int>(n, 0));
+    int di[] = {+1, 0, 0, -1};
+    int dj[] = {0, -1, 1, 0};
+    if (arr[0][0] == 1) solve(0, 0, arr, n, ans, "", vis, di, dj);
+    return ans;
+}
+
+// Sample Driver Code
+int main() {
+    // Example maze
+    vector<vector<int>> maze = {{1, 0, 1},
+                                {1, 1, 1},
+                                {0, 1, 1}};
+
+    // Size of the maze
+    int n = maze.size();
+
+    // Finding all paths in the maze
+    vector<string> paths = searchMaze(maze, n);
+
+    // Displaying the paths
+    cout << "All paths in the maze:\n";
+    for (const string &path : paths) {
+        cout << path << "\n";
+    }
+
+    return 0;
+}
