@@ -1,0 +1,79 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int data;
+    Node *left;
+    Node *right;
+    Node(int x) : data(x), left(NULL), right(NULL) {}
+};
+
+void count_nodes(Node* root, int &c) {
+    if (!root) return;
+    count_nodes(root->left, c);
+    c++;
+    count_nodes(root->right, c);
+}
+
+void func(Node* root, Node* &cur, Node* &prev, int &c, int k, int &f) {
+    if (!root) return;
+    func(root->left, cur, prev, c, k, f);
+    if (prev == NULL) {
+        prev = root;
+        c++;
+    } else if (c == k) {
+        c++;
+        cur = root;
+        f = 1;
+        return;
+    } else if (f == 0) {
+        c++;
+        prev = root;
+    }
+    func(root->right, cur, prev, c, k, f);
+}
+
+float findMedian(Node *root) {
+    int n = 0;
+    count_nodes(root, n);
+    Node* cur = NULL;
+    Node* prev = NULL;
+    int c = 1;
+    int x = (n / 2) + 1;
+    int f = 0;
+    func(root, cur, prev, c, x, f);
+    if (n & 1) {
+        float ans = (cur->data) * 1.0;
+        return ans;
+    } else {
+        float ans = ((cur->data + prev->data) * 1.0) / (2 * 1.0);
+        return ans;
+    }
+}
+
+// Driver's code for testing
+int main() {
+    // Create a sample binary search tree
+    Node* root = new Node(10);
+    root->left = new Node(5);
+    root->right = new Node(15);
+    root->left->left = new Node(3);
+    root->left->right = new Node(7);
+    root->right->left = new Node(12);
+    root->right->right = new Node(20);
+
+    // Find and print the median
+    float median = findMedian(root);
+    cout << "Median: " << median << endl;
+
+    // Clean up memory (free the allocated nodes)
+    delete root->left->left;
+    delete root->left->right;
+    delete root->left;
+    delete root->right->left;
+    delete root->right->right;
+    delete root->right;
+    delete root;
+
+    return 0;
+}
