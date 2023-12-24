@@ -1,0 +1,104 @@
+DFS:
+
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+class Solution {
+public:
+    int maxInformTime = INT_MIN;
+
+    // Depth-First Search
+    void DFS(unordered_map<int, vector<int>>& hierarchy, vector<int>& informTime, int currentEmployee, int currentTime) {
+        // Base case: No subordinates, update maxInformTime
+        if (hierarchy[currentEmployee].empty()) {
+            maxInformTime = max(maxInformTime, currentTime);
+            return;
+        }
+
+        // Recursive step: Iterate through subordinates and call DFS
+        for (int& subordinate : hierarchy[currentEmployee]) {
+            DFS(hierarchy, informTime, subordinate, currentTime + informTime[currentEmployee]);
+        }
+    }
+
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        unordered_map<int, vector<int>> hierarchy;
+
+        // Construct hierarchy using manager vector
+        for (int i = 0; i < manager.size(); ++i) {
+            int subordinate = i;
+            int managerID = manager[i];
+
+            if (managerID != -1)
+                hierarchy[managerID].push_back(subordinate);
+        }
+
+        // Call DFS to calculate maxInformTime
+        DFS(hierarchy, informTime, headID, 0);
+
+        return maxInformTime;
+    }
+};
+
+
+
+
+
+BFS:
+
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <queue>
+
+using namespace std;
+
+class Solution {
+public:
+    int maxInformTime = INT_MIN;
+
+    // Breadth-First Search
+    void BFS(unordered_map<int, vector<int>>& hierarchy, vector<int>& informTime, int headID) {
+        queue<pair<int, int>> q;
+        q.push({headID, 0}); // Initial time at which headID receives the information
+
+        while (!q.empty()) {
+            pair<int, int> currentEmployeeInfo = q.front();
+            int currentEmployee = currentEmployeeInfo.first;
+            int currentTime = currentEmployeeInfo.second;
+
+            // Update maxInformTime
+            maxInformTime = max(maxInformTime, currentTime);
+
+            q.pop();
+
+            // Enqueue subordinates with updated time
+            for (int& subordinate : hierarchy[currentEmployee]) {
+                q.push({subordinate, currentTime + informTime[currentEmployee]});
+            }
+        }
+    }
+
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        unordered_map<int, vector<int>> hierarchy;
+
+        // Construct hierarchy using manager vector
+        for (int i = 0; i < manager.size(); ++i) {
+            int subordinate = i;
+            int managerID = manager[i];
+
+            if (managerID != -1)
+                hierarchy[managerID].push_back(subordinate);
+        }
+
+        // Call BFS to calculate maxInformTime
+        BFS(hierarchy, informTime, headID);
+
+        return maxInformTime;
+    }
+};
