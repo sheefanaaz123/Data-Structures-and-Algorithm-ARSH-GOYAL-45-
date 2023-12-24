@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Solution {
+public:
+    int n;
+
+    // Depth-First Search
+    void dfs(vector<vector<int>>& stones, int index, vector<bool>& visited) {
+        visited[index] = true;
+
+        for (int i = 0; i < n; ++i) {
+            if (!visited[i] &&
+                ((stones[i][0] == stones[index][0]) || (stones[i][1] == stones[index][1]))) {
+                dfs(stones, i, visited);
+            }
+        }
+    }
+
+    int removeStones(vector<vector<int>>& stones) {
+        n = stones.size();
+        vector<bool> visited(n, false);
+
+        int count = 0;
+        for (int i = 0; i < n; ++i) {
+            if (visited[i])
+                continue;
+            dfs(stones, i, visited);
+            count++;
+        }
+
+        return n - count;
+    }
+};
+
+int main() {
+    Solution solution;
+
+    // Example usage:
+    vector<vector<int>> stones1 = {{0, 0}, {0, 1}, {1, 0}, {1, 2}, {2, 2}};
+    cout << "Minimum stones to remove: " << solution.removeStones(stones1) << endl;
+
+    vector<vector<int>> stones2 = {{0, 0}, {0, 2}, {1, 1}, {2, 0}, {2, 2}};
+    cout << "Minimum stones to remove: " << solution.removeStones(stones2) << endl;
+
+    return 0;
+}
