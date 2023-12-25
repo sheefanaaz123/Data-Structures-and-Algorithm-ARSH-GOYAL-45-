@@ -1,0 +1,49 @@
+// Function to check if it's safe to color a node with a given color.
+bool isSafe(int node, int color[], bool graph[101][101], int n, int col) {
+    for (int k = 0; k < n; k++) {
+        // Check if there is an adjacent node with the same color.
+        if (k != node && graph[k][node] == 1 && color[k] == col) {
+            return false;
+        }
+    }
+    // If no conflict is found, it's safe to color the node with the given color.
+    return true;
+}
+
+// Recursive function to solve the graph coloring problem.
+bool solve(int node, int color[], int m, int N, bool graph[101][101]) {
+    // Base case: All nodes are colored.
+    if (node == N) {
+        return true;
+    }
+
+    // Try coloring the current node with each color from 1 to m.
+    for (int i = 1; i <= m; i++) {
+        // Check if it's safe to color the current node with color i.
+        if (isSafe(node, color, graph, N, i)) {
+            // Color the node and move on to the next one recursively.
+            color[node] = i;
+            if (solve(node + 1, color, m, N, graph)) {
+                return true; // If coloring is successful, return true.
+            }
+            // Backtrack: Reset the color of the current node.
+            color[node] = 0;
+        }
+    }
+    // If no color is found for the current node, return false.
+    return false;
+}
+
+// Function to determine if the graph can be colored with at most M colors
+// such that no two adjacent vertices of the graph are colored with the same color.
+bool graphColoring(bool graph[101][101], int m, int N) {
+    // Initialize an array to store colors of each node (0 represents uncolored).
+    int color[N] = {0};
+
+    // Start the coloring process from the first node (node 0).
+    // If the coloring is successful, return true; otherwise, return false.
+    if (solve(0, color, m, N, graph)) {
+        return true;
+    }
+    return false;
+}
