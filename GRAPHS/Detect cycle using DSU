@@ -1,0 +1,66 @@
+class Solution {
+public:
+    // Vector to store parent of each vertex.
+    vector<int> parent;
+    
+    // Vector to store the rank of each set for union by rank.
+    vector<int> rank;
+    
+    // Function to find the parent of a set (with path compression).
+    int find(int x) {
+        // If the parent is the same as the vertex, return the vertex.
+        if(parent[x] == x)
+            return x;
+        
+        // Path compression: Set the parent of the current vertex to its root.
+        return parent[x] = find(parent[x]);
+    }
+    
+    // Function to perform union of two sets (with union by rank).
+    void Union(int x, int y) {
+        // Find the root (parent) of the sets containing x and y.
+        int x_parent = find(x);
+        int y_parent = find(y);
+        
+        // If sets have different ranks, attach the smaller rank tree under the larger rank tree.
+        if(rank[x_parent] > rank[y_parent]) {
+            parent[y_parent] = x_parent;
+        } else if(rank[x_parent] < rank[y_parent]) {
+            parent[x_parent] = y_parent;
+        } else {
+            // If ranks are equal, choose any tree as the parent and increment its rank.
+            parent[x_parent] = y_parent;
+            rank[y_parent]++;
+        }
+    }
+    
+    // Function to detect cycle using Disjoint Set Union (DSU) in an undirected graph.
+    int detectCycle(int V, vector<int> adj[]) {
+        // Resize and initialize the parent and rank vectors.
+        parent.resize(V);
+        rank.resize(V, 0);
+        
+        // Initialize each vertex as the parent of its own set.
+        for(int i = 0; i < V; i++)
+            parent[i] = i;
+        
+        // Iterate through each vertex and its adjacent vertices in the graph.
+        for(int u = 0; u < V; u++) {
+            for(int &v : adj[u]) {
+                // Process each edge only once (u < v).
+                if(u < v) {
+                    // If both vertices belong to the same set, a cycle is detected.
+                    if(find(u) == find(v))
+                        return true;
+                    else {
+                        // Otherwise, perform union of the sets containing u and v.
+                        Union(u, v);
+                    }
+                }
+            }
+        }
+        
+        // No cycles detected in the graph.
+        return false;
+    }
+};
