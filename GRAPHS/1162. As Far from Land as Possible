@@ -1,0 +1,58 @@
+class Solution {
+public:
+    // Arrays to represent the four possible directions: up, down, right, left.
+    const int x[4] = {-1, 1, 0, 0};
+    const int y[4] = {0, 0, 1, -1};
+
+    // Function to find the maximum distance of a land cell to water cells.
+    int maxDistance(vector<vector<int>>& grid) {
+        // Queue to store the coordinates of land cells.
+        queue<pair<int, int>> q;
+
+        // Enqueue the coordinates of land cells.
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[i].size(); ++j) {
+                if (grid[i][j] == 1) {
+                    q.push({i, j});
+                }
+            }
+        }
+
+        int steps = 0;
+        int n = grid.size();
+        int i, j;
+
+        // BFS to find the maximum distance.
+        while (!q.empty()) {
+            // Process nodes at the current level.
+            int size = q.size();
+
+            for (int s = 0; s < size; ++s) {
+                i = q.front().first;
+                j = q.front().second;
+                q.pop();
+
+                // Explore all four directions.
+                for (int k = 0; k < 4; ++k) {
+                    int in = i + x[k];
+                    int jn = j + y[k];
+
+                    // Check if the new coordinates are within the grid boundaries.
+                    if (in < 0 || jn < 0 || in >= n || jn >= n || grid[in][jn] == 1) {
+                        continue;
+                    }
+
+                    // Mark the water cell and enqueue its coordinates.
+                    grid[in][jn] = 1;
+                    q.push({in, jn});
+                }
+            }
+
+            // Increment the distance.
+            steps++;
+        }
+
+        // Return the maximum distance, adjusted if it's the first level (steps == 1).
+        return (steps == 1 ? -1 : steps - 1);
+    }
+};
