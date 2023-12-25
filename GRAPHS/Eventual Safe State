@@ -1,0 +1,104 @@
+class Solution {
+public:
+    // DFS function to check for cycles in the graph.
+    bool isCycleDFS(vector<vector<int>>& adj, int u, vector<bool>& visited, vector<bool>& inRecursion) {
+        visited[u] = true;
+        inRecursion[u] = true;
+        
+        // Explore adjacent vertices of the current vertex.
+        for(int &v : adj[u]) {
+            // If not visited, check for cycle in DFS.
+            if(visited[v] == false && isCycleDFS(adj, v, visited, inRecursion))
+                return true;
+            // If the adjacent vertex is in the recursion stack, a cycle is detected.
+            else if(inRecursion[v] == true)
+                return true;
+        }
+        
+        // Backtrack: Mark the current vertex as not in the recursion stack.
+        inRecursion[u] = false;
+        return false;
+    }
+    
+    // Function to find eventual safe nodes in a graph.
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int V = graph.size();
+        vector<bool> visited(V, false);
+        vector<bool> inRecursion(V, false);
+        
+        // Iterate through each vertex and check for cycles using DFS.
+        for(int i = 0; i < V; i++) {
+            if(!visited[i])
+                isCycleDFS(graph, i, visited, inRecursion);
+        }
+        
+        // Identify eventual safe nodes by checking vertices not in the recursion stack.
+        vector<int> safeNodes;
+        for(int i = 0; i < V; i++) {
+            if(!inRecursion[i])
+                safeNodes.push_back(i);
+        }
+        
+        return safeNodes;
+    }
+};
+
+// Approach-2 (Using BFS) for Topological Sort
+class Solution {
+public:
+    // Function to find eventual safe nodes in a graph using BFS (Topological Sort).
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int V = graph.size();
+
+        // Adjacency list for reverse edges (to perform topological sort).
+        vector<vector<int>> adj(V);
+        
+        // Queue for BFS, indegree vector, and counter.
+        queue<int> que;
+        vector<int> indegree(V, 0);
+        int count = 0;
+
+        // 1. Build reverse edges and calculate indegrees.
+        for(int u = 0; u < V; u++) {
+            for(int &v : graph[u]) {
+                adj[v].push_back(u);
+                indegree[u]++;
+            }
+        }
+        
+        // 2. Enqueue vertices with indegree 0.
+        for(int i = 0; i < V; i++) {
+            if(indegree[i] == 0) {
+                que.push(i);
+                count++;
+            }
+        }
+        
+        // 3. Simple BFS for topological sort.
+        vector<bool> safe(V, false);
+        while(!que.empty()) {
+            int u = que.front();
+            que.pop();
+            safe[u] = true;
+            
+            for(int &v : adj[u]) {
+                indegree[v]--;
+                
+                if(indegree[v] == 0) {
+                    que.push(v);
+                    count++;
+                }
+            }
+        }
+        
+        // Identify eventual safe nodes based on BFS results.
+        vector<int> safeNodes;
+        for(int i = 0; i < V; i++) {
+            if(safe[i]) {
+                safeNodes.push_back(i);
+            }
+        }
+        
+        return safeNodes;
+    }
+};
