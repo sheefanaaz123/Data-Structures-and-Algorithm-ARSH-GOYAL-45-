@@ -1,0 +1,48 @@
+class Solution {
+public:
+    // Function to return list containing vertices in Topological order.
+    vector<int> topoSort(int N, vector<int> adj[])  {
+        // Queue to store vertices with 0 in-degree.
+        queue<int> que;
+
+        // Array to store in-degrees of each vertex, initialized with zeros.
+        vector<int> indegree(N, 0);
+        
+        // 1. Calculate in-degrees for each vertex.
+        for(int u = 0; u<N; u++) {
+            for(int &v : adj[u]) {
+                indegree[v]++;
+            }
+        }
+        
+        // 2. Enqueue vertices with in-degree 0.
+        for(int i = 0; i<N; i++) {
+            if(indegree[i] == 0) {
+                que.push(i);
+            }
+        }
+        
+        // 3. Perform a simple BFS to get topological order.
+        vector<int> result;
+        while(!que.empty()) {
+            // Dequeue a vertex.
+            int u = que.front();
+            result.push_back(u);
+            que.pop();
+            
+            // Iterate through adjacent vertices of the dequeued vertex.
+            for(int &v : adj[u]) {
+                // Decrement in-degree of the adjacent vertex.
+                indegree[v]--;
+                
+                // If in-degree becomes 0, enqueue the vertex.
+                if(indegree[v] == 0) {
+                    que.push(v);
+                }
+            }
+        }
+        
+        // Return the topological order.
+        return result;
+    }
+};
