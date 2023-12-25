@@ -1,0 +1,48 @@
+class Solution
+{
+	public:
+	
+	// Depth-First Search function for exploring the graph
+	void DFS(vector<int> adj[], int u, vector<bool>& visited, stack<int>& st) {
+	    // Mark the current node as visited
+	    visited[u] = true;
+	    
+	    // Explore all unvisited neighbors of the current node
+	    for(int &v : adj[u]) {
+	        if(!visited[v])
+	            DFS(adj, v, visited, st);
+	    }
+	    
+	    // Push the current node onto the stack after processing its neighbors
+	    st.push(u);
+	}
+	
+	// Function to return a list containing vertices in Topological order
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    // Initialize a boolean vector to keep track of visited nodes
+	    vector<bool> visited(V, false);
+	    
+	    // Initialize a stack to store the topological order
+	    stack<int> st;
+	    
+	    // Iterate through all nodes in the graph
+	    for(int i = 0; i<V; i++) {
+	        // If the node is not visited, call DFS to explore and push nodes onto the stack
+	        if(!visited[i])
+	            DFS(adj, i, visited, st);
+	    }
+	    
+	    // Vector to store the final topological order
+	    vector<int> result;
+	    
+	    // Pop elements from the stack to get the topological order
+	    while(!st.empty()) {
+	        result.push_back(st.top());
+	        st.pop();
+	    }
+	    
+	    // Return the topological order
+	    return result;
+	}
+};
