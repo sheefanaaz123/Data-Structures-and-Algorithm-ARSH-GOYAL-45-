@@ -38,3 +38,64 @@ class Solution {
 --------------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
+BFS:
+
+class Solution {
+public:
+    // Function to detect cycle in a directed graph.
+    bool isCyclic(int N, vector<int> adj[]) {
+        // Queue to store vertices with 0 in-degree.
+        queue<int> que;
+
+        // Array to store in-degrees of each vertex, initialized with zeros.
+        vector<int> indegree(N, 0);
+        
+        // Variable to count the number of vertices with 0 in-degree.
+        int count = 0;
+
+        // 1. Calculate in-degrees for each vertex.
+        for(int u = 0; u<N; u++) {
+            for(int &v : adj[u]) {
+                indegree[v]++;
+            }
+        }
+        
+        // 2. Enqueue vertices with in-degree 0 and update count.
+        for(int i = 0; i<N; i++) {
+            if(indegree[i] == 0) {
+                que.push(i);
+                count++;
+            }
+        }
+        
+        // 3. Perform a simple BFS to detect cycles and update count.
+        while(!que.empty()) {
+            // Dequeue a vertex.
+            int u = que.front();
+            que.pop();
+            
+            for(int &v : adj[u]) {
+                // Decrement in-degree of the adjacent vertex.
+                indegree[v]--;
+                
+                // If in-degree becomes 0, enqueue the vertex and update count.
+                if(indegree[v] == 0) {
+                    que.push(v);
+                    count++;
+                }
+            }
+        }
+        
+        // If count is not equal to the total number of vertices, there is a cycle.
+        return count != N;
+    }
+};
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+DSU:
+
+
