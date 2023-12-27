@@ -1,0 +1,55 @@
+class Solution {
+public:
+    // Function to find the city with the minimum number of reachable cities within the distance threshold
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        // Create a 2D grid to represent the graph with edge weights
+        vector<vector<int>> grid(n, vector<int>(n, INT_MAX));
+        
+        // Populate the grid with edge weights from the given edges
+        for (auto it : edges) {
+            grid[it[0]][it[1]] = it[2];
+            grid[it[1]][it[0]] = it[2];
+        }
+        
+        // Set the distance from each city to itself as 0
+        for (int i = 0; i < n; i++) {
+            grid[i][i] = 0;
+        }
+
+        // Perform Floyd-Warshall algorithm to calculate shortest distances between all pairs of cities
+        for (int via = 0; via < n; via++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    // Update the minimum distance from city i to city j via city 'via'
+                    if(grid[i][via]==INT_MAX || grid[via][j] == INT_MAX){
+                        continue;
+                    }
+                    grid[i][j] = min(grid[i][j], grid[i][via] + grid[via][j]);
+                }
+            }
+        }
+
+        // Initialize variables to track the city with the minimum number of reachable cities
+        int citycount = n;
+        int cityno = -1;
+
+        // Check each city for the number of reachable cities within the distance threshold
+        for (int city = 0; city < n; city++) {
+            int cnt = 0;
+            for (int adjcity = 0; adjcity < n; adjcity++) {
+                // Count the reachable cities within the distance threshold
+                if (grid[city][adjcity] <= distanceThreshold) {
+                    cnt++;
+                }
+            }
+            // Update the city with the minimum number of reachable cities
+            if (cnt <= citycount) {
+                citycount = cnt;
+                cityno = max(cityno, city);
+            }
+        }
+
+        // Return the city with the minimum number of reachable cities
+        return cityno;
+    }
+};
