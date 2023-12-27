@@ -1,69 +1,72 @@
+// Approach-1 (Graph coloring: DFS)
 class Solution {
 public:
-
-    bool checkBipartiteDFS(vector<int>adj[], int curr, vector<int>& color, int currColor) {
-        color[curr] = currColor; //color kardiya curr node ko
+    
+    // Helper function for DFS traversal
+    bool checkBipartiteDFS(vector<int> adj[], int curr, vector<int>& color, int currColor) {
+        color[curr] = currColor; // Assign color to the current node
         
-        //ab jaate hain adjacent nodes par
+        // Explore adjacent nodes
         for(int &v : adj[curr]) {
-            
+            // Check if adjacent nodes have the same color
             if(color[v] == color[curr])
                 return false;
             
-            if(color[v] == -1) { //never colored (never visited)
-                
+            // If the adjacent node is not colored (never visited)
+            if(color[v] == -1) {
+                // Assign the opposite color to the adjacent node
                 int colorOfV = 1 - currColor;
                 
+                // Recursively check bipartiteness for the adjacent node
                 if(checkBipartiteDFS(adj, v, color, colorOfV) == false)
                     return false;
             }
-            
         }
         
         return true;
     }
 
-	bool isBipartite(int V, vector<int>adj[]){
-	    
-	    vector<int> color(V, -1); //no node colored in the start
-	    
-	    //red = 1
-	    //gree = 0
-	    
-	    for(int i = 0; i<V; i++) {
-	        if(color[i] == -1) {
-	            if(checkBipartiteDFS(adj, i, color, 1) == false)
-	                return false;
-	        }
-	    }
-	    
-	    return true;
-	    
-	}
-
+    // Main function to check if the graph is bipartite
+    bool isBipartite(int V, vector<int> adj[]) {
+        vector<int> color(V, -1); // Initialize all nodes with no color
+        
+        // Red = 1, Green = 0
+        
+        // Check bipartiteness for each uncolored node using DFS
+        for(int i = 0; i < V; i++) {
+            if(color[i] == -1) {
+                if(checkBipartiteDFS(adj, i, color, 1) == false)
+                    return false;
+            }
+        }
+        
+        return true;
+    }
 };
 
 
-
-//Approach-2 (Graph coloring : BFS)
+// Approach-2 (Graph coloring: BFS)
 class Solution {
 public:
-
-    bool checkBipartiteBFS(vector<int>adj[], int curr, vector<int>& color, int currColor) {
-        color[curr] = currColor; //color kardiya curr node ko
+    
+    // Helper function for BFS traversal
+    bool checkBipartiteBFS(vector<int> adj[], int curr, vector<int>& color, int currColor) {
+        color[curr] = currColor; // Assign color to the current node
         
         queue<int> que;
         que.push(curr);
         
+        // Explore nodes level-wise using BFS
         while(!que.empty()) {
             int u = que.front();
             que.pop();
             
+            // Check adjacent nodes for color conflicts
             for(int &v : adj[u]) {
                 if(color[v] == color[u]) {
-                    return false;
+                    return false; // Color conflict found
                 } else if(color[v] == -1) {
-                    color[v] = 1 - color[u];
+                    color[v] = 1 - color[u]; // Assign the opposite color
                     que.push(v);
                 }
             }
@@ -72,22 +75,20 @@ public:
         return true;
     }
 
-	bool isBipartite(int V, vector<int>adj[]){
-	    
-	    vector<int> color(V, -1); //no node colored in the start
-	    
-	    //red = 1
-	    //gree = 0
-	    
-	    for(int i = 0; i<V; i++) {
-	        if(color[i] == -1) {
-	            if(checkBipartiteBFS(adj, i, color, 1) == false)
-	                return false;
-	        }
-	    }
-	    
-	    return true;
-	    
-	}
-
+    // Main function to check if the graph is bipartite
+    bool isBipartite(int V, vector<int> adj[]) {
+        vector<int> color(V, -1); // Initialize all nodes with no color
+        
+        // Red = 1, Green = 0
+        
+        // Check bipartiteness for each uncolored node using BFS
+        for(int i = 0; i < V; i++) {
+            if(color[i] == -1) {
+                if(checkBipartiteBFS(adj, i, color, 1) == false)
+                    return false;
+            }
+        }
+        
+        return true;
+    }
 };
