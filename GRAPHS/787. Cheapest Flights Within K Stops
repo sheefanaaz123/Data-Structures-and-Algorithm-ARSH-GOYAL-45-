@@ -1,0 +1,61 @@
+class Solution {
+public:
+    // Function to find the cheapest price from source to destination with at most k stops
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        // Initialize an array to store the minimum distance from source to each node
+        vector<int> distance(n, INT_MAX);
+        
+        // Create an adjacency map to represent the graph with vertices and their associated costs
+        unordered_map<int, vector<pair<int, int>>> adj;
+        
+        // Populate the adjacency map based on the given flights information
+        for(vector<int> &vec : flights) {
+            int u    = vec[0];
+            int v    = vec[1];
+            int cost = vec[2];
+            
+            adj[u].push_back({v, cost});
+        }
+        
+        // Initialize a queue for BFS-based traversal with pairs representing (node, distance)
+        queue<pair<int, int>> que;
+        que.push({src, 0});
+        
+        // Set the distance from the source node to itself as 0
+        distance[src] = 0;
+        
+        // Initialize the level to track the number of stops
+        int level = 0;
+        
+        // BFS-based traversal with at most k stops
+        while(!que.empty() && level <= k) {
+            int N = que.size();
+            
+            while(N--) {
+                // Dequeue a node and its distance
+                int u = que.front().first;
+                int d = que.front().second;
+                que.pop();
+                
+                // Explore neighbors of the current node
+                for(pair<int, int> &P : adj[u]) {
+                    
+                    int v    = P.first;
+                    int cost = P.second;
+                    
+                    // Update the distance if a shorter path is found
+                    if(distance[v] > d + cost) {
+                        distance[v] = d + cost;
+                        que.push({v, d + cost});
+                    }
+                    
+                }
+                
+            }
+            level++; // Move to the next level (stop)
+        }
+        
+        // Return the minimum distance to the destination, or -1 if not reachable
+        return distance[dst] == INT_MAX ? -1 : distance[dst];
+    }
+};
