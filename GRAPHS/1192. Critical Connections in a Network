@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int time = 0;
+
+    void dfs(vector<vector<int>> &adj, vector<bool> &vis, vector<int> &timestamp, int vertex, int prev, vector<vector<int>> &ans) {
+        vis[vertex] = true;
+        timestamp[vertex] = time++;
+        int currenttimestamp = timestamp[vertex];
+
+        for (auto &child : adj[vertex]) {
+            if (child == prev)
+                continue;
+            if (!vis[child]) {
+                dfs(adj, vis, timestamp, child, vertex, ans);
+            }
+            timestamp[vertex] = min(timestamp[vertex], timestamp[child]);
+            if ( timestamp[child] > currenttimestamp ) {
+                vector<int> temp;
+                temp.push_back(vertex);
+                temp.push_back(child);
+                ans.push_back(temp);
+            }
+        }
+    }
+
+    vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+        vector<vector<int>> ans, adj(n); 
+        vector<bool> vis(n, false);
+        vector<int> timestamp(n, 0);
+
+        for (auto &i : connections) {
+            adj[i[0]].push_back(i[1]);
+            adj[i[1]].push_back(i[0]);
+        }
+
+        dfs(adj, vis, timestamp, 0, -1, ans);
+
+        return ans;
+    }
+};
