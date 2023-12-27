@@ -1,0 +1,82 @@
+class Solution {
+private:
+    // Function to perform topological sort using BFS
+    // Returns a vector representing the topological order
+    vector<int> topoSort(int V, vector<int> adj[]) {
+        // Initialize an array to store the in-degrees of each node
+        int indegree[V] = {0};
+
+        // Calculate in-degrees for each node
+        for (int i = 0; i < V; i++) {
+            for (auto it : adj[i]) {
+                indegree[it]++;
+            }
+        }
+
+        // Initialize a queue for BFS
+        queue<int> q;
+
+        // Add nodes with in-degree 0 to the queue
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        // Vector to store the topological order
+        vector<int> topo;
+
+        // Perform BFS
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+
+            // Add the node to the topological order
+            topo.push_back(node);
+
+            // Update in-degrees and add neighbors with in-degree 0 to the queue
+            for (auto it : adj[node]) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.push(it);
+                }
+            }
+        }
+
+        return topo;
+    }
+
+public:
+    // Function to find the order of characters in the alien dictionary
+    string findOrder(string dict[], int N, int K) {
+        // Initialize an adjacency list to represent the relationships between characters
+        vector<int> adj[K];
+
+        // Build the adjacency list by comparing adjacent words in the dictionary
+        for (int i = 0; i < N - 1; i++) {
+            string s1 = dict[i];
+            string s2 = dict[i + 1];
+            int len = min(s1.size(), s2.size());
+
+            // Compare characters at the same position in adjacent words
+            for (int ptr = 0; ptr < len; ptr++) {
+                if (s1[ptr] != s2[ptr]) {
+                    // Add an edge in the adjacency list representing the relationship between characters
+                    adj[s1[ptr] - 'a'].push_back(s2[ptr] - 'a');
+                    break; // Stop comparing as soon as a difference is found
+                }
+            }
+        }
+
+        // Perform topological sort to get the order of characters
+        vector<int> topo = topoSort(K, adj);
+
+        // Convert the topological order to a string
+        string ans = "";
+        for (auto it : topo) {
+            ans = ans + char(it + 'a');
+        }
+
+        return ans;
+    }
+};
