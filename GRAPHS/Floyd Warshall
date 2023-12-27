@@ -3,7 +3,7 @@ public:
     // Function to find the shortest distance between all pairs of nodes in a graph.
     void shortest_distance(vector<vector<int>>& grid) {
         int n = grid.size(); // Get the number of nodes in the graph.
-        
+
         // Convert -1 entries to a large value (100000) to represent infinity.
         for(int i = 0; i < n; i++) {
             for(int j = 0; j < n; j++) {
@@ -11,7 +11,7 @@ public:
                     grid[i][j] = 100000;
             }
         }
-        
+
         // Floyd-Warshall algorithm for all pairs shortest paths.
         for(int via = 0; via < n; via++) {
             for(int i = 0; i < n; i++) {
@@ -21,7 +21,16 @@ public:
                 }
             }
         }
-        
+
+       //Negative Cycle
+       // If the distance of any vertex from itself
+       // becomes negative, then there is a negative
+      // weight cycle.
+       for (int i = 0; i < V; i++)
+                 if (dist[i][i] < 0)
+                      return true;
+                 return false; 
+
         // Convert back the large values to -1 for representing infinity in the original graph.
         for(int i = 0; i < n; i++) {
             for(int j = 0; j < n; j++) {
