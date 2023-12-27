@@ -1,0 +1,67 @@
+class Solution {
+public:
+    int m, n;
+    vector<vector<int>> directions = {
+        {-1, 0},
+        {0, -1}, 
+        {0, 1},
+        {1, 0}
+    };
+
+    int t[1001][1001];
+
+    // Function to check if a cell is within bounds
+    bool isSafe(int i, int j) {
+        return (i < m && i >= 0 && j < n && j >= 0);
+    }
+
+    // Constant for modulo operation
+    long long MOD = 1e9 + 7;
+
+    // Recursive DFS function with memoization
+    int dfs(vector<vector<int>>& grid, int i, int j) {
+
+        // Check if the result for the current cell is already memoized
+        if (t[i][j] != -1)
+            return t[i][j];
+
+        int answer = 1;
+
+        // Explore neighboring cells in all four directions
+        for (auto &dir : directions) {
+            int i_ = i + dir[0];
+            int j_ = j + dir[1];
+
+            // Check if the neighboring cell is safe and has a lower value
+            if (isSafe(i_, j_) && grid[i_][j_] < grid[i][j]) {
+                // Recursively call DFS for the neighboring cell
+                answer = (answer + dfs(grid, i_, j_)) % MOD;
+            }
+        }
+
+        // Memoize the result for the current cell
+        return t[i][j] = answer;
+    }
+
+    // Main function to count paths with decreasing values
+    int countPaths(vector<vector<int>>& grid) {
+        m = grid.size();
+        n = grid[0].size();
+
+        // Initialize the memoization array with -1
+        memset(t, -1, sizeof(t));
+
+        int result = 0;
+
+        // Iterate through each cell in the grid
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Update the result with the count of paths starting from each cell
+                result = (result + dfs(grid, i, j)) % MOD;
+            }
+        }
+
+        // Return the overall count of paths with decreasing values
+        return result;
+    }
+};
