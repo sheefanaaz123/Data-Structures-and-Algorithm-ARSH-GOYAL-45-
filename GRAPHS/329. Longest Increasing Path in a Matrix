@@ -1,0 +1,63 @@
+class Solution {
+public:
+    // Function to find the longest increasing path in a matrix
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        // Get the number of rows and columns in the matrix
+        int n = matrix.size();
+        int m = matrix[0].size();
+
+        // Memoization matrix to store already calculated results
+        vector<vector<int>> memo(n, vector<int>(m, 0));
+
+        // Variable to store the final answer
+        int ans = 0;
+
+        // Iterate through each cell in the matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                // Update the answer with the maximum path starting from each cell
+                ans = max(ans, dfs(matrix, i, j, memo));
+            }
+        }
+
+        // Return the overall maximum path length
+        return ans;
+    }
+
+    // Recursive DFS function to find the longest increasing path from a given cell
+    int dfs(vector<vector<int>>& matrix, int i, int j, vector<vector<int>>& memo) {
+        // Get the number of rows and columns in the matrix
+        int n = matrix.size();
+        int m = matrix[0].size();
+
+        // Base case: check if the current cell is out of bounds
+        if (i < 0 || j < 0 || i >= n || j >= m) {
+            return 0;
+        }
+
+        // Check if the result for the current cell is already memoized
+        if (memo[i][j] > 0) {
+            return memo[i][j];
+        }
+
+        // Initialize the maximum path length for the current cell
+        int currentmax = 1;
+
+        // Explore neighboring cells and update the maximum path length
+        if (i + 1 < n && matrix[i + 1][j] > matrix[i][j]) {
+            currentmax = max(currentmax, 1 + dfs(matrix, i + 1, j, memo));
+        }
+        if (j + 1 < m && matrix[i][j + 1] > matrix[i][j]) {
+            currentmax = max(currentmax, 1 + dfs(matrix, i, j + 1, memo));
+        }
+        if (i - 1 >= 0 && matrix[i - 1][j] > matrix[i][j]) {
+            currentmax = max(currentmax, 1 + dfs(matrix, i - 1, j, memo));
+        }
+        if (j - 1 >= 0 && matrix[i][j - 1] > matrix[i][j]) {
+            currentmax = max(currentmax, 1 + dfs(matrix, i, j - 1, memo));
+        }
+
+        // Memoize the result for the current cell
+        return memo[i][j] = currentmax;
+    }
+};
