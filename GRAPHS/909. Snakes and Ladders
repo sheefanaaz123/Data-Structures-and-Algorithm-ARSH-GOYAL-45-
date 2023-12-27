@@ -1,0 +1,73 @@
+class Solution {
+public:
+    int n;
+    
+    // Function to convert 1D index to 2D coordinates
+    pair<int, int> getCoord(int s) {
+        // Calculate row based on the given formula
+        int row = n - 1 - (s - 1) / n;
+        
+        // Calculate column based on the given formula
+        int col = (s - 1) % n;
+        
+        // Adjust column position based on the row and board conditions
+        if ((n % 2 == 1 && row % 2 == 1) || (n % 2 == 0 && row % 2 == 0))
+            col = n - 1 - col;
+        
+        return make_pair(row, col);
+    }
+    
+    int snakesAndLadders(vector<vector<int>>& board) {
+        n = board.size();
+        
+        int steps = 0;
+        queue<int> que;
+        
+        // Create a matrix to track visited positions on the board
+        vector<vector<bool>> visited(n, vector<bool>(n, false));
+        visited[n - 1][0] = true;
+        
+        que.push(1);
+        vector<bool> seen(n * n + 1, false);
+        
+        while (!que.empty()) {
+            int N = que.size();
+            while (N--) {
+                int x = que.front();
+                que.pop();
+
+                // If reached the last cell, return the number of steps
+                if (x == n * n)
+                    return steps;
+
+                // Explore next possible positions after rolling a dice
+                for (int k = 1; k <= 6; k++) {
+                    if (x + k > n * n)
+                        break;
+
+                    // Convert 1D index to 2D coordinates
+                    pair<int, int> coord = getCoord(x + k);
+                    int r = coord.first;
+                    int c = coord.second;
+
+                    // Skip if the position is already visited
+                    if (visited[r][c] == true)
+                        continue;
+
+                    visited[r][c] = true;
+
+                    // Push the next position into the queue based on the board conditions
+                    if (board[r][c] == -1)
+                        que.push(k + x);
+                    else {
+                        que.push(board[r][c]);
+                    }
+                }
+            }
+            steps++;
+        }
+        
+        // If the destination is not reached, return -1
+        return -1;
+    }
+};
