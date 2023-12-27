@@ -1,0 +1,66 @@
+// Approach-1 (Using BFS Cycle Check - Kahn's Algorithm (Topological Sort)
+class Solution {
+public:
+    
+    // Function to perform topological sort and check for cycles
+    bool topologicalSortCheck(unordered_map<int, vector<int>> &adj, int n, vector<int> &indegree) {
+        queue<int> que;
+        
+        int count = 0; // Counter to track the number of visited nodes
+        
+        // Enqueue nodes with in-degree 0 (starting nodes)
+        for(int i = 0; i < n; i++) {
+            if(indegree[i] == 0) {
+                count++;
+                que.push(i);
+            }
+        }
+        
+        // BFS-based topological sort
+        while(!que.empty()) {
+            int u = que.front();
+            que.pop();
+            
+            for(int &v : adj[u]) {
+                
+                indegree[v]--;
+                
+                if(indegree[v] == 0) {
+                    count++;
+                    que.push(v);
+                }
+                
+            }
+            
+        }
+        
+        // Check if all nodes have been visited, i.e., no cycle is present
+        if(count == n)
+            return true; // Able to finish all courses without a cycle
+        
+        return false; // Cycle is present, unable to complete all courses
+    }
+    
+    // Function to check if it is possible to finish all courses
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        
+        unordered_map<int, vector<int>> adj; // Adjacency list to represent the graph
+        
+        vector<int> indegree(numCourses, 0); // Array to store in-degree of each course (Kahn's algorithm)
+        
+        // Construct the graph and calculate in-degrees
+        for(auto &vec : prerequisites) {
+            int a = vec[0];
+            int b = vec[1];
+            
+            // Directed edge: b ---> a (prerequisite relationship)
+            adj[b].push_back(a);
+            
+            // Increase in-degree of course 'a'
+            indegree[a]++;
+        }
+        
+        // Perform topological sort and check for cycles
+        return topologicalSortCheck(adj, numCourses, indegree);
+    }
+};
