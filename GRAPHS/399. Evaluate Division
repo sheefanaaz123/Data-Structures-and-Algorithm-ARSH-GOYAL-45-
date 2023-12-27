@@ -1,0 +1,72 @@
+class Solution {
+public:
+    
+    // Depth First Search function to traverse the graph and calculate the result
+    void dfs(unordered_map<string, vector<pair<string, double>>> &adj, string src, string dst, unordered_set<string>& visited, double product, double &ans) {
+        // If the source node is already visited, return
+        if(visited.find(src) != visited.end())
+            return;
+        
+        // Mark the current node as visited
+        visited.insert(src);
+        
+        // If the source and destination nodes are the same, update the result
+        if(src == dst) {
+            ans = product;
+            return;
+        }
+        
+        // Explore neighbors and recursively call DFS
+        for(auto p : adj[src]) {
+            string v   = p.first;
+            double val = p.second;
+            
+            // Recursively call DFS for each neighbor with updated product value
+            dfs(adj, v, dst, visited, product * val, ans);
+        }
+    }
+    
+    // Main function to calculate equations and handle queries
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        int n = equations.size();
+        
+        // Create an adjacency list to represent the graph
+        unordered_map<string, vector<pair<string, double>>> adj;
+        
+        // Populate the adjacency list based on given equations and values
+        for(int i = 0; i < n; i++) {
+            string u   = equations[i][0];
+            string v   = equations[i][1];
+            double val = values[i];
+            
+            // Add directed edges for both u/v and v/u with corresponding values
+            adj[u].push_back({v, val});        // To handle a/c
+            adj[v].push_back({u, 1.0 / val});   // To handle c/a
+        }
+        
+        // Result vector to store answers for each query
+        vector<double> result;
+        
+        // Process each query and calculate the result using DFS
+        for(auto &query : queries) {
+            string src = query[0];
+            string dst = query[1];
+            
+            double ans     = -1.0;
+            double product = 1.0;
+            
+            // Check if the source node is present in the graph
+            if(adj.find(src) != adj.end()) {
+                unordered_set<string> visited;
+                
+                // Perform DFS to calculate the result for the current query
+                dfs(adj, src, dst, visited, product, ans);
+            }
+            
+            // Add the result to the final vector
+            result.push_back(ans);
+        }
+        
+        return result;
+    }
+};
