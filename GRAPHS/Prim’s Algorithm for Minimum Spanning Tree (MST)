@@ -1,0 +1,40 @@
+class Solution
+{
+    typedef pair<int, int> P; // Define a pair of integers as P for convenience.
+public:
+    // Function to find the sum of weights of edges of the Minimum Spanning Tree (MST).
+    int spanningTree(int V, vector<vector<int>> adj[]) {
+        priority_queue<P, vector<P>, greater<P>> pq; // Min-heap to store {weight, node} pairs.
+        pq.push({0, 0}); // Start with the source node (node 0) with weight 0.
+        
+        vector<bool> inMST(V, false); // Flag to track whether a node is already in the MST.
+        int sum = 0; // Initialize the sum of weights of MST edges.
+        
+        while (!pq.empty()) {
+            auto p = pq.top(); // Extract the pair with the smallest weight from the heap.
+            pq.pop();
+            
+            int wt = p.first; // Extract the weight of the current edge.
+            int node = p.second; // Extract the node corresponding to the weight.
+            
+            if (inMST[node] == true)
+                continue; // Skip if the node is already in the MST.
+            
+            inMST[node] = true; // Mark the node as added to the MST.
+            sum += wt; // Add the weight of the current edge to the sum.
+            
+            // Explore neighbors of the current node.
+            for (auto &tmp : adj[node]) {
+                int neighbor = tmp[0]; // Extract the neighboring node.
+                int neighbor_wt = tmp[1]; // Extract the weight of the edge to the neighbor.
+                
+                // If the neighbor is not in the MST, add the {weight, neighbor} pair to the heap.
+                if (inMST[neighbor] == false) {
+                    pq.push({neighbor_wt, neighbor});
+                }
+            }
+        }
+        
+        return sum; // Return the sum of weights of edges in the MST.
+    }
+};
