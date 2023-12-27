@@ -1,0 +1,80 @@
+class Solution {
+public:
+    // Function to find the shortest distance of all the vertices
+    // from the source vertex S using Dijkstra's algorithm.
+    vector<int> dijkstra(int V, vector<vector<int>> adj[], int S) {
+        // Priority queue to store {distance, node} pairs, sorted by distance.
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+        // Vector to store the shortest distances from the source vertex.
+        vector<int> result(V, INT_MAX);
+
+        result[S] = 0; // Distance from source to itself is 0.
+        pq.push({0, S}); // Push the source node with distance 0 to the priority queue.
+
+        // Dijkstra's algorithm main loop.
+        while (!pq.empty()) {
+            int d = pq.top().first; // Current distance.
+            int node = pq.top().second; // Current node.
+            pq.pop(); // Remove the current node from the priority queue.
+
+            // Explore neighbors of the current node.
+            for (auto &vec : adj[node]) {
+                int adjNode = vec[0]; // Neighbor node.
+                int dist = vec[1]; // Distance to the neighbor.
+
+                // Relaxation step: Update distance if a shorter path is found.
+                if (d + dist < result[adjNode]) {
+                    result[adjNode] = d + dist; // Update the distance.
+                    pq.push({d + dist, adjNode}); // Push the updated distance and node to the priority queue.
+                }
+            }
+        }
+
+        return result; // Return the vector containing the shortest distances.
+    }
+};
+
+class Solution {
+public:
+    // Function to find the shortest distance of all the vertices
+    // from the source vertex S using Dijkstra's algorithm with set.
+    vector<int> dijkstra(int V, vector<vector<int>> adj[], int S) {
+        // Set to store {distance, node} pairs, sorted by distance.
+        set<pair<int, int>> pq;
+
+        // Vector to store the shortest distances from the source vertex.
+        vector<int> result(V, INT_MAX);
+
+        result[S] = 0; // Distance from source to itself is 0.
+        pq.insert({0, S}); // Insert the source node with distance 0 to the set.
+
+        // Dijkstra's algorithm main loop.
+        while (!pq.empty()) {
+            auto &it = *pq.begin(); // Get the iterator to the first element in the set.
+            int d = it.first; // Current distance.
+            int node = it.second; // Current node.
+            pq.erase(it); // Remove the current node from the set.
+
+            // Explore neighbors of the current node.
+            for (auto &vec : adj[node]) {
+                int adjNode = vec[0]; // Neighbor node.
+                int dist = vec[1]; // Distance to the neighbor.
+
+                // Relaxation step: Update distance if a shorter path is found.
+                if (d + dist < result[adjNode]) {
+                    if (result[adjNode] != INT_MAX) {
+                        auto iter = pq.find({result[adjNode], adjNode});
+                        pq.erase(iter); // Remove the old distance and node from the set.
+                        // OR, pq.erase({result[adjNode], adjNode});
+                    }
+
+                    result[adjNode] = d + dist; // Update the distance.
+                    pq.insert({d + dist, adjNode}); // Insert the updated distance and node to the set.
+                }
+            }
+        }
+
+        return result; // Return the vector containing the shortest distances.
+    }
+};
