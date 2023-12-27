@@ -1,0 +1,39 @@
+class Solution {
+public:
+    // Function to perform Bellman-Ford algorithm
+    // Returns the shortest distances from source (S) to all other vertices
+    vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+        // Initialize result vector with maximum distances
+        vector<int> result(V, 1e8);
+        result[S] = 0; // Distance from source to itself is 0
+        
+        // Relax edges (V - 1) times
+        for(int c = 1; c <= V - 1; c++) {
+            // Iterate through all edges
+            for(auto& edge : edges) {
+                int u = edge[0]; // Source vertex
+                int v = edge[1]; // Destination vertex
+                int w = edge[2]; // Weight of the edge
+                
+                // Update the distance if a shorter path is found
+                if(result[u] != 1e8 && result[u] + w < result[v]) {
+                    result[v] = result[u] + w;
+                }
+            }
+        }
+        
+        // Detect negative cycle
+        for(auto& edge : edges) {
+            int u = edge[0]; // Source vertex
+            int v = edge[1]; // Destination vertex
+            int w = edge[2]; // Weight of the edge
+            
+            // If a shorter path is found, there is a negative cycle
+            if(result[u] != 1e8 && result[u] + w < result[v]) {
+                return {-1}; // Negative cycle detected, return -1
+            }
+        }
+        
+        return result; // Return the result vector with shortest distances
+    }
+};
