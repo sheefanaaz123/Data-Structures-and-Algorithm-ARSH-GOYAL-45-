@@ -7,36 +7,47 @@ using namespace std;
 const int n = 4;
 const int MAX = 1000000;
 
+// Given distances between cities represented by the dist matrix
 int dist[n + 1][n + 1] = {
     {0, 0, 0, 0, 0}, {0, 0, 10, 15, 20},
     {0, 10, 0, 25, 25}, {0, 15, 25, 0, 30},
     {0, 20, 25, 30, 0},
 };
 
+// Memoization table to store computed results
 vector<vector<int>> memo(n + 1, vector<int>(1 << (n + 1), 0));
 
+// Traveling Salesman Problem function using dynamic programming
 int tsp(int i, int mask) {
+    // Base case: If all cities are visited, return the cost to return to the starting city
     if (mask == ((1 << (n + 1)) - 1)) 
         return dist[i][0];
 
+    // If the result for the current city and mask is already computed, return it
     if (memo[i][mask] != 0)
         return memo[i][mask];
 
     int res = MAX;
 
-    for (int j = 0; j < n; j++)
-        if ((mask & (1 << j)) == 0)
+    // Explore all unvisited cities and find the minimum cost
+    for (int j = 0; j < n; j++) {
+        if ((mask & (1 << j)) == 0) {
             res = min(res, tsp(j, mask | (1 << j)) + dist[j][i]);
+        }
+    }
 
+    // Memoize the result and return
     return memo[i][mask] = res;
 }
 
 int main() {
     int ans = MAX;
 
+    // Start the TSP from each city and find the minimum cost
     for (int i = 1; i < n; i++) 
         ans = min(ans, tsp(i, 1 << i) + dist[i][0]); 
 
+    // Output the result
     cout << "The cost of the most efficient tour = " << ans << endl;
 
     return 0;
