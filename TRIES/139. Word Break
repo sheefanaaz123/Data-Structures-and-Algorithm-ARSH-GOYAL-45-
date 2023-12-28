@@ -1,0 +1,51 @@
+class Solution {
+public:
+    unordered_set<string> st; // Set to store the words in the wordDict for quick lookup
+    int t[301]; // Memoization array to store intermediate results
+    int n; // Length of the input string
+
+    // Recursive function to check if the string can be broken into words
+    bool solve(string &s, int idx) {
+        // If the end of the string is reached, it means the string can be broken
+        if (idx == n) {
+            return true;
+        }
+
+        // If the remaining substring is already in the set, it can be broken
+        if (st.find(s.substr(idx, n - idx)) != st.end()) {
+            return true;
+        }
+
+        // Check if the result for the current index is already computed
+        if (t[idx] != -1)
+            return t[idx];
+
+        // Iterate through possible word lengths
+        for (int l = 1; l <= n; l++) {
+            // Extract a substring of length 'l'
+            string temp = s.substr(idx, l);
+
+            // If the substring is in the set and the remaining part can be broken
+            if (st.find(temp) != st.end() && solve(s, idx + l))
+                return t[idx] = true;
+        }
+
+        return t[idx] = false;
+    }
+
+    // Main function to check if the input string can be broken into words from wordDict
+    bool wordBreak(string s, vector<string>& wordDict) {
+        n = s.length();
+
+        // Initialize memoization array with -1
+        memset(t, -1, sizeof(t));
+
+        // Populate the set with words from wordDict
+        for (string &word : wordDict) {
+            st.insert(word);
+        }
+
+        // Start the recursive function from the beginning of the string
+        return solve(s, 0);
+    }
+};
