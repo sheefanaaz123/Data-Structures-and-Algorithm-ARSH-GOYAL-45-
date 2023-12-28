@@ -1,0 +1,83 @@
+class WordDictionary {
+public:
+    // Structure representing each node in the Trie
+    struct trieNode {
+        trieNode *children[26]; // Links to child nodes for each character
+        bool isEndOfWord;       // Flag indicating the end of a word
+    };
+
+    // Function to create a new trieNode and initialize it
+    trieNode* getNode() {
+        trieNode* newNode = new trieNode();
+        newNode->isEndOfWord = false;
+
+        // Initialize child pointers to NULL
+        for (int i = 0; i < 26; i++) {
+            newNode->children[i] = NULL;
+        }
+
+        return newNode;
+    }
+
+    // Root of the Trie
+    trieNode* root;
+
+    // Constructor to initialize the Trie
+    WordDictionary() {
+        root = getNode();
+    }
+
+    // Function to add a word to the Trie
+    void addWord(string word) {
+        trieNode *crawler = root;
+
+        // Traverse the Trie for each character in the word
+        for (int i = 0; i < word.length(); i++) {
+            int index = word[i] - 'a';
+
+            // Create new nodes if the path for a character doesn't exist
+            if (!crawler->children[index])
+                crawler->children[index] = getNode();
+
+            crawler = crawler->children[index];
+        }
+
+        // Mark the last node as the end of the word
+        crawler->isEndOfWord = true;
+    }
+
+    // Utility function for searching a word with '.' wildcard
+    bool searchUtil(trieNode* root, string word) {
+        trieNode *crawler = root;
+
+        // Traverse the Trie for each character in the word
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word[i];
+
+            // Handling '.' wildcard
+            if (ch == '.') {
+                // Recursively search for the remaining word for each possible child node
+                for (int j = 0; j < 26; j++) {
+                    if (crawler->children[j] != NULL)
+                        if (searchUtil(crawler->children[j], word.substr(i + 1)))
+                            return true;
+                }
+
+                return false;
+            } else if (crawler->children[ch - 'a'] == NULL) {
+                // If the character path doesn't exist, return false
+                return false;
+            }
+
+            crawler = crawler->children[ch - 'a'];
+        }
+
+        // Check if the last node marks the end of a word
+        return (crawler != NULL && crawler->isEndOfWord);
+    }
+
+    // Function to search for a word with '.' wildcard
+    bool search(string word) {
+        return searchUtil(root, word);
+    }
+};
