@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class SpanningTreeCalculator {
+public:
+    int findTotalSpanningTrees(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<vector<int>> laplacianMatrix(n, vector<int>(n, 0));
+
+        // Step 1: Create Laplacian Matrix
+        createLaplacianMatrix(graph, laplacianMatrix);
+
+        // Step 2: Replace diagonal elements with degrees and non-diagonal 1's with -1
+        replaceDiagonalAndOnes(laplacianMatrix);
+
+        // Step 3: Calculate cofactor and return the total number of spanning trees
+        return calculateCofactorAndGetSpanningTrees(laplacianMatrix);
+    }
+
+private:
+    void createLaplacianMatrix(vector<vector<int>>& graph, vector<vector<int>>& laplacianMatrix) {
+        int n = graph.size();
+        for (int i = 0; i < n; ++i) {
+            int degree = 0;
+            for (int j = 0; j < n; ++j) {
+                laplacianMatrix[i][j] = -graph[i][j];
+                degree += graph[i][j];
+            }
+            laplacianMatrix[i][i] = degree;
+        }
+    }
+
+    void replaceDiagonalAndOnes(vector<vector<int>>& laplacianMatrix) {
+        int n = laplacianMatrix.size();
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i == j) {
+                    laplacianMatrix[i][j] = laplacianMatrix[i][i];
+                } else if (laplacianMatrix[i][j] == 1) {
+                    laplacianMatrix[i][j] = -1;
+                }
+            }
+        }
+    }
+
+    int calculateCofactorAndGetSpanningTrees(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        vector<vector<int>> cofactor(n - 1, vector<int>(n - 1, 0));
+        int totalSpanningTrees = 1;
+
+        for (int k = 0; k < n - 1; ++k) {
+            for (int i = 1; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (j != k) {
+                        cofactor[i - 1][j > k ? j - 1 : j] = matrix[i][j];
+                    }
+                }
+            }
+
+            int cofactorDeterminant = calculateDeterminant(cofactor);
+            totalSpanningTrees *= cofactorDeterminant;
+        }
+
+        return totalSpanningTrees;
+    }
+
+    int calculateDeterminant(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        if (n == 1) {
+            return matrix[0][0];
+        }
+
+        int determinant = 0;
+        int sign = 1;
+
+        for (int k = 0; k < n; ++k) {
+            vector<vector<int>> submatrix(n - 1, vector<int>(n - 1, 0));
+            for (int i = 1; i < n; ++i) {
+                for (int j = 0; j < n; ++j) {
+                    if (j != k) {
+                        submatrix[i - 1][j > k ? j - 1 : j] = matrix[i][j];
+                    }
+                }
+            }
+
+            determinant += sign * matrix[0][k] * calculateDeterminant(submatrix);
+            sign = -sign;
+        }
+
+        return determinant;
+    }
+};
+
+int main() {
+    SpanningTreeCalculator calculator;
+
+    // Example: Adjacency matrix for a graph
+    vector<vector<int>> graph = {
+        {0, 1, 1, 0},
+        {1, 0, 1, 1},
+        {1, 1, 0, 1},
+        {0, 1, 1, 0}
+    };
+
+    int totalSpanningTrees = calculator.findTotalSpanningTrees(graph);
+    cout << "Total Spanning Trees: " << totalSpanningTrees << endl;
+
+    return 0;
+}
