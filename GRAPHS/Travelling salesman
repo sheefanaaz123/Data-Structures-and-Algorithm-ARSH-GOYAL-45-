@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int n = 4;
+const int MAX = 1000000;
+
+int dist[n + 1][n + 1] = {
+    {0, 0, 0, 0, 0}, {0, 0, 10, 15, 20},
+    {0, 10, 0, 25, 25}, {0, 15, 25, 0, 30},
+    {0, 20, 25, 30, 0},
+};
+
+vector<vector<int>> memo(n + 1, vector<int>(1 << (n + 1), 0));
+
+int tsp(int i, int mask) {
+    if (mask == ((1 << (n + 1)) - 1)) 
+        return dist[i][0];
+
+    if (memo[i][mask] != 0)
+        return memo[i][mask];
+
+    int res = MAX;
+
+    for (int j = 0; j < n; j++)
+        if ((mask & (1 << j)) == 0)
+            res = min(res, tsp(j, mask | (1 << j)) + dist[j][i]);
+
+    return memo[i][mask] = res;
+}
+
+int main() {
+    int ans = MAX;
+
+    for (int i = 1; i < n; i++) 
+        ans = min(ans, tsp(i, 1 << i) + dist[i][0]); 
+
+    cout << "The cost of the most efficient tour = " << ans << endl;
+
+    return 0;
+}
