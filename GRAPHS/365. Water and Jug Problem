@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+class Solution {
+public:
+    // Function to check if it is possible to measure water to reach the target amount
+    bool canMeasureWater(int x, int y, int z) {
+        // Check if z is already one of the capacities or their sum
+        if (x + y == z || x == z || y == z)
+            return true;
+
+        // If the total capacity is less than the target amount, it's impossible
+        if (x + y < z)
+            return false;
+
+        int m = x + y; // Maximum capacity
+        vector<int> v = {x, -x, y, -y}; // Possible operations on the water levels
+        queue<int> q;
+        q.push(0); // Initial state with no water
+        vector<int> vis(m + 1, 0); // Visited array to track visited states
+        vis[0] = 1;
+
+        while (!q.empty()) {
+            int curr = q.front();
+            q.pop();
+
+            // If the target amount is reached, return true
+            if (curr == z)
+                return true;
+
+            // Explore all possible operations on water levels
+            for (int i = 0; i < 4; i++) {
+                int k = curr + v[i];
+
+                // Check if the new state is within bounds and hasn't been visited
+                if (k >= 0 && k <= m && vis[k] == 0) {
+                    q.push(k);
+                    vis[k] = 1; // Mark the state as visited
+                }
+            }
+        }
+
+        // Target amount cannot be reached
+        return false;
+    }
+};
