@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <queue>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        if (find(wordList.begin(), wordList.end(), endWord) == wordList.end()) 
+            return 0;
+
+        unordered_map<string, bool> Vmap;
+        for (const string& word : wordList) 
+            Vmap[word] = false;
+
+        queue<string> q;
+        int length = 1;
+        q.push(beginWord);
+        Vmap[beginWord] = true;
+
+        while (!q.empty()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                string w = q.front();
+                q.pop();
+                if (w == endWord) 
+                    return length;
+
+                wordMatch(w, Vmap, q);
+            }
+            length++;
+        }
+        return 0;
+    }
+
+    void wordMatch(string w, unordered_map<string, bool>& Vmap, queue<string>& q) {
+        for (int i = 0; i < w.length(); i++) {
+            string word = w;
+            for (int j = 0; j < 26; j++) {
+                char c = 'a' + j;
+                word[i] = c;
+                if (Vmap.find(word) != Vmap.end() && !Vmap[word]) {
+                    q.push(word);
+                    Vmap[word] = true;
+                }
+            }
+        }
+    }
+};
