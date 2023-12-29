@@ -1,0 +1,32 @@
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> mostCompetitive(vector<int>& nums, int k) {
+        stack<int> st;
+
+        for (int i = 0; i < nums.size(); ++i) {
+            // popping from stack
+            while (!st.empty() && nums[i] < nums[st.top()] && st.size() + nums.size() - i > k) {
+                st.pop();
+            }
+
+            if (st.size() < k) {
+                st.push(i);
+            }
+        }
+
+        vector<int> result(k);
+        int i = k;
+
+        while (!st.empty()) {
+            result[--i] = nums[st.top()];
+            st.pop();
+        }
+
+        return result;
+    }
+};
