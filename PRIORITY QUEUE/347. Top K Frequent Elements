@@ -38,6 +38,54 @@ public:
     }
 };
 
+-------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
+
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        int n = nums.size();
+        
+        // Create a map to store the frequency of each element
+        unordered_map<int, int> mp;
+        
+        // Count the frequency of each element in the nums array
+        for(int &num : nums) {
+            mp[num]++;
+        }
+        
+        // Create a bucket to store elements based on their frequency
+        // Index represents frequency, and each element is stored in the corresponding bucket
+        vector<vector<int>> bucket(n+1);
+        
+        // Populate the bucket based on the frequency map
+        for(auto &it : mp) {
+            int element = it.first;
+            int freq    = it.second;
+            
+            bucket[freq].push_back(element);
+        }
+        
+        // Pick elements from right to left to find max frequency elements
+        vector<int> result;
+        for(int i = n; i >= 0; i--) {
+            
+            // If the bucket is empty, continue to the next frequency
+            if(bucket[i].size() == 0) continue;
+            
+            // Pick elements from the bucket until 'k' becomes zero
+            while(bucket[i].size() > 0 && k > 0) {
+                result.push_back(bucket[i].back());
+                bucket[i].pop_back();
+                k--;
+            }
+        }
+        
+        return result;
+    }
+};
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
