@@ -1,0 +1,39 @@
+#include <vector>
+#include <queue>
+#include <cmath>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int K) {
+        if (points.empty()) {
+            return {};
+        }
+
+//max pq
+        auto compare = [](const vector<int>& p1, const vector<int>& p2) {
+            return (p1[0] * p1[0] + p1[1] * p1[1]) < (p2[0] * p2[0] + p2[1] * p2[1]);
+        };
+
+        priority_queue<vector<int>,vector<vector<int>>,  decltype(compare)>    pq(compare);
+
+        for (int i = 0; i < points.size(); ++i) {
+            pq.push(points[i]);
+            if (pq.size() > K) {
+                pq.pop();
+            }
+        }
+
+        vector<vector<int>> result(K, vector<int>(2));
+        int i = K - 1;
+
+        while (!pq.empty()) {
+            result[i] = pq.top();
+            pq.pop();
+            i--;
+        }
+
+        return result;
+    }
+};
