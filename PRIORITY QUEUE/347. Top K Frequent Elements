@@ -1,1 +1,43 @@
+MIN HEAP:
 
+class Solution {
+public:
+    // Using typedef to simplify the syntax for a pair of integers
+    typedef pair<int, int> p;
+
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+
+        // Create a min-heap to store pairs (frequency, element)
+        // The heap will order elements based on their frequency in ascending order
+        priority_queue<p, vector<p>, greater<p>> pq;
+
+        // Count the frequency of each element using an unordered_map
+        // Worst Case - n distinct elements are stored, so, space O(n)
+        unordered_map<int, int> mp;
+        for(int i : nums)
+            mp[i]++;
+
+        // Push pairs into min-heap and maintain its size at most k
+        for(auto it : mp) {
+            pq.push({it.second, it.first});
+
+            // If the size of the heap exceeds k, remove the smallest element
+            if(pq.size() > k)
+                pq.pop();
+        }
+
+        // Pick all top K elements from the min-heap
+        vector<int> result;
+        while(!pq.empty()) {
+            result.push_back(pq.top().second);
+            pq.pop();
+        }
+
+        // The result vector now contains the top k frequent elements
+        return result;
+    }
+};
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
