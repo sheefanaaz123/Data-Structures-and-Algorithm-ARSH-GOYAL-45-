@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        priority_queue<int> pq; // max heap
+        
+        // Traverse the matrix
+        for(int i = 0; i < matrix.size(); i++) {
+            for(int j = 0; j < matrix[0].size(); j++) {
+                
+                // Push the current element onto the max heap
+                pq.push(matrix[i][j]);
+                
+                // Maintain the size of the heap to be at most k
+                if (pq.size() > k) {
+                    pq.pop();        
+                }
+            }
+        }
+        
+        // The top of the max heap now contains the kth smallest element
+        return pq.top();
+    }
+};
