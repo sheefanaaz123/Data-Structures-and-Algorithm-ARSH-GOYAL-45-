@@ -1,0 +1,49 @@
+class Solution
+{
+public:
+    // Recursive function to find the maximum number of cuts
+    int solve(int n, int x, int y, int z, vector<int>& dp) {
+        // Base case: If the length becomes 0, return 0 cuts
+        if (n == 0) {
+            return 0;
+        }
+        
+        // Base case: If the length becomes negative, return INT_MIN to indicate invalid cut
+        if (n < 0) {
+            return INT_MIN;
+        }
+        
+        // Check if the result for the current length is already calculated
+        if (dp[n] != -1) {
+            return dp[n];
+        }
+        
+        // Recursive calls for three possible cut lengths (x, y, z)
+        int a = solve(n - x, x, y, z, dp) + 1;
+        int b = solve(n - y, x, y, z, dp) + 1;
+        int c = solve(n - z, x, y, z, dp) + 1;
+        
+        // Update dp table with the maximum of the three cuts
+        dp[n] = max(a, max(b, c));
+        
+        // Return the calculated result
+        return dp[n];
+    }
+
+    // Function to find the maximum number of cuts.
+    int maximizeTheCuts(int n, int x, int y, int z) {
+        // Initialize a vector to store intermediate results using memoization
+        vector<int> dp(n + 1, -1);
+        
+        // Call the recursive function to find the maximum number of cuts
+        int ans = solve(n, x, y, z, dp);
+        
+        // If the result is negative, return 0 as no valid cut is possible
+        if (ans < 0) {
+            return 0;
+        }
+        
+        // Return the maximum number of cuts
+        return ans;
+    }
+};
