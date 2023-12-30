@@ -1,0 +1,33 @@
+class Solution {
+public:
+    // Function to calculate the minimum number of refueling stops required
+    // Parameters:
+    //   - target: the target distance to be reached
+    //   - cur: the initial fuel level
+    //   - s: a vector of vectors representing the fuel stations and their corresponding distances
+    // Returns:
+    //   - int: the minimum number of refueling stops, or -1 if it's not possible
+    int minRefuelStops(int target, int cur, vector<vector<int>> s) {
+        int i = 0, res; // Initialize variables for iteration and result
+
+        priority_queue<int> pq; // Priority queue to store fuel levels of available fuel stations
+
+        // Continue refueling until the current fuel level is sufficient to reach the target
+        for (res = 0; cur < target; res++) {
+            // Add fuel stations that are reachable with the current fuel level to the priority queue
+            while (i < s.size() && s[i][0] <= cur)
+                pq.push(s[i++][1]);
+
+            // If no reachable fuel station is available, return -1 as it's not possible to reach the target
+            if (pq.empty()) 
+                return -1;
+
+            // Refuel by consuming the fuel from the station with the highest fuel level in the priority queue
+            cur += pq.top();
+            pq.pop();
+        }
+
+        // Return the minimum number of refueling stops required to reach the target
+        return res;
+    }
+};
