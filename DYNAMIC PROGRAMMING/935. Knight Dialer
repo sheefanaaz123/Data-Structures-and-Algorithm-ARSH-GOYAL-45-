@@ -1,0 +1,61 @@
+class Solution {
+public:
+    // Modulo constant for the result
+    int M = 1e9+7;
+
+    // Adjacency list representing possible knight moves on the phone pad
+    vector<vector<int>> adj = {
+        {4, 6},
+        {6, 8},
+        {7, 9},
+        {4, 8},
+        {3, 9, 0},
+        {},
+        {1, 7, 0},
+        {2, 6},
+        {1, 3},
+        {2, 4}
+    };
+    
+    // Memoization table to store intermediate results
+    int t[5001][10];
+    
+    // Recursive function to calculate the number of distinct phone numbers
+    int solve(int n, int cell) {
+        // Base case: if n becomes 0, one distinct number is formed
+        if(n == 0) {
+            return 1;
+        }
+        
+        // Check if the result for the current state is already calculated
+        if(t[n][cell] != -1) {
+            return t[n][cell];
+        }
+        
+        int result = 0;
+        
+        // Iterate through possible next moves and accumulate the results
+        for(int &nextCell : adj[cell]) {
+            result = (result + solve(n-1, nextCell)) % M; 
+        }
+        
+        // Memoize the result and return
+        return t[n][cell] = result;
+    }
+    
+    // Main function to calculate the knight dialer for a given length
+    int knightDialer(int n) {
+        int result = 0;
+        
+        // Initialize the memoization table with -1
+        memset(t, -1, sizeof(t));
+        
+        // Iterate through all possible starting cells and accumulate results
+        for(int cell = 0; cell <= 9; cell++) {
+            result = (result + solve(n-1, cell)) % M;
+        }
+        
+        // Return the final result
+        return result;
+    }
+};
