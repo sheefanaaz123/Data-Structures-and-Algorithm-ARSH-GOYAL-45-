@@ -1,0 +1,19 @@
+class Solution {
+public:
+    // Function to calculate the number of unique paths
+    int uniquePaths(int m, int n) {
+        // Initialize a 2D vector to store intermediate results
+        vector<vector<int>> dp(m, vector<int>(n, 1));
+
+        // Dynamic Programming: Calculate unique paths for each cell
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                // The number of unique paths to a cell is the sum of paths from its above and left cells
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+
+        // Return the result, which is the number of unique paths to the bottom-right corner
+        return dp[m - 1][n - 1];
+    }
+};
