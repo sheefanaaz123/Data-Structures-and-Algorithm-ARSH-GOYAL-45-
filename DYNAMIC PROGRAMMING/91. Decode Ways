@@ -1,0 +1,94 @@
+RECURR+MEMO:
+
+class Solution {
+public:
+    // Function to solve the decoding problem using recursive approach with memoization
+    int solve(int i, string &s, int &n, vector<int> &t) {
+        // Check if the result for the current index 'i' is already calculated
+        if (t[i] != -1) {
+            return t[i];
+        }
+
+        // Base case: If the index 'i' reaches the end of the string, one valid split is done
+        if (i == n) {
+            return t[i] = 1;
+        }
+
+        // Base case: If the current digit is '0', it's not possible to split
+        if (s[i] == '0') {
+            return t[i] = 0;
+        }
+
+        // Recursive call for the next index 'i+1'
+        int result = solve(i + 1, s, n, t);
+
+        // Check if a two-digit decoding is possible (valid digits and within 'A' to 'Z' mapping)
+        if (i + 1 < n && (s[i] == '1' || (s[i] == '2' && s[i + 1] <= '6'))) {
+            // Add the number of ways to decode the string starting from index 'i+2'
+            result += solve(i + 2, s, n, t);
+        }
+
+        // Memoize the result for the current index 'i'
+        return t[i] = result;
+    }
+
+    // Main function to calculate the number of ways to decode the given string
+    int numDecodings(string s) {
+        // Get the length of the string
+        int n = s.length();
+        // Initialize an array 't' for memoization, initially set to -1
+        vector<int> t(n + 1, -1);
+
+        // Call the recursive function with memoization
+        return solve(0, s, n, t);
+    }
+};
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+BOTTOM UP:
+
+class Solution {
+public:
+    // Function to implement bottom-up dynamic programming approach for decoding
+    int bottom_up_1(string &s, int n) {
+        // Create an array 't' to store the number of ways to decode string from index i to n
+        vector<int> t(n + 1, 0);
+        // Initialize t[n] to 1, as there is one way to decode an empty string
+        t[n] = 1;
+        
+        // Iterate from the end of the string to the beginning
+        for (int i = n - 1; i >= 0; i--) {
+            // If the current digit is '0', it cannot be decoded alone
+            if (s[i] == '0') {
+                t[i] = 0;
+            } else {
+                // Set t[i] to the value of t[i+1]
+                t[i] = t[i + 1];
+                // Check if a two-digit decoding is possible (valid digits and within 'A' to 'Z' mapping)
+                if (i < n - 1 && (s[i] == '1' || (s[i] == '2' && s[i + 1] < '7'))) {
+                    // Add the number of ways to decode the string starting from i+2
+                    t[i] += t[i + 2];
+                }
+            }
+        }
+        // Return the number of ways to decode the entire string
+        return t[0];
+    }
+    
+    // Main function to calculate the number of ways to decode the given string
+    int numDecodings(string &s) {
+        // Get the length of the string
+        int n = s.length();
+        // Initialize an array 't' for memoization, initially set to -1
+        vector<int> t(n + 1, -1);
+        // Call the bottom-up dynamic programming function
+        return bottom_up_1(s, n);
+    }
+};
