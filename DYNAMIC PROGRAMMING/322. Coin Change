@@ -1,0 +1,24 @@
+class Solution {
+public:
+    // Function to find the fewest number of coins needed to make up a given amount
+    int coinChange(vector<int>& coins, int amount) {
+        // Create a dynamic programming array 'dp' to store the minimum number of coins for each amount
+        vector<int> dp(amount + 1, amount + 1);
+        
+        // Base case: 0 coins needed for amount 0
+        dp[0] = 0;
+        
+        // Iterate through each coin denomination
+        for (int coin : coins) {
+            // Update 'dp' for each amount starting from the coin value
+            for (int i = coin; i <= amount; i++) {
+                // Update 'dp[i]' with the minimum of its current value and 'dp[i-coin] + 1'
+                dp[i] = min(dp[i], dp[i - coin] + 1);
+            }
+        }
+        
+        // Check if a valid combination exists for the given amount
+        // If not, return -1; otherwise, return the minimum number of coins for the amount
+        return dp[amount] <= amount ? dp[amount] : -1;
+    }
+};
