@@ -1,0 +1,54 @@
+// The Solution class encapsulates the solution logic
+class Solution {
+public:
+    // Function to calculate the total cost of hiring candidates
+    // Parameters:
+    //   - costs: vector of integers representing the cost of hiring each candidate
+    //   - k: the total number of candidates to be hired
+    //   - candidates: the number of candidates to choose from in each iteration
+    // Returns:
+    //   - long long: the total cost of hiring k candidates
+    long long totalCost(vector<int>& costs, int k, int candidates) {
+        int n = costs.size();
+        
+        // Priority queues to store the lowest costs from the beginning and end of the costs vector
+        priority_queue<int, vector<int>, greater<int>> pq1, pq2;
+        
+        // Variable to store the total cost of hiring
+        long long ans = 0;
+        
+        // Variables to keep track of candidates hired and iterate through the costs vector
+        int hired = 0;
+        int i = 0;
+        int j = n-1;
+        
+        // Continue hiring candidates until the required number (k) is reached
+        while(hired < k){
+            
+            // Fill priority queues with costs from the beginning and end of the vector
+            while(pq1.size() < candidates && i <= j) 
+                pq1.push(costs[i++]);
+            while(pq2.size() < candidates && j >= i) 
+                pq2.push(costs[j--]);
+            
+            // Select the candidate with the lowest cost from the two priority queues
+            int a = pq1.size() > 0 ? pq1.top() : INT_MAX;
+            int b = pq2.size() > 0 ? pq2.top() : INT_MAX;
+            
+            // Hire the candidate with the lower cost and update the total cost
+            if(a <= b){
+                ans += a;
+                pq1.pop();
+            } else {
+                ans += b;
+                pq2.pop();
+            }
+            
+            // Increment the count of hired candidates
+            hired++;
+        }
+        
+        // Return the total cost of hiring k candidates
+        return ans;
+    }
+};
