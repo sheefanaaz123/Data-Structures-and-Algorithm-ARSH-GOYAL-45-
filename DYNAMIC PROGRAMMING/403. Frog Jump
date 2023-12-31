@@ -1,0 +1,60 @@
+#include <vector>
+#include <unordered_map>
+#include <cstring> // For memset
+
+class Solution {
+public:
+    int n;
+    std::unordered_map<int, int> mp; // Map to store stone positions for quick lookup
+    int t[2001][2001]; // Memoization table for dynamic programming
+
+    // Recursive function to check if frog can cross the river
+    bool solve(std::vector<int>& stones, int curr_stone_index, int prevJump) {
+        // If the frog reaches the last stone, return true
+        if(curr_stone_index == n - 1)
+            return true;
+
+        bool result = false;
+
+        // If the result for the current state is already calculated, return it
+        if(t[curr_stone_index][prevJump] != -1)
+            return t[curr_stone_index][prevJump];
+
+        // Try jumping to the next stone with different jump distances
+        for(int nextJump = prevJump - 1; nextJump <= prevJump + 1; nextJump++) {
+            // Ensure the jump distance is valid
+            if(nextJump > 0) {
+                int next_stone = stones[curr_stone_index] + nextJump;
+
+                // Check if the next stone exists in the array
+                if(mp.find(next_stone) != mp.end()) {
+                    // Recursively check if the frog can reach the next stone
+                    result = result || solve(stones, mp[next_stone], nextJump);
+                }
+            }
+        }
+
+        // Memoize the result and return it
+        return t[curr_stone_index][prevJump] = result;
+    }
+
+    // Main function to check if the frog can cross the river
+    bool canCross(std::vector<int>& stones) {
+        // Check if the second stone is reachable from the first stone
+        if(stones[1] != 1)
+            return false;
+
+        n = stones.size();
+
+        // Populate the map with stone positions for quick lookup
+        for(int i = 0; i < n; i++) {
+            mp[stones[i]] = i;
+        }
+
+        // Initialize the memoization table with -1
+        memset(t, -1, sizeof(t));
+
+        // Start the recursive function from the first stone with jump distance 0
+        return solve(stones, 0, 0);
+    }
+};
