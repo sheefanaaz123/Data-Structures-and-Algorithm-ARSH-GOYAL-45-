@@ -1,0 +1,31 @@
+class Solution {
+public:
+    long dp[100000][100000];
+    int solve(int k, int n){
+        if(n==1 or k==0 or k==1){
+            return k;
+        }
+        if(dp[n][k] != -1){
+            return dp[n][k];
+        }
+
+        int ans = INT_MAX;
+
+        for(int i=1; i<=k; i++){
+            int c1 = solve(n-1,i-1); // egg breaks //go down and reduce 1 egg
+            int c2 = solve(n,k-i);  //egg dont breaks //egg remains same // remaing floor above
+
+            int worst = 1 + max(c1,c2);
+
+            ans = min(ans,worst);
+        }
+
+        dp[n][k] = ans;
+
+        return dp[n][k];
+    }
+    int superEggDrop(int k, int n) {
+        memset(dp,-1,sizeof(dp));
+        return solve(n,k);
+    }
+};
