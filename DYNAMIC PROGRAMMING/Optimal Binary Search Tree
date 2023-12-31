@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to calculate the sum of frequencies from index i to j
+int sum(int freq[], int i, int j) {
+	int s = 0;
+	for (int k = i; k <= j; k++)
+		s += freq[k];
+	return s;
+}
+
+// Function to calculate the optimal cost of a Binary Search Tree (BST)
+int optCost(int freq[], int i, int j) {
+	// Base cases
+	if (j < i) // no elements in this subarray
+		return 0;
+	if (j == i) // one element in this subarray
+		return freq[i];
+
+	// Get sum of freq[i], freq[i+1], ... freq[j]
+	int fsum = sum(freq, i, j);
+
+	// Initialize minimum value
+	int min = INT_MAX;
+
+	// One by one consider all elements
+	// as root and recursively find cost
+	// of the BST, compare the cost with
+	// min and update min if needed
+	for (int root = i; root <= j; ++root) {
+		int cost = optCost(freq, i, root - 1) +
+					optCost(freq, root + 1, j);
+		if (cost < min)
+			min = cost;
+	}
+
+	// Return minimum value
+	return min + fsum;
+}
+
+// Function to find the optimal cost of a Binary Search Tree (BST)
+int optimalSearchTree(int keys[], int freq[], int n) {
+	// Here array keys[] is assumed to be
+	// sorted in increasing order. If keys[]
+	// is not sorted, then add code to sort
+	// keys, and rearrange freq[] accordingly.
+	return optCost(freq, 0, n - 1);
+}
+
+int main() {
+	// Example keys and frequencies
+	int keys[] = {10, 12, 20};
+	int freq[] = {34, 8, 50};
+	int n = sizeof(keys) / sizeof(keys[0]);
+
+	// Output the optimal cost of the Binary Search Tree (BST)
+	cout << "Cost of Optimal BST is "
+		<< optimalSearchTree(keys, freq, n);
+
+	return 0;
+}
