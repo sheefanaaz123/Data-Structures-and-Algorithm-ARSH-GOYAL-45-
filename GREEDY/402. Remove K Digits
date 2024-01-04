@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        int digits = num.length() - k;
+
+        // If the length of the number is less than or equal to k, return "0"
+        if (num.length() <= k)
+            return "0";
+
+        int top = -1, start = 0;
+        vector<char> st(num.begin(), num.end());
+
+        // Iterate through the digits in the number
+        for (int i = 0; i < st.size(); i++) {
+            // Pop elements from the stack while maintaining non-decreasing order
+            while (top >= 0 && st[top] > st[i] && k > 0) {
+                top--;
+                k--;
+            }
+            top++;
+            st[top] = st[i];
+        }
+
+        // Find the starting index of the result number (ignoring leading zeros)
+        while (start <= top && st[start] == '0') start++;
+
+        // Construct the result string
+        string ans = "";
+        for (int i = start; i < digits; i++)
+            ans += st[i];
+
+        // If the result is empty, return "0"
+        if (ans.empty()) return "0";
+        return ans;
+    }
+};
