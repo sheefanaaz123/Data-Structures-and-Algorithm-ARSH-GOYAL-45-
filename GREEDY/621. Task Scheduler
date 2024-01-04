@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int leastInterval(std::vector<char>& tasks, int n) {
+        std::vector<int> f(26, 0); // Array to store frequency of each task
+
+        // Count the frequency of each task
+        for (char task : tasks)
+            f[task - 'A']++;
+
+        std::sort(f.begin(), f.end()); // Sort the frequencies in ascending order
+
+        int chunk = f[25] - 1; // Maximum frequency task (e.g., 'A') forms chunks with cooling period
+        int idleSpots = chunk * n; // Calculate total idle spots in chunks
+
+        // Distribute other tasks into the chunks
+        for (int i = 24; i >= 0; i--)
+            idleSpots -= std::min(chunk, f[i]);
+
+        // If idleSpots is negative, no idle time is needed, return total tasks
+        // Otherwise, return the sum of idleSpots and total tasks
+        return idleSpots < 0 ? tasks.size() : idleSpots + tasks.size();
+    }
+};
