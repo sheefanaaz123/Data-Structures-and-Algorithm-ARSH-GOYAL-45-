@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+class Solution {
+public:
+    int memo[50001];
+    int n; // Number of jobs
+
+    //Find the index of the next job whose start time is greater than or equal to the current job's end time
+    int getNextJobIndex(vector<vector<int>>& jobs, int currentIndex, int currentJobEndTime) {
+        int left = currentIndex + 1;
+        int right = n - 1;
+        int result = n; // Default value if no valid job is found
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (jobs[mid][0] >= currentJobEndTime) {
+                result = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return result;
+    }
+
+    // Recursive function to calculate the maximum profit starting from the current index
+    int calculateMaxProfit(vector<vector<int>>& jobs, int currentIndex) {
+        if (currentIndex >= n)
+            return 0;
+
+        if (memo[currentIndex] != -1)
+            return memo[currentIndex];
+
+        // Find the index of the next valid job
+        int nextJobIndex = getNextJobIndex(jobs, currentIndex, jobs[currentIndex][1]);
+
+        // Calculate profit by considering both taking and not taking the current job
+        int takenProfit = jobs[currentIndex][2] + calculateMaxProfit(jobs, nextJobIndex);
+        int notTakenProfit = calculateMaxProfit(jobs, currentIndex + 1);
+
+        // Store the maximum profit in the memoization array
+        return memo[currentIndex] = max(takenProfit, notTakenProfit);
+    }
+
+    // Function to solve the job scheduling problem and maximize profit
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
+        n = startTime.size();
+
+        // Initialize memoization array with -1
+        memset(memo, -1, sizeof(memo));
+
+        // Prepare a 2D array to store job information {start time, end time, profit}
+        vector<vector<int>> jobs(n, vector<int>(3, 0));
+
+        // Populate the jobs array
+        for (int i = 0; i < n; i++) {
+            jobs[i][0] = startTime[i];
+            jobs[i][1] = endTime[i];
+            jobs[i][2] = profit[i];
+        }
+
+        // Sort jobs based on start times for efficient processing
+        sort(begin(jobs), end(jobs), [&](const auto& job1, const auto& job2) {
+            return job1[0] <= job2[0];
+        });
+
+        // Call the recursive function to calculate the maximum profit
+        return calculateMaxProfit(jobs, 0);
+    }
+};
+
+int main() {
+    Solution solution;
+    
+    // Example input
+    vector<int> startTime = {1, 2, 3};
+    vector<int> endTime = {3, 4, 5};
+    vector<int> profit = {50, 10, 40};
+
+    // Output the result
+    cout << "Maximum Profit: " << solution.jobScheduling(startTime, endTime, profit) << endl;
+
+    return 0;
+}
