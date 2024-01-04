@@ -1,0 +1,21 @@
+// Returns sum of two numbers formed
+// from all digits in a[]
+int minSum(int a[], int n)
+{
+    // sort the elements
+    sort(a, a + n);
+    int num1 = 0;
+    int num2 = 0;
+
+    // Iterate through the sorted array
+    for (int i = 0; i < n; i++) {
+        // Alternate between forming num1 and num2
+        if (i % 2 == 0)
+            num1 = num1 * 10 + a[i];
+        else
+            num2 = num2 * 10 + a[i];
+    }
+
+    // Return the sum of the two formed numbers
+    return num2 + num1;
+}
