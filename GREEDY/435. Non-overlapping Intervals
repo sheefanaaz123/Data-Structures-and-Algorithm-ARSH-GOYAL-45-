@@ -1,0 +1,40 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        // Sort intervals based on start times
+        sort(begin(intervals), end(intervals));
+
+        int totalRemovedIntervals = 0;
+        int currentIntervalIndex = 0, nextIntervalIndex = 1;
+
+        while (nextIntervalIndex < intervals.size()) {
+            vector<int> currentInterval = intervals[currentIntervalIndex];
+            vector<int> nextInterval = intervals[nextIntervalIndex];
+
+            int currentIntervalStart = currentInterval[0];
+            int currentIntervalEnd   = currentInterval[1];
+
+            int nextIntervalStart = nextInterval[0];
+            int nextIntervalEnd   = nextInterval[1];
+
+            if (currentIntervalEnd <= nextIntervalStart) {
+                currentIntervalIndex = nextIntervalIndex;
+                nextIntervalIndex++;
+            } else if (currentIntervalEnd <= nextIntervalEnd) {
+                nextIntervalIndex++;
+                totalRemovedIntervals++;
+            } else if (currentIntervalEnd > nextIntervalEnd) {
+                currentIntervalIndex = nextIntervalIndex;
+                nextIntervalIndex++;
+                totalRemovedIntervals++;
+            }
+        }
+
+        return totalRemovedIntervals;
+    }
+};
