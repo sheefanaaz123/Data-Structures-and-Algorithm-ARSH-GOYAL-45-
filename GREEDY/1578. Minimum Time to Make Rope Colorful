@@ -1,0 +1,31 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    int minCost(string colors, vector<int>& neededTime) {
+        int n = colors.size();
+
+        int totalCost = 0;
+        int prevMaxTime = 0; // Variable to keep track of the maximum time for the previous color
+
+        for (int i = 0; i < n; i++) {
+            // If the current color is different from the previous color, reset the previous maximum time.
+            if (i > 0 && colors[i] != colors[i - 1]) {
+                prevMaxTime = 0;
+            }
+
+            int currentTime = neededTime[i]; // Time required for the current color
+
+            // Greedily choose the minimum time between the previous maximum time and the current time.
+            totalCost += min(prevMaxTime, currentTime);
+
+            // Update the previous maximum time with the maximum of the previous maximum and the current time.
+            prevMaxTime = max(prevMaxTime, currentTime);
+        }
+
+        return totalCost;
+    }
+};
