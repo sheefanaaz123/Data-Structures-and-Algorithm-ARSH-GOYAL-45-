@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int minDeletions(string s) {
+        unordered_set<int> st; // Set to store unique frequencies
+        int freq[26] = {0}; // Array to store frequency of each character
+
+        // Count the frequency of each character
+        for (char &ch : s) {
+            freq[ch - 'a']++;
+        }
+
+        int result = 0;
+
+        // Iterate through the frequency array
+        for (int i = 0; i < 26; i++) {
+            // If the current frequency is already in the set, decrement it until it becomes unique
+            while (freq[i] > 0 && st.find(freq[i]) != st.end()) {
+                freq[i]--;
+                result++;
+            }
+            // Insert the unique frequency into the set
+            st.insert(freq[i]);
+        }
+
+        return result;
+    }
+};
