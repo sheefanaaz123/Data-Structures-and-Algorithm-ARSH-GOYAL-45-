@@ -1,0 +1,24 @@
+#include <iostream>
+#include <vector>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> subsets(std::vector<int>& arr) {
+        std::vector<int> curr;
+        std::vector<std::vector<int>> ans;
+        rec(arr, 0, curr, ans);
+        return ans;
+    }
+
+    void rec(std::vector<int>& arr, int i, std::vector<int>& curr, std::vector<std::vector<int>>& ans) {
+        if (i == arr.size()) {
+            ans.push_back(curr);
+            return;
+        }
+        curr.push_back(arr[i]);
+        rec(arr, i + 1, curr, ans);
+        curr.pop_back();
+        rec(arr, i + 1, curr, ans);
+    }
+};
+
