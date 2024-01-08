@@ -1,0 +1,69 @@
+class Solution {
+public:
+    int m, n; // Dimensions of the grid
+    int emptyCells; // Count of empty cells
+    int result = 0; // Final result
+    vector<vector<int>> directions{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; // Possible directions to move
+    
+    // Depth-First Search (DFS) function
+    void dfs(vector<vector<int>>& grid, int curr_count, int i, int j) {
+        // Base case: Out of bounds or cell is an obstacle
+        if(i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == -1) {
+            return;
+        }
+        
+        // Check if reaching the destination
+        if(grid[i][j] == 2) {
+            // If all empty cells are visited, increment the result count
+            if(curr_count == emptyCells) {
+                result++;
+            }
+            return;
+        }
+        
+        // Mark the current cell as visited
+        grid[i][j] = -1;
+        
+        // Explore all possible directions
+        for(vector<int> dir:directions) {
+            int i_ = i + dir[0];
+            int j_ = j + dir[1];
+            dfs(grid, curr_count+1, i_, j_);
+        }
+        
+        // Backtrack: Mark the current cell as unvisited
+        grid[i][j] = 0;
+    }
+    
+    // Main function to find unique paths
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        m = grid.size();
+        n = grid[0].size();
+        emptyCells = 0;
+        result = 0;
+        
+        int start_x = 0;
+        int start_y = 0;
+        
+        // Count the number of empty cells and find the starting position
+        for(int i = 0; i<m; i++) {
+            for(int j = 0; j<n; j++) {
+                if(grid[i][j] == 0)
+                    emptyCells++;
+                
+                if(grid[i][j] == 1) {
+                    start_x = i;
+                    start_y = j;
+                }
+            }
+        }
+        
+        emptyCells += 1; // Walk over every non-obstacle square exactly once.
+        int curr_count = 0;
+        
+        // Start DFS from the starting position
+        dfs(grid, curr_count, start_x, start_y);
+        
+        return result; // Return the final result
+    }
+};
