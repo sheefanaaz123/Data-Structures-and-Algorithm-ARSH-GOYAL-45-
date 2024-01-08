@@ -1,0 +1,53 @@
+// Function to solve the subset sum problem with memoization
+bool subsetSumUtil(int currentIndex, int targetSum, const vector<int>& array, vector<vector<int>>& dp) {
+    // Base case: If the target sum is 0, return true
+    if (targetSum == 0)
+        return dp[currentIndex][targetSum] = true;
+
+    // Base case: If we have considered all elements and the target is still not 0, return false
+    if (currentIndex == 0)
+        return dp[currentIndex][targetSum] = (array[0] == targetSum);
+
+    // If the result for this state is already calculated, return it
+    if (dp[currentIndex][targetSum] != -1)
+        return dp[currentIndex][targetSum];
+
+    // Recursive cases
+    // 1. Exclude the current element
+    bool notTaken = subsetSumUtil(currentIndex - 1, targetSum, array, dp);
+
+    // 2. Include the current element if it doesn't exceed the target
+    bool taken;
+    if (array[currentIndex] <= targetSum)
+        taken = subsetSumUtil(currentIndex - 1, targetSum - array[currentIndex], array, dp);
+
+    // Store the result in the DP table and return
+    return dp[currentIndex][targetSum] = notTaken || taken;
+}
+
+// Function to find the minimum absolute difference between two subset sums
+int minSubsetSumDifference(const vector<int>& array, int size) {
+    int totalSum = 0;
+
+    // Calculate the total sum of the array
+    for (int i = 0; i < size; i++) {
+        totalSum += array[i];
+    }
+
+    // Initialize a DP table to store the results of the subset sum problem
+    vector<vector<int>> dp(size, vector<int>(totalSum + 1, -1));
+
+    // Calculate the subset sum for each possible sum from 0 to the total sum
+    for (int i = 0; i <= totalSum; i++) {
+        bool dummy = subsetSumUtil(size - 1, i, array, dp);
+    }
+
+    int minimumDifference = 1e9;
+    for (int i = 0; i <= totalSum; i++) {
+        if (dp[size - 1][i] == true) {
+            int difference = abs(i - (totalSum - i));
+            minimumDifference = min(minimumDifference, difference);
+        }
+    }
+    return minimumDifference;
+}
