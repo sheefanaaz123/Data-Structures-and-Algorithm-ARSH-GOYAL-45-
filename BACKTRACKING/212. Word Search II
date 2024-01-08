@@ -1,0 +1,73 @@
+class Solution {
+public:
+    vector<string> result; // Stores the final result of found words
+    int r, c; // Dimensions of the board
+    vector<pair<int, int>> directions{{-1, 0},{1, 0},{0, 1},{0, -1}}; // Directions for DFS
+    struct trieNode {
+        bool endOfWord; // Indicates if the current node marks the end of a word
+        trieNode* children[26]; // Children nodes for each letter of the alphabet
+        string word; // Stores the word represented by the current node
+    };
+
+    trieNode* getNode() {
+        trieNode* temp = new trieNode(); // Creates a new trie node
+        temp->endOfWord = false; // Initializes endOfWord flag to false
+        for(int i = 0; i<26; i++) {
+            temp->children[i] = NULL; // Initializes children array to NULL
+        }
+        temp->word = ""; // Initializes the word to an empty string
+        return temp;
+    }
+
+    void insert(trieNode* root, string str) {
+        trieNode* pCrawl = root; // Initializes the pointer to traverse the trie
+        for(char ch:str) {
+            if(pCrawl->children[ch-'a'] == NULL) {
+                pCrawl->children[ch-'a'] = getNode(); // Creates a new node if it doesn't exist
+            }
+            pCrawl = pCrawl->children[ch-'a']; // Moves the pointer to the next node
+        }
+        pCrawl->endOfWord = true; // Marks the end of the inserted word
+        pCrawl->word = str; // Stores the word in the last node
+    }
+
+    void DFS(vector<vector<char>>& board, int i, int j, trieNode* root) {
+        if(i<0 || i >= r || j<0 || j >= c || board[i][j] == '$' || root->children[board[i][j]- 'a'] == NULL) {
+            return; // Base case: out of bounds or already visited cell or no matching trie node
+        }
+        root = root->children[board[i][j]- 'a']; // Move to the child node
+        if(root->endOfWord == true) {
+            result.push_back(root->word); // Found a valid word, add to result
+            root->endOfWord = false; // Mark the word as processed to avoid duplicates
+        }
+        char temp = board[i][j];
+        
+        board[i][j] = '$'; // Mark the current cell as visited
+        for(pair<int, int> p:directions) {
+            int new_i = i+p.first;
+            int new_j = j+p.second;
+            DFS(board, new_i, new_j, root); // Explore neighboring cells recursively
+        }
+        board[i][j] = temp; // Backtrack: restore the original value of the cell
+    }
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        r = board.size();
+        c = board[0].size();
+
+        trieNode* root = getNode(); // Create the root node of the trie
+        for(string str:words) {
+            insert(root, str); // Insert each word into the trie
+        }
+
+        for(int i = 0; i<r; i++) {
+            for(int j = 0; j<c; j++) {
+                char ch = board[i][j];
+                if(root->children[ch-'a'] != NULL) {
+                    DFS(board, i, j, root); // Start DFS from cells with potential matches in the trie
+                }
+            }
+        }
+        return result; // Return the final result
+    }
+};
