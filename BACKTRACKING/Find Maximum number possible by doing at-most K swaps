@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to find maximum integer by doing at-most K swap operations
+void findMaximumNum(string str, int k, string& max) {
+    // Return if no swaps left
+    if (k == 0)
+        return;
+
+    int n = str.length();
+
+    // Consider every digit
+    for (int i = 0; i < n - 1; i++) {
+        // Compare it with all digits after it
+        for (int j = i + 1; j < n; j++) {
+            // If digit at position i is less than digit at position j, swap it
+            // and check for maximum number so far, then recurse for remaining swaps
+            if (str[i] < str[j]) {
+                // Swap str[i] with str[j]
+                swap(str[i], str[j]);
+
+                // If the current num is more than the maximum so far
+                if (str.compare(max) > 0)
+                    max = str;
+
+                // Recurse for the other k - 1 swaps
+                findMaximumNum(str, k - 1, max);
+
+                // Backtrack: Undo the swap for backtracking
+                swap(str[i], str[j]);
+            }
+        }
+    }
+}
+
+// Driver code
+int main() {
+    string str = "129814999";
+    int k = 4;
+
+    string max = str;
+    findMaximumNum(str, k, max);
+
+    cout << "Maximum Integer after " << k << " swaps: " << max << endl;
+
+    return 0;
+}
