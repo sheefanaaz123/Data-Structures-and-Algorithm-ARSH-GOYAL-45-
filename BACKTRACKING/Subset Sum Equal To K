@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+using namespace std;
+
+bool dfs(vector<int>& nums, vector<bool>& v, int target, int sum, int i);
+
+bool subsetSumToK(int n, int k, vector<int>& nums) {
+    long long sum = accumulate(nums.begin(), nums.end(), 0LL);
+    if (sum < k )
+        return false;
+    vector<bool> v(nums.size(), false);
+    return dfs(nums, v, k, 0, 0);
+}
+
+bool dfs(vector<int>& nums, vector<bool>& v, int target, int sum, int i) {
+    if (sum == target)
+        return true;
+    if (sum > target || i == nums.size())
+        return false;
+    
+    for (int j = i; j < nums.size(); j++) {
+        if (v[j])
+            continue;
+        v[j] = true;
+        if (dfs(nums, v, target, sum + nums[j], j + 1))
+            return true;
+        v[j] = false;
+    }
+    return false;
+}
