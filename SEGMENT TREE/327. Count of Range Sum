@@ -1,0 +1,59 @@
+#include <vector>
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    int countRangeSum(vector<int>& nums, int lower, int upper) {
+        int n = nums.size();
+        if (n == 0) return 0;
+
+        vector<long long> prefixSum(n + 1, 0);
+        for (int i = 0; i < n; ++i) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        return mergeSortCount(prefixSum, lower, upper, 0, n);
+    }
+
+    int mergeSortCount(vector<long long>& prefixSum, int lower, int upper, int start, int end) {
+        if (start == end) return 0;
+
+        int mid = (start + end) / 2;
+        int count = mergeSortCount(prefixSum, lower, upper, start, mid) +
+                    mergeSortCount(prefixSum, lower, upper, mid + 1, end);
+
+        int j = mid + 1, k = mid + 1;
+
+        for (int i = start; i <= mid; ++i) {
+            while (j <= end && prefixSum[j] - prefixSum[i] < lower) {
+                ++j;
+            }
+            while (k <= end && prefixSum[k] - prefixSum[i] <= upper) {
+                ++k;
+            }
+            count += (k - j);
+        }
+
+        vector<long long> merged(end - start + 1);
+        
+        int left = start, right = mid + 1, pos = 0;
+
+        while (left <= mid || right <= end) {
+            if (left > mid) {
+                merged[pos++] = prefixSum[right++];
+            } else if (right > end) {
+                merged[pos++] = prefixSum[left++];
+            } else {
+                merged[pos++] = (prefixSum[left] < prefixSum[right]) ? prefixSum[left++] : prefixSum[right++];
+            }
+        }
+
+        for (int i = 0; i < pos; ++i) {
+            prefixSum[start + i] = merged[i];
+        }
+
+        return count;
+    }
+};
+
