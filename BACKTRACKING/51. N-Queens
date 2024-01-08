@@ -1,0 +1,68 @@
+class Solution {
+public:
+    // Function to check if placing a queen at position (row, col) is safe
+    bool isSafe1(int row, int col, vector<string> board, int n) {
+        // Check upper left diagonal
+        int duprow = row;
+        int dupcol = col;
+
+        while (row >= 0 && col >= 0) {
+            if (board[row][col] == 'Q')
+                return false;
+            row--;
+            col--;
+        }
+
+        // Check left column
+        col = dupcol;
+        row = duprow;
+        while (col >= 0) {
+            if (board[row][col] == 'Q')
+                return false;
+            col--;
+        }
+
+        // Check lower left diagonal
+        row = duprow;
+        col = dupcol;
+        while (row < n && col >= 0) {
+            if (board[row][col] == 'Q')
+                return false;
+            row++;
+            col--;
+        }
+        return true;
+    }
+
+    // Recursive function to solve N-Queens problem
+    void solve(int col, vector<string>& board, vector<vector<string>>& ans, int n) {
+        // Base case: All queens are placed, add the current board configuration to the result
+        if (col == n) {
+            ans.push_back(board);
+            return;
+        }
+
+        // Try placing a queen in each row of the current column
+        for (int row = 0; row < n; row++) {
+            if (isSafe1(row, col, board, n)) {
+                // Place the queen and recursively solve for the next column
+                board[row][col] = 'Q';
+                solve(col + 1, board, ans, n);
+
+                // Backtrack: Remove the queen to explore other possibilities
+                board[row][col] = '.';
+            }
+        }
+    }
+
+    // Main function to solve N-Queens problem
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> ans; // Resultant vector to store all solutions
+        vector<string> board(n, string(n, '.')); // Initialize the chessboard with empty cells
+
+        // Call the solve function to start solving the N-Queens problem
+        solve(0, board, ans, n);
+
+        return ans; // Return the final result
+    }
+};
