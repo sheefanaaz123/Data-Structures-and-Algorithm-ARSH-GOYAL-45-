@@ -1,0 +1,24 @@
+string timeConversion(string s) {
+ int hours, minutes, seconds;
+    char colon;
+    std::istringstream ss(s);
+    ss >> hours >> colon >> minutes >> colon >> seconds;
+
+    // Checking if it's PM and not noon
+    // 1PM, 2PM, 3PM....
+    if (s.find("PM") != s.npos && hours != 12) {
+        hours += 12;
+    }
+    // Checking if it's AM and noon
+    else if (s.find("AM") != s.npos && hours == 12) {
+        hours = 0;
+    }
+
+    // Formatting the result in 24-hour format
+    std::ostringstream result;
+    result << setw(2) << setfill('0') << hours << ":"
+           << setw(2) << setfill('0') << minutes << ":"
+           << setw(2) << setfill('0') << seconds;
+
+    return result.str();
+}
