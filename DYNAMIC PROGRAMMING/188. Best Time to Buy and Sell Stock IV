@@ -1,0 +1,43 @@
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    // Recursive helper function to calculate maximum profit
+    int calculateMaxProfit(vector<int>& stockPrices, int daysRemaining, int currentDay, int isBuyingStock, int remainingTransactions, vector<vector<vector<int>>>& memo) {
+        // Base case: If we reach the end of the array or run out of allowed transactions, return 0.
+        if (currentDay == daysRemaining || remainingTransactions == 0)
+            return 0;
+
+        // Check if the result is already computed
+        if (memo[currentDay][isBuyingStock][remainingTransactions] != -1)
+            return memo[currentDay][isBuyingStock][remainingTransactions];
+
+        int currentProfit;
+
+        if (isBuyingStock == 0) { // We can buy the stock
+            // Calculate the profit for the current state considering buying or not buying the stock
+            currentProfit = max(0 + calculateMaxProfit(stockPrices, daysRemaining, currentDay + 1, 0, remainingTransactions, memo),
+                                -stockPrices[currentDay] + calculateMaxProfit(stockPrices, daysRemaining, currentDay + 1, 1, remainingTransactions, memo));
+        }
+
+        if (isBuyingStock == 1) { // We can sell the stock
+            // Calculate the profit for the current state considering selling or not selling the stock
+            currentProfit = max(0 + calculateMaxProfit(stockPrices, daysRemaining, currentDay + 1, 1, remainingTransactions, memo),
+                                stockPrices[currentDay] + calculateMaxProfit(stockPrices, daysRemaining, currentDay + 1, 0, remainingTransactions - 1, memo));
+        }
+
+        // Store the result in the DP array and return
+        return memo[currentDay][isBuyingStock][remainingTransactions] = currentProfit;
+    }
+
+    // Main function to calculate maximum profit with at most k transactions
+    int maxProfit(int maxTransactions, vector<int>& prices) {
+        int n = prices.size();
+        // Creating a 3D memoization array of size [n][2][maxTransactions+1]
+        vector<vector<vector<int>>> memo(n, vector<vector<int>>(2, vector<int>(maxTransactions + 1, -1)));
+
+        // Call the recursive function to calculate maximum profit
+        return calculateMaxProfit(prices, n, 0, 0, maxTransactions, memo);
+    }
+};
