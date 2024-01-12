@@ -1,0 +1,32 @@
+bool custom_comparator(string a, string b) {
+        if (a + b > b + a) {
+            return true;  // ab
+        } else {
+            return false; // ba
+        }
+    }
+
+class Solution {
+public:
+    
+
+    string largestNumber(vector<int>& nums) {
+        string ans;
+        vector<string> nums_str;
+        for (int x : nums) {
+            nums_str.push_back(to_string(x));
+        }
+        sort(nums_str.begin(), nums_str.end(), custom_comparator);
+
+        for (string s : nums_str) {
+            ans.append(s);
+        }
+
+        int start = 0;
+        while (ans[start] == '0' && start < ans.size() - 1) {
+            start++;
+        }
+
+        return ans.substr(start);
+    }
+};
