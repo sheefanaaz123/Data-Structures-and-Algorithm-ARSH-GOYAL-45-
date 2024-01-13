@@ -1,0 +1,41 @@
+class Solution {
+public:
+    
+    // Function to find the maximum sum of a subarray using Kadane's algorithm
+    long long int findMaxSubarraySum(vector<long long int>& array, int size) {
+        long long int maxSum = INT_MIN, currentSum = 0;
+        
+        for (int i = 0; i < size; i++) {
+            currentSum += array[i];
+            maxSum = max(maxSum, currentSum);
+            currentSum = (currentSum < 0) ? 0 : currentSum; // Reset to 0 if current sum becomes negative
+        }
+        
+        return maxSum;
+    }
+
+    // Function to find the maximum sum rectangle in a 2D matrix
+    int maximumSumRectangle(int rows, int cols, vector<vector<int>>& matrix) {
+        long long int maxSum = INT_MIN;
+
+        // Iterate over each possible pair of columns
+        for (int startCol = 0; startCol < cols; ++startCol) {
+            vector<long long int> temp(rows, 0); // Initialize a vector to store the current subarray
+
+            // Iterate over all possible ending columns
+            for (int endCol = startCol; endCol < cols; ++endCol) {
+                // Update the temp vector with the cumulative sum of elements in the current subarray
+                for (int row = 0; row < rows; ++row)
+                    temp[row] += matrix[row][endCol];
+
+                // Find the maximum sum of the subarray using Kadane's algorithm
+                long long int sum = findMaxSubarraySum(temp, rows);
+
+                // Update the overall maximum sum
+                maxSum = max(maxSum, sum);
+            }
+        }
+
+        return maxSum;
+    }
+};
