@@ -1,0 +1,9 @@
+#include <bits/stdc++.h> 
+int findGcd(int x, int y)
+{
+    if(y==0){
+        return x;
+    }else{
+        findGcd(y,x%y);
+    }
+}
