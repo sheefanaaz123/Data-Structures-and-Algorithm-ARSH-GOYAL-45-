@@ -1,0 +1,103 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define endl "\n"
+
+// Function to find the subarray with maximum sum and its length
+pair<int, int> subsum(vector<int> arr, int n) {
+    unordered_map<int, int> mp;
+    int maxlen = 0;         // Maximum length of the subarray with sum 0
+    int sum = 0;            // Cumulative sum of elements
+    int ending_index = -1;  // Ending index of the subarray
+
+    for (int i = 0; i < n; ++i) {
+        sum += arr[i];
+
+        // Check if the current element is 0
+        if (arr[i] == 0)
+            maxlen = max(maxlen, 1);
+
+        // Check if the sum becomes zero
+        if (sum == 0) {
+            maxlen = max(maxlen, i + 1);
+            ending_index = i;
+        }
+
+        // Check if the current sum has been encountered before
+        if (mp.find(sum) != mp.end()) {
+            if (maxlen < i - (int)mp[sum]) {
+                maxlen = i - mp[sum];
+                ending_index = i;
+            }
+        } else {
+            mp[sum] = i;
+        }
+    }
+
+    pair<int, int> p{maxlen, ending_index};
+    return p;
+}
+
+int main() {
+    int r, c;
+    int starting_row = 0;
+    int ending_row = 0;
+    int starting_col = 0;
+    int ending_col = 0;
+
+    // Input dimensions of the matrix
+    cin >> r >> c;
+
+    // Create a matrix of size r x c
+    vector<vector<int>> mat(r, vector<int>(c));
+
+    // Input the elements of the matrix
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            cin >> mat[i][j];
+        }
+    }
+
+    int final_length = INT_MIN;
+
+    // Iterate through all possible submatrices
+    for (int i = 0; i < r; i++) {
+        vector<int> current_array(c);
+
+        for (int j = i; j < r; j++) {
+            // Update the current array with cumulative sum
+            for (int col = 0; col < c; col++) {
+                current_array[col] += mat[j][col];
+            }
+
+            // Find the subarray with maximum sum
+            pair<int, int> p = subsum(current_array, c);
+
+            // Compare the area of the old submatrix with the new one
+            if (final_length * (ending_row - starting_row + 1) < (p.first * (j - i + 1))) {
+                final_length = p.first;
+                starting_row = i;
+                ending_row = j;
+                starting_col = p.second - p.first + 1;
+                ending_col = p.second;
+            }
+        }
+    }
+
+    // Calculate the final area and output the results
+    int final_area = final_length * (ending_row - starting_row + 1);
+    cout << "Maximum area of submatrix with sum 0: " << final_area << endl;
+    cout << "Starting Row: " << starting_row << ", Ending Row: " << ending_row << endl;
+    cout << "Starting Column: " << starting_col << ", Ending Column: " << ending_col << endl;
+
+    // Output the elements of the answer matrix
+    cout << "Answer matrix is " << endl;
+    for (int i = starting_row; i <= ending_row; ++i) {
+        for (int j = starting_col; j <= ending_col; ++j) {
+            cout << mat[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
