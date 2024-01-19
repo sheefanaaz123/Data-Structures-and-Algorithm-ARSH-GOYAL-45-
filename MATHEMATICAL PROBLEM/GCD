@@ -1,4 +1,8 @@
 #include <bits/stdc++.h> 
+
+//euclids algo
+
+// pre req:  x > y
 int findGcd(int x, int y)
 {
     if(y==0){
