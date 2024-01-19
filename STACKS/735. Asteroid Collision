@@ -1,0 +1,47 @@
+#include <vector>
+#include <stack>
+
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& asteroids) {
+        stack<int> remainingAsteroids;  // Stack to simulate asteroid collisions.
+
+        // Iterate through each asteroid in the list.
+        for (int &currentAsteroid : asteroids) {
+            // Check for potential collisions with asteroids on the stack.
+            while (!remainingAsteroids.empty() && currentAsteroid < 0 && remainingAsteroids.top() > 0) {
+                int sum = currentAsteroid + remainingAsteroids.top();
+                // Resolve collisions based on the sum of asteroid sizes.
+                if (sum < 0) {
+                    remainingAsteroids.pop();  // Asteroid on the stack is destroyed.
+                } else if (sum > 0) {
+                    // Current asteroid is destroyed.
+                    currentAsteroid = 0;
+                    break;
+                } else {
+                    remainingAsteroids.pop();  // Both asteroids are destroyed.
+                    currentAsteroid = 0;
+                }
+            }
+
+            // If the current asteroid survives, push it onto the stack.
+            if (currentAsteroid != 0)
+                remainingAsteroids.push(currentAsteroid);
+        }
+
+        int resultSize = remainingAsteroids.size();
+        
+        // Prepare the result vector to store the final state of surviving asteroids.
+        vector<int> result(resultSize);
+        int resultIndex = resultSize - 1;
+
+        // Transfer remaining asteroids from the stack to the result vector.
+        while (!remainingAsteroids.empty()) {
+            result[resultIndex] = remainingAsteroids.top();
+            remainingAsteroids.pop();
+            resultIndex--;
+        }
+
+        return result;
+    }
+};
