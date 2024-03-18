@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int solve(int i, int j, vector<int>&nums){
+
+          if(i>j){
+            return 0;
+          }else if(i==j){
+            return nums[i];
+          }
+
+          int taking_ith_index_element = nums[i] + min(solve(i+2,j,nums),solve(i+1,j-1,nums));
+          int taking_jth_index_element = nums[j] + min(solve(i,j-2,nums),solve(i+1,j-1,nums));
+
+          return max(taking_ith_index_element,taking_jth_index_element);
+    }
+    bool predictTheWinner(vector<int>& nums) {
+        int n = nums.size();
+        int total = accumulate(begin(nums),end(nums),0);
+        int player1_score = solve(0,n-1,nums);
+        int player2_score = total - player1_score;
+
+        if(player1_score >= player2_score){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+}; 
