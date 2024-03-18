@@ -1,0 +1,23 @@
+class Solution {
+public:
+    bool winnerOfGame(string colors) {
+        int n = colors.size();
+        //the number of chances the person get is already decided based on the input string
+
+        int alice_chance = 0;
+        int bob_chance = 0;
+
+        for ( int i = 1; i<n; i++){
+            if(colors[i-1]==colors[i] && colors[i]==colors[i+1] ){
+                if(colors[i] == 'A'){
+                    alice_chance ++;
+                }else{
+                    bob_chance++;
+                }
+            }
+        }
+
+
+        return alice_chance > bob_chance;
+    }
+};
