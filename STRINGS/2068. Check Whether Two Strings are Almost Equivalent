@@ -1,0 +1,32 @@
+#include <map>
+#include <string>
+#include <cmath>
+using namespace std;
+
+class Solution {
+public:
+    bool checkAlmostEquivalent(string word1, string word2) {
+        map<char, int> mp;
+        int l1 = word1.size();
+        int l2 = word2.size();
+
+        // Count frequency of each character in word1
+        for (char c : word1) {
+            mp[c]++;
+        }
+
+        // Subtract frequency of each character in word2
+        for (char c : word2) {
+            mp[c]--;
+        }
+
+        // Check if the absolute difference of frequencies for any character is more than 3
+        for (auto it = mp.begin(); it != mp.end(); ++it) {
+            if (abs(it->second) > 3) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
