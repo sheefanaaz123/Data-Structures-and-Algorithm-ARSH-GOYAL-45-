@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+struct ListNode {
+    int val;
+    ListNode *next;
+
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
+class Solution {
+public:
+    ListNode* deleteMiddle(ListNode* head) {
+        if (!head || !head->next) return nullptr;
+
+        ListNode* prev = nullptr;
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast && fast->next) {
+            prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        prev->next = slow->next;
+        delete slow;
+
+        return head;
+    }
+};
+
+ListNode* createList(const vector<int>& values) {
+    if (values.empty()) return nullptr;
+
+    ListNode* head = new ListNode(values[0]);
+    ListNode* current = head;
+
+    for (int i = 1; i < values.size(); i++) {
+        current->next = new ListNode(values[i]);
+        current = current->next;
+    }
+
+    return head;
+}
+
+int main() {
+    Solution sol;
+
+    vector<int> values = {1, 2, 3, 4, 5};
+    ListNode* head = createList(values);
+
+    head = sol.deleteMiddle(head);
+
+    return 0;
+}
