@@ -1,0 +1,39 @@
+class Solution {
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        // Base Case 1: If the list is empty, return NULL
+        if (!head) return NULL;
+
+        // Base Case 2: If the list has only one element, make it a leaf TreeNode
+        if (head->next == NULL) return new TreeNode(head->val);
+
+        // Initialize slow and fast pointers to find the middle element
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        // slow_prev will track the node just before the slow pointer
+        ListNode* slow_prev = NULL;
+
+        // Move fast by 2 steps and slow by 1 step to find the middle
+        while (fast && fast->next) {
+            slow_prev = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        // slow is now pointing to the middle node which will be the root of BST
+        TreeNode* root = new TreeNode(slow->val);
+
+        // Disconnect the left half from the middle node to split the list
+        slow_prev->next = NULL;
+
+        // Recursively build the left subtree from the left half of the list
+        root->left = sortedListToBST(head);
+
+        // Recursively build the right subtree from the right half of the list
+        root->right = sortedListToBST(slow->next);
+
+        // Return the root node of the BST
+        return root;
+    }
+};
