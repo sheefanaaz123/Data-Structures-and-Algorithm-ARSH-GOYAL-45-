@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        
+        int singleNumber = 0;
+        
+        for (int bitPosition = 0; bitPosition < 32; bitPosition++) {
+            
+            int bitMask = (1 << bitPosition);
+            
+            int countOnes = 0;
+            
+            for (int num : nums) {
+                
+                if ((num & bitMask) != 0) {
+                    countOnes++;
+                }
+            }
+            
+            if (countOnes % 3 == 1) {
+                singleNumber |= bitMask;
+            }
+        }
+        
+        return singleNumber;
+        
+    }
+};
