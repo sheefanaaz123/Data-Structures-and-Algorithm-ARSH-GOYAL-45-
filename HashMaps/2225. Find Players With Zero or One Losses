@@ -1,0 +1,41 @@
+#include <vector>
+#include <unordered_map>
+#include <set>
+#include <algorithm>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> findWinners(std::vector<std::vector<int>>& matches) {
+        std::unordered_map<int, int> loss_counts;
+        std::set<int> players;
+
+        // Iterate through all matches once to populate loss counts and player set
+        for (const auto& match : matches) {
+            int winner = match[0];
+            int loser = match[1];
+
+            loss_counts[loser]++;
+            players.insert(winner);
+            players.insert(loser);
+        }
+
+        std::vector<int> no_losses;
+        std::vector<int> one_loss;
+
+        // Iterate through the set of all players to determine winners
+        for (int player : players) {
+            if (loss_counts.find(player) == loss_counts.end()) {
+                no_losses.push_back(player);
+            } else if (loss_counts[player] == 1) {
+                one_loss.push_back(player);
+            }
+        }
+        
+        // Results are naturally sorted because a std::set was used for players
+        // but sorting is good practice in case the problem constraints change.
+        std::sort(no_losses.begin(), no_losses.end());
+        std::sort(one_loss.begin(), one_loss.end());
+
+        return {no_losses, one_loss};
+    }
+};
