@@ -1,0 +1,43 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ * int val;
+ * TreeNode *left;
+ * TreeNode *right;
+ * TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ * TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ * TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void findPaths(TreeNode* node, int currentSum, int targetSum, vector<int>& currentPath, vector<vector<int>>& allPaths) {
+        if (!node) {
+            return;
+        }
+
+        currentPath.push_back(node->val);
+        currentSum += node->val;
+
+        // Check if we've reached a leaf node and if the path sum is equal to the target
+        if (node->left == nullptr && node->right == nullptr) {
+            if (currentSum == targetSum) {
+                allPaths.push_back(currentPath);
+            }
+        } else {
+            // Recursively explore the left and right subtrees
+            findPaths(node->left, currentSum, targetSum, currentPath, allPaths);
+            findPaths(node->right, currentSum, targetSum, currentPath, allPaths);
+        }
+
+        // Backtrack by removing the last element
+        currentPath.pop_back();
+    }
+    
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> allPaths;
+        vector<int> currentPath;
+        findPaths(root, 0, targetSum, currentPath, allPaths);
+        return allPaths;
+    }
+};
