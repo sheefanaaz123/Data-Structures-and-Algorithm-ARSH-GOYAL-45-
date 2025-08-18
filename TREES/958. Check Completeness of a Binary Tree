@@ -1,0 +1,49 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ * int val;
+ * TreeNode *left;
+ * TreeNode *right;
+ * TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ * TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ * TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isCompleteTree(TreeNode* root) {
+        // Handle the edge case of an empty tree. A null root is a complete tree.
+        if (!root) {
+            return true;
+        }
+
+        std::queue<TreeNode*> nodeQueue;
+        nodeQueue.push(root);
+
+        // Flag to track if we have encountered a null node.
+        bool foundNullNode = false;
+
+        while (!nodeQueue.empty()) {
+            TreeNode* currentNode = nodeQueue.front();
+            nodeQueue.pop();
+
+            // If the current node is null, we've entered the "null" zone of the tree.
+            if (currentNode == nullptr) {
+                foundNullNode = true;
+            } else {
+                // If we've already found a null node and now find a non-null node,
+                // the tree is not complete. This violates the left-to-right filling rule.
+                if (foundNullNode) {
+                    return false;
+                }
+                
+                // Continue level-order traversal by adding children to the queue.
+                // We add both children, even if they are null, to maintain the level structure.
+                nodeQueue.push(currentNode->left);
+                nodeQueue.push(currentNode->right);
+            }
+        }
+
+        return true;
+    }
+};
