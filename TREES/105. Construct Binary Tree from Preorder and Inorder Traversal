@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ * int val;
+ * TreeNode *left;
+ * TreeNode *right;
+ * TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ * TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ * TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // Helper function to build the tree recursively
+    TreeNode* buildTreeHelper(vector<int>& preorder, vector<int>& inorder, int inorderStart, int inorderEnd, int& preorderIndex) {
+        // Base case: If the inorder segment is invalid, return nullptr.
+        if (inorderStart > inorderEnd) {
+            return nullptr;
+        }
+
+        // Get the current root value from preorder and increment the index for the next recursive call.
+        int rootValue = preorder[preorderIndex];
+        preorderIndex++;
+
+        // Create the root node for the current subtree.
+        TreeNode* rootNode = new TreeNode(rootValue);
+
+        // Find the index of the root value in the inorder array to split the subtrees.
+        int inorderRootIndex;
+        for (int i = inorderStart; i <= inorderEnd; i++) {
+            if (inorder[i] == rootValue) {
+                inorderRootIndex = i;
+                break;
+            }
+        }
+
+        // Recursively build the left and right subtrees.
+        // The left subtree's inorder range is from inorderStart to inorderRootIndex - 1.
+        rootNode->left = buildTreeHelper(preorder, inorder, inorderStart, inorderRootIndex - 1, preorderIndex);
+        
+        // The right subtree's inorder range is from inorderRootIndex + 1 to inorderEnd.
+        rootNode->right = buildTreeHelper(preorder, inorder, inorderRootIndex + 1, inorderEnd, preorderIndex);
+
+        return rootNode;
+    }
+
+    // Main function to initiate the tree construction.
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        int n = preorder.size();
+        int preorderIndex = 0;
+        return buildTreeHelper(preorder, inorder, 0, n - 1, preorderIndex);
+    }
+};
