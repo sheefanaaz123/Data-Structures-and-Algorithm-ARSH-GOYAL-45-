@@ -1,0 +1,93 @@
+class Solution {
+public:
+    // 4-directional movement (down, up, left, right)
+    const vector<vector<int>> DIRECTIONS = {
+        {1, 0}, {-1, 0}, {0, -1}, {0, 1}
+    };
+
+    /**
+     * DFS to mark cells reachable from an ocean.
+     * 
+     * We traverse "uphill" (reverse flow):
+     * from ocean → higher/equal height cells.
+     * 
+     * @param heights Grid of heights
+     * @param row Current row
+     * @param col Current column
+     * @param prevHeight Height of previous cell (to enforce monotonic increase)
+     * @param visited Matrix marking reachable cells for a given ocean
+     */
+    void dfs(const vector<vector<int>>& heights,
+             int row,
+             int col,
+             int prevHeight,
+             vector<vector<bool>>& visited) {
+        
+        int rows = heights.size();
+        int cols = heights[0].size();
+
+        // Boundary + validity checks
+        if (row < 0 || row >= rows || col < 0 || col >= cols)
+            return;
+
+        // Stop if:
+        // 1. Already visited
+        // 2. Cannot move "uphill" (reverse condition violated)
+        if (visited[row][col] || heights[row][col] < prevHeight)
+            return;
+
+        // Mark current cell as reachable
+        visited[row][col] = true;
+
+        // Explore all 4 directions
+        for (const auto& dir : DIRECTIONS) {
+            int nextRow = row + dir[0];
+            int nextCol = col + dir[1];
+
+            dfs(heights, nextRow, nextCol, heights[row][col], visited);
+        }
+    }
+
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        int rows = heights.size();
+        int cols = heights[0].size();
+
+        vector<vector<int>> result;
+
+        // Reachability matrices
+        vector<vector<bool>> canReachPacific(rows, vector<bool>(cols, false));
+        vector<vector<bool>> canReachAtlantic(rows, vector<bool>(cols, false));
+
+        /**
+         * Step 1: Start DFS from ocean boundaries
+         * 
+         * Pacific → top row + left column
+         * Atlantic → bottom row + right column
+         */
+
+        // Traverse columns (top & bottom edges)
+        for (int col = 0; col < cols; col++) {
+            dfs(heights, 0, col, INT_MIN, canReachPacific);        // Top row (Pacific)
+            dfs(heights, rows - 1, col, INT_MIN, canReachAtlantic); // Bottom row (Atlantic)
+        }
+
+        // Traverse rows (left & right edges)
+        for (int row = 0; row < rows; row++) {
+            dfs(heights, row, 0, INT_MIN, canReachPacific);        // Left column (Pacific)
+            dfs(heights, row, cols - 1, INT_MIN, canReachAtlantic); // Right column (Atlantic)
+        }
+
+        /**
+         * Step 2: Collect cells reachable from both oceans
+         */
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (canReachPacific[row][col] && canReachAtlantic[row][col]) {
+                    result.push_back({row, col});
+                }
+            }
+        }
+
+        return result;
+    }
+};
