@@ -1,0 +1,58 @@
+class Solution {
+public:
+    // Build adjacency list and indegree array
+    void buildGraph(int numCourses, vector<vector<int>>& prerequisites,
+                    unordered_map<int, vector<int>>& graph, vector<int>& indegree) {
+        for (auto &p : prerequisites) {
+            int course = p[0];
+            int pre = p[1];
+            graph[pre].push_back(course);
+            indegree[course]++;
+        }
+    }
+
+    // Push all nodes with indegree 0 into the queue
+    void addZeroIndegreeNodes(int numCourses, vector<int>& indegree, queue<int>& q) {
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.push(i);
+            }
+        }
+    }
+
+    // Run Kahn's algorithm and return topological order
+    vector<int> kahnBFS(int numCourses, unordered_map<int, vector<int>>& graph,
+                        vector<int>& indegree) {
+        queue<int> q;
+        vector<int> result;
+
+        addZeroIndegreeNodes(numCourses, indegree, q);
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            result.push_back(node);
+
+            for (int neigh : graph[node]) {
+                indegree[neigh]--;
+                if (indegree[neigh] == 0) {
+                    q.push(neigh);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        unordered_map<int, vector<int>> graph;
+        vector<int> indegree(numCourses, 0);
+
+        buildGraph(numCourses, prerequisites, graph, indegree);
+
+        vector<int> result = kahnBFS(numCourses, graph, indegree);
+
+        if (result.size() != numCourses) return {};
+        return result;
+    }
+};
