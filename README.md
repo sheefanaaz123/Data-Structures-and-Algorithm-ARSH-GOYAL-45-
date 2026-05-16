@@ -1,9 +1,7 @@
 # DSA Sheet Solutions - C++ Approaches
 
+## Arsh Goyal DSA Sheet Link
 1. https://docs.google.com/spreadsheets/d/1MGVBJ8HkRbCnU6EQASjJKCqQE8BWng4qgL0n3vCVOxE/edit?usp=sharing
-2. https://youtu.be/0nc8gzpkkSY
-3. https://docs.google.com/spreadsheets/d/1r35qSXY6rSAonFbPEKB_KXUvpCIBbVGMp5001MaNb3c/edit#gid=0
-4. https://docs.google.com/spreadsheets/d/1hXserPuxVoWMG9Hs7y8wVdRCJTcj3xMBAEYUOXQ5Xag/edit#gid=0
 
 Welcome to the repository containing comprehensive solutions to the **DSA Sheet** and other frequently asked questions in C++. This repository is dedicated to providing you with a variety of approaches, all implemented in C++, for solving the problems outlined in the 45 Days Plan.
 
